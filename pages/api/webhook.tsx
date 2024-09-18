@@ -6,6 +6,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const data = req.body
     if(data["aspect_type"] =="update"){
       console.log("YEEEES")
+      console.log(req.headers)
 
     }
     res.status(200).send("EVENT_RECEIVED");
