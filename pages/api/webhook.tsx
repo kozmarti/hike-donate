@@ -3,6 +3,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     console.log("webhook event received!", req.query, req.body);
+    const data = req.body
+    if(data["aspect_type"] =="update"){
+      console.log("YEEEES")
+    }
     res.status(200).send("EVENT_RECEIVED");
    }
   // console.log("HEREEE");
