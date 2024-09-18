@@ -21,6 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   console.log(mode);
   console.log(token);
   console.log(challenge);
+  console.log(req.query)
 
   if (mode && token) {
     // Verifies that the mode and token sent are valid
