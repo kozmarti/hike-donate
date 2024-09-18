@@ -5,6 +5,8 @@ const refreshToken = process.env.STRAVA_REFRESH_TOKEN;
 const userId = process.env.STRAVA_USER_ID;; // 👈 Your strava user id, can be found by visiting your strava profile and checking the url
 const TOKEN_ENDPOINT = "https://www.strava.com/oauth/token";
 const ATHLETES_ENDPOINT = `https://www.strava.com/api/v3/athletes/${userId}`;
+const ACTIVITY_ENDPOINT = "https://www.strava.com/api/v3/";
+
 
 const getAccessToken = async () => {
   const body = JSON.stringify({
@@ -40,7 +42,6 @@ export const getActivities = async () => {
   return publicActivities;
 };
 
-const ACTIVITY_ENDPOINT = "https://www.strava.com/api/v3/";
 
 export const getActivity = async (id: number) => {
   const { access_token: accessToken } = await getAccessToken();
@@ -54,7 +55,7 @@ export const getActivity = async (id: number) => {
 export const getActivityStreams = async (id: number) => {
     const { access_token: accessToken } = await getAccessToken();
     const response = await fetch(
-      `${ACTIVITY_ENDPOINT}/activities/${id}/streams?keys=distance&access_token=${accessToken}`
+      `${ACTIVITY_ENDPOINT}/activities/${id}/streams?keys=distance,altitude,latlng,time&access_token=${accessToken}`
     );
     const json = await response.json();
     return json;
