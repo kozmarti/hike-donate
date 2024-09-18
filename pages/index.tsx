@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import client from "@/lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import BasicArea from "@/app/components/TestChart";
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -167,6 +168,7 @@ export default function Home({
           <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
+          <BasicArea/>
         </a>
       </div>
     </main>
