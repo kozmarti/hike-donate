@@ -1,141 +1,163 @@
 db.createCollection("activities", {
-   validator: {
-      $jsonSchema: {
-         bsonType: "object",
-         title: "Activity Object Validation",
-         required: [ "user_id", "start_time", "name", "coordinates", "moving_time" ],
-         properties: {
-            user_id: {
-               bsonType: "int",
-               description: "'user_id' must be an integer and is required"
-            },
-            start_time: {
-               bsonType: "string",
-               description: "start time must be a string like '2018-02-16T06:52:54Z'"
-            },
-            name: {
-                bsonType: "string",
-                description: "name must be a string"
-             },
-            moving_time: {
-                bsonType: "int",
-                description: "'moving time' is an integer in seconds"
-             },
-            coordinates: {
-               bsonType: "array",
-               description: "'coordinates' must be an array of array [lat, long]"
-            },
-            altitudes: {
-                bsonType: "array",
-               description: "'altitude' must be an array of doubles in meter"
-            },
-            delta_altitudes: {
-                bsonType: "array",
-               description: "'delta_altitudes' must be an array of doubles in meter"
-            },
-            distances: {
-                bsonType: "array",
-                description: "'distances' must be an array of doubles in meter"
-            },
-            delta_distances: {
-                bsonType: "array",
-                description: "'delta_distances' must be an array of doubles in meter"
-            },
-            total_distance: {
-                bsonType: "double",
-                description: "'total_distance' is an double in meter"
-             },
-            min_altitude: {
-                bsonType: "double",
-                description: "'min_altitude' is an double in meter"
-             },
-            max_altitude: {
-                bsonType: "double",
-                description: "'max_altitude' is an double in meter"
-             },
-            total_elevation_gain: {
-                bsonType: "double",
-                description: "'total_elevation_gain' is an double in meter"
-             },
-            total_elevation_loss: {
-                bsonType: "double",
-                description: "'total_elevation_loss' is an double in meter"
-             },
-            polyline: {
-                bsonType: "string",
-                description: "'polyline' is an string"
-             },
-         }
-      }
-   }
-} )
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      title: "Activity Object Validation",
+      required: [
+        "user_id",
+        "start_time",
+        "project_name",
+        "coordinates",
+        "moving_time",
+      ],
+      properties: {
+         user_id: {
+            bsonType: "int",
+            description: "'user_id' must be an integer and is required",
+          },
+        strava_user_id: {
+          bsonType: "int",
+          description: "'user_id' must be an integer and is required",
+        },
+        strava_activity_id: {
+          bsonType: "int",
+          description: "'user_id' must be an integer and is required",
+        },
+        strava_project_name: {
+          bsonType: "string",
+          description: "name must be a string",
+        },
+        strava_photo_url{
+
+        },
+        start_time: {
+          bsonType: "string",
+          description:
+            "start time must be a string like '2018-02-16T06:52:54Z'",
+        },
+        moving_time: {
+          bsonType: "int",
+          description: "'moving time' is an integer in seconds",
+        },
+        coordinates: {
+          bsonType: "array",
+          description: "'coordinates' must be an array of array [lat, long]",
+        },
+        altitudes: {
+          bsonType: "array",
+          description: "'altitude' must be an array of doubles in meter",
+        },
+        delta_altitudes: {
+          bsonType: "array",
+          description: "'delta_altitudes' must be an array of doubles in meter",
+        },
+        distances: {
+          bsonType: "array",
+          description: "'distances' must be an array of doubles in meter",
+        },
+        delta_distances: {
+          bsonType: "array",
+          description: "'delta_distances' must be an array of doubles in meter",
+        },
+        total_distance: {
+          bsonType: "double",
+          description: "'total_distance' is an double in meter",
+        },
+        min_altitude: {
+          bsonType: "double",
+          description: "'min_altitude' is an double in meter",
+        },
+        max_altitude: {
+          bsonType: "double",
+          description: "'max_altitude' is an double in meter",
+        },
+        total_elevation_gain: {
+          bsonType: "double",
+          description: "'total_elevation_gain' is an double in meter",
+        },
+        total_elevation_loss: {
+          bsonType: "double",
+          description: "'total_elevation_loss' is an double in meter",
+        },
+        polyline: {
+          bsonType: "string",
+          description: "'polyline' is an string",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      title: "User Object Validation",
+      required: [
+         "password",
+         "first_name",
+         "last_name"
+      ],
+      properties: {
+         first_name: {
+            bsonType: "int",
+            description: "'user_id' must be an integer and is required",
+          },
+          last_name: {
+            bsonType: "int",
+            description: "'user_id' must be an integer and is required",
+          },
+          password: {
+            bsonType: "int",
+            description: "'user_id' must be an integer and is required",
+          },
+        strava_user_id: {
+          bsonType: "int",
+          description: "'user_id' must be an integer and is required",
+        },
+        strava_user_id: {
+          bsonType: "int",
+          description: "'user_id' must be an integer and is required",
+        },
+        strava_client_id: {
+          bsonType: "int",
+          description: "'user_id' must be an integer and is required",
+        },
+        strava_secret: {
+          bsonType: "int",
+          description: "'user_id' must be an integer and is required",
+        },
+        strava_project_names: {
+          bsonType: "array",
+          description: "'delta_distances' must be an array of doubles in meter",
+        },
+        
+      },
+    },
+  },
+});
+
+
+
 
 const data = {
-             user_id: 147153150,
-             start_time: '2018-02-16T06:52:54Z',
-             name: "test",
-             moving_time: 1666,
-             coordinates: [],
-             altitudes: [
-                2.9,
-                5.8,
-                8.5,
-                11.7,
-                15,
-                19,
-                23.2,
-                28,
-                32.8,
-                38.1,
-                43.8,
-                49.5
-              ],
-             delta_altitudes: [
-                2.9,
-                5.8,
-                8.5,
-                11.7,
-                15,
-                19,
-                23.2,
-                28,
-                32.8,
-                38.1,
-                43.8,
-                49.5
-              ],
-             distances: [
-                2.9,
-                5.8,
-                8.5,
-                11.7,
-                15,
-                19,
-                23.2,
-                28,
-                32.8,
-                38.1,
-                43.8,
-                49.5
-              ],
-             delta_distances: [
-                2.9,
-                5.8,
-                8.5,
-                11.7,
-                15,
-                19,
-                23.2,
-                28,
-                32.8,
-                38.1,
-                43.8,
-                49.5
-              ],
-             total_distance: 49.5,
-             min_altitude: Double(1),
-             max_altitude: Double(20),
-             total_elevation_gain: Double(20),
-             total_elevation_loss: Double(20),
-             polyline: "polyline"
-            }
+  user_id: 147153150,
+  start_time: "2018-02-16T06:52:54Z",
+  project_name: "test",
+  moving_time: 1666,
+  coordinates: [],
+  altitudes: [2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5],
+  delta_altitudes: [
+    2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5,
+  ],
+  distances: [2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5],
+  delta_distances: [
+    2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5,
+  ],
+  total_distance: 49.5,
+  min_altitude: Double(1),
+  max_altitude: Double(20),
+  total_elevation_gain: Double(20),
+  total_elevation_loss: Double(20),
+  polyline: "polyline",
+};
