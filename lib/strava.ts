@@ -1,8 +1,9 @@
+// this should be refacto to get logged in user data
 const clientId = process.env.STRAVA_CLIENT_ID;
 const clientSecret = process.env.STRAVA_CLIENT_SECRET;
 const refreshToken = process.env.STRAVA_REFRESH_TOKEN;
 
-const userId = process.env.STRAVA_USER_ID;; // 👈 Your strava user id, can be found by visiting your strava profile and checking the url
+const userId = process.env.STRAVA_USER_ID;;
 const TOKEN_ENDPOINT = "https://www.strava.com/oauth/token";
 const ATHLETES_ENDPOINT = `https://www.strava.com/api/v3/athletes/${userId}`;
 const ACTIVITY_ENDPOINT = "https://www.strava.com/api/v3/";

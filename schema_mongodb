@@ -4,44 +4,42 @@ db.createCollection("activities", {
       bsonType: "object",
       title: "Activity Object Validation",
       required: [
-        "user_id",
+        "strava_user_id",
         "start_time",
-        "project_name",
+        "strava_project_name",
         "coordinates",
         "moving_time",
       ],
       properties: {
-         user_id: {
-            bsonType: "int",
-            description: "'user_id' must be an integer and is required",
-          },
         strava_user_id: {
           bsonType: "int",
-          description: "'user_id' must be an integer and is required",
+          description: "'strava used id' must be an integer and is required",
         },
         strava_activity_id: {
           bsonType: "int",
-          description: "'user_id' must be an integer and is required",
+          description: "'strava activity id' must be an integer",
         },
         strava_project_name: {
           bsonType: "string",
-          description: "name must be a string",
+          description: "strava project name must be a slug string and required",
         },
-        strava_photo_url{
-
+        strava_photo_urls: {
+          bsonType: "array",
+          description: "strava photo urls must be an array of strings",
         },
         start_time: {
           bsonType: "string",
           description:
-            "start time must be a string like '2018-02-16T06:52:54Z'",
+            "start time must be a string like '2018-02-16T06:52:54Z' and required",
         },
         moving_time: {
           bsonType: "int",
-          description: "'moving time' is an integer in seconds",
+          description: "'moving time' is an integer in seconds and required",
         },
         coordinates: {
           bsonType: "array",
-          description: "'coordinates' must be an array of array [lat, long]",
+          description:
+            "'coordinates' must be an array of array [lat, long] and required",
         },
         altitudes: {
           bsonType: "array",
@@ -93,59 +91,63 @@ db.createCollection("users", {
     $jsonSchema: {
       bsonType: "object",
       title: "User Object Validation",
-      required: [
-         "password",
-         "first_name",
-         "last_name"
-      ],
+      required: ["strava_user_id"],
       properties: {
-         first_name: {
-            bsonType: "int",
-            description: "'user_id' must be an integer and is required",
-          },
-          last_name: {
-            bsonType: "int",
-            description: "'user_id' must be an integer and is required",
-          },
-          password: {
-            bsonType: "int",
-            description: "'user_id' must be an integer and is required",
-          },
-        strava_user_id: {
+        first_name: {
+          bsonType: "string",
+          description: "'first_name' must be an string and is required",
+        },
+        last_name: {
+          bsonType: "string",
+          description: "'last_name' must be an string and is required",
+        },
+        password: {
           bsonType: "int",
-          description: "'user_id' must be an integer and is required",
+          description: "'password' must be an integer and is required",
         },
         strava_user_id: {
           bsonType: "int",
-          description: "'user_id' must be an integer and is required",
+          description: "'strava user id' must be an integer and is required",
         },
         strava_client_id: {
           bsonType: "int",
-          description: "'user_id' must be an integer and is required",
+          description: "'strava client id' must be an integer",
         },
         strava_secret: {
-          bsonType: "int",
-          description: "'user_id' must be an integer and is required",
+          bsonType: "string",
+          description: "'user_id' must be a string",
         },
         strava_project_names: {
           bsonType: "array",
-          description: "'delta_distances' must be an array of doubles in meter",
+          description: "'strava project names' must be an array of strings",
         },
-        
       },
     },
   },
 });
 
-
-
-
 const data = {
-  user_id: 147153150,
+  strava_user_id: 147153150,
   start_time: "2018-02-16T06:52:54Z",
-  project_name: "test",
+  strava_project_name: "test",
   moving_time: 1666,
-  coordinates: [],
+  coordinates: [
+   [44.837173, -0.565518],
+   [44.837204, -0.56553],
+   [44.837217,-0.565534],
+   [44.837235, -0.56556],
+   [44.837237, -0.565561],
+   [44.837242, -0.56557],
+   [44.837247, -0.565579],
+   [44.837258,-0.565601],
+   [44.837278, -0.56562]
+  ],
+  strava_activity_id: 12345,
+  strava_photo_urls: [
+    "https://dgtzuqphqg23d.cloudfront.net/VLVrAJKqgrFhXv3ZkMBMguX41NbTIuAz3Ap_qSAz5KM-2048x2048.jpg",
+    "https://dgtzuqphqg23d.cloudfront.net/XHQe2GWQq-J6tHBUbVmn52NJxf7Moy5rnrq1IUU1xa0-2048x2048.jpg",
+    "https://dgtzuqphqg23d.cloudfront.net/lXfuBO9hehistImo4jvZx-VIuJMCYetjRk4aPeP7Txo-2048x2048.jpg",
+  ],
   altitudes: [2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5],
   delta_altitudes: [
     2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5,
@@ -154,10 +156,10 @@ const data = {
   delta_distances: [
     2.9, 5.8, 8.5, 11.7, 15, 19, 23.2, 28, 32.8, 38.1, 43.8, 49.5,
   ],
-  total_distance: 49.5,
-  min_altitude: Double(1),
-  max_altitude: Double(20),
-  total_elevation_gain: Double(20),
-  total_elevation_loss: Double(20),
-  polyline: "polyline",
+  total_distance: 6354.5,
+  min_altitude: 9.4,
+  max_altitude: 4.5,
+  total_elevation_gain: 4.5,
+  total_elevation_loss: 3.5,
+  polyline: "egtpGjmmBKFMRCAQRKLMZIJKHKRIBY^GDWj@UVa@ZEJg@?UJM?GB[?{@Rw@f@SRCFWNSTOLQBOVWLGAMNKDEFa@XWFIJQ@SFQJO@MFEHI?a@N[DGD]DqAl@G@UHM@MLEAe@NSDMJSDQC]NaB^AFMBGDMAUHKAODM?eAXKA[JU@GBO?o@J_@Jw@HBBA@QDGAo@REA_@Fk@?YHGAg@FYAKB]@SBOCIB]Hc@Aa@@WCk@?FECAC@GAaA@SCCMBMASCKIGGAIEO]c@OKGIISIUGEEe@OKI[IiAe@QO]SB@a@SUEKMi@Wc@Q_@m@]_@SMmA{Aa@[?EUc@e@o@MI}@gAQ[[[u@gA[YKUeAwAKUQWIEQYEK_@g@yAmCGQKM_AmBk@sAIMGEg@mAGKK[{BkF]}@COS_@Oo@s@qBW{@wAyDUy@c@mAMWW}@Uc@ESi@uAQs@m@kBOUe@gAKo@k@uASo@CSWi@Sq@IACF@HRP?FJ\\T`@AGEHTl@T`@zApEnA|CX|@?P^x@\\`ADPLVf@pAZhAh@xAHZTf@Rt@j@xAhAlDJHnAzCH^HPf@hAbAtBBHfAnB`@`AHJlBlDj@z@\\b@HBn@~@r@`AFNJJf@t@LLx@hA|@fAPLz@hAZXNTBJrA~AF@\\Vp@ZTFJHJ?z@d@`@Zf@LDHND^TJBr@Zt@d@THVVZDHCFF\\BLCTFRAHDNAFEJD\\@bBX`@BPDH?PRJCK?ECEH@Gn@Ud@?b@DTAJGVCrAW|AOFEzAYZKx@G`@GXOpAS^CBAJMv@SfAa@z@Un@UVMZGb@S`AYPKtAc@VOp@MFGLCVQB?PQXGX@NETYXSXYz@o@`@UTIH?^Ir@?R_@DAl@m@Zc@HYV[JUBCLNJBu@XEC",
 };

@@ -1,10 +1,12 @@
+
+
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     console.log("webhook event received!", req.query, req.body);
     const data = req.body;
-    if (data["aspect_type"] == "update") {
+    if (data["aspect_type"] == "update" && data["subscription"] == process.env.SUBSCRIPTION_ID) {
       console.log("YEEEES");
       console.log(req.headers);
     }
