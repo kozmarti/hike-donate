@@ -9,7 +9,7 @@ export async function GET(req: NextRequest, { params }: { params: { strava_user_
         const db = client.db("hike");
         const activities = await db
             .collection("activities")
-            .find({strava_user_id: parseInt(process.env.STRAVA_USER_ID), strava_project_name: process.env.STRAVA_PROJECT_NAME})
+            .find({strava_user_id: parseInt(process.env.STRAVA_USER_ID??= ""), strava_project_name: process.env.STRAVA_PROJECT_NAME})
             .toArray();
     return NextResponse.json(activities);
 } catch (e) {
