@@ -19,9 +19,9 @@ export default async function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{" "}
+            HELOOOOOOOOOOOOOOOOOOo{" "}
             <Image
-              src="/vercel.svg"
+              src="/logo.png"
               alt="Vercel Logo"
               className="dark:invert"
               width={100}
