@@ -1,17 +1,43 @@
-export default interface Webhook {
+import { getActivity, getActivityPhotos, getActivityStreams } from "@/lib/strava";
 
+interface Webhook {
+  aspect_type: "update" | "create" | "delete";
+  event_time: number;
+  object_id: number; //activty id
+  object_type: string;
+  owner_id: number; //strava user id
+  subscription_id: number;
+  updates: {};
 }
 
 
 export async function POST(request: Request) {
-  const data = await request.json();
-  console.log("webhook event received!", data);
-  if (data["aspect_type"] == "update") {
-  }
+  const webhook_data = await request.json();
+  console.log("webhook event received!", webhook_data);
+  const activity_id = webhook_data["object_id"]
+  const activity = await getActivity(Number(activity_id));
+  const streams = await getActivityStreams(Number(activity_id));
+  const photos = await getActivityPhotos(Number(activity_id));
+
+  console.log(streams)
+  console.log(photos)
+  console.log(activity)
+
   return new Response("EVENT_RECEIVED", {
     status: 200,
   });
 }
+
+
+
+
+
+
+
+
+
+
+
 
 export async function GET(request: Request) {
   console.log(request.url);

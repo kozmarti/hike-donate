@@ -1,4 +1,5 @@
 import clientPromise from "@/lib/mongodb";
+
 import { NextRequest, NextResponse } from "next/server";
 
 interface Activity {
@@ -28,6 +29,7 @@ export async function GET(
   // endpoint: api/user/{strava_user_id}/project/{project_slug}/activities
 
   const { strava_user_id, project_slug } = params;
+
 
   try {
     const client = await clientPromise;
