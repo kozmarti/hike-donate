@@ -114,8 +114,11 @@ export async function POST(request: Request) {
   const streams_strava = await getActivityStreams(Number(activity_id));
   const photos_strava = await getActivityPhotos(Number(activity_id));
   const activity = extract_data(activity_strava, photos_strava, streams_strava);
+  console.log("data collected")
+  console.log(activity)
 
   try {
+    console.log("to POST")
     const client = await clientPromise;
     const db = client.db("hike");
     db.collection("activities").insertOne(activity);
