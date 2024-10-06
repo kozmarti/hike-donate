@@ -33,19 +33,78 @@ export async function GET(
             photosUrl: {
               $push: { hikeDate: "$start_time", photos: "$strava_photo_urls" },
             },
-            startHikeDate: { $min: {$toDate: "$start_time"} },
-            lastHikeDate: { $max: {$toDate: "$start_time"} },
-            
+            coordinate_by_day: { $push: "$coordinates" },
+            altitude_by_day: { $push: "$altitudes" },
+            distance_by_day: { $push: "$delta_distances" },
 
-
+            startHikeDate: { $min: { $toDate: "$start_time" } },
+            lastHikeDate: { $max: { $toDate: "$start_time" } },
           },
         },
         {
           $addFields: {
             timeElapsed: {
-              $divide: [{$subtract: ["$lastHikeDate", "$startHikeDate"]}, 3600000*24],
+              $divide: [
+                { $subtract: ["$lastHikeDate", "$startHikeDate"] },
+                3600000 * 24,
+              ],
+            },
+            coordinates: {
+              $reduce: {
+                input: "$coordinate_by_day",
+                initialValue: [],
+                in: { $concatArrays: ["$$value", "$$this"] },
+              },
+            },
+            altitudes: {
+              $reduce: {
+                input: "$altitude_by_day",
+                initialValue: [],
+                in: { $concatArrays: ["$$value", "$$this"] },
+              },
+            },
+            distances: {
+              $reduce: {
+                input: "$distance_by_day",
+                initialValue: [],
+                in: { $concatArrays: ["$$value", "$$this"] },
+              },
             },
           },
+        },
+        {
+          $addFields: {
+            distance_aggregated: {
+              $reduce: {
+                input: { $range: [ 0, { $size: "$distances" } ] },
+                initialValue: [],
+                in: {
+                  $concatArrays: [
+                    "$$value",
+                    [
+                      {
+                        $add: [
+                          { $arrayElemAt: ["$distances", "$$this"] },
+                          { $sum: {$slice: ["$distances", "$$this"]} },
+                        ],
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          $unset: [
+            "coordinate_by_day",
+            "altitude_by_day",
+            "distance_by_day",
+            "startHikeDate",
+            "lastHikeDate",
+            "_id",
+            "distances"
+          ],
         },
       ])
       .toArray();

@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/user/[strava_user_id]/project/[project_slug]/activities/[activity_id]"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/user/[strava_user_id]/project/[project_slug]/activities/[activity_id]", "app/services/activity_service"],
   "exclude": ["node_modules"]
 }
