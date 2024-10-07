@@ -116,6 +116,7 @@ export async function POST(request: Request) {
     // @ts-ignore
     webhook_data.updates["title"] == process.env.STRAVA_PROJECT_NAME
   ) {
+    console.log("Activity event in scope")
     const activity_id: number = webhook_data.object_id;
     const activity_strava = await getActivity(Number(activity_id));
     const streams_strava = await getActivityStreams(Number(activity_id));
