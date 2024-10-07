@@ -121,7 +121,11 @@ export async function POST(request: Request) {
     console.log("to POST")
     const client = await clientPromise;
     const db = client.db("hike");
+    console.log("db accesses")
+
     db.collection("activities").insertOne(activity);
+    console.log("normally inserted")
+
   } catch (e) {
     console.error(e);
   }
