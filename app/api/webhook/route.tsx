@@ -120,7 +120,7 @@ export async function POST(request: Request) {
     const activity_strava = await getActivity(Number(activity_id));
     const streams_strava = await getActivityStreams(Number(activity_id));
     const photos_strava = await getActivityPhotos(Number(activity_id));
-    const activity = extract_data(
+    const activity: Activity = extract_data(
       activity_strava,
       photos_strava,
       streams_strava
@@ -129,18 +129,14 @@ export async function POST(request: Request) {
     try {
       const client = await clientPromise;
       const db = client.db("hike");
-      const existing_activity = await db
+      const activity = await db
         .collection("activities")
-        .find({
-          strava_activity_id: activity_id,
-        })
-        .toArray();
-      if (!existing_activity) {
-        const new_activity = await db
-          .collection("activities")
-          .insertOne(activity);
-        console.log("Activity inserted", activity);
-      }
+        .updateOne(
+          { strava_activity_id: activity_id },
+          { $set: activity },
+          { upsert: true }
+        );
+      console.log("Activity upserted", activity);
     } catch (e) {
       console.error(e);
     }
