@@ -49,6 +49,18 @@ export async function GET(
 
 export async function POST(request: Request) {
   const activityData:Activity = await request.json();
+  try {
+    console.log("to POST")
+    const client = await clientPromise;
+    const db = client.db("hike");
+    console.log("db accesses")
+
+    db.collection("activities").insertOne(activityData);
+    console.log("normally inserted")
+
+  } catch (e) {
+    console.error(e);
+  }
 
   return Response.json({ message: "Hello world", activityData });
 }
