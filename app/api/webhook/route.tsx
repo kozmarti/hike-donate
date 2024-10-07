@@ -108,26 +108,42 @@ export async function POST(request: Request) {
   console.log("webhook event received!", webhook_data);
 
   // if subscription id, aspect type, strava user, object type and project name matches, save data
+  if (
+    webhook_data.aspect_type == "update" &&
+    webhook_data.subscription_id ==
+      parseInt((process.env.SUBSCRIPTION_ID ??= "")) &&
+    webhook_data.owner_id == parseInt((process.env.STRAVA_USER_ID ??= "")) &&
+    // @ts-ignore
+    webhook_data.updates["title"] == process.env.STRAVA_PROJECT_NAME
+  ) {
+    const activity_id: number = webhook_data.object_id;
+    const activity_strava = await getActivity(Number(activity_id));
+    const streams_strava = await getActivityStreams(Number(activity_id));
+    const photos_strava = await getActivityPhotos(Number(activity_id));
+    const activity = extract_data(
+      activity_strava,
+      photos_strava,
+      streams_strava
+    );
 
-  const activity_id: number = webhook_data["object_id"];
-  const activity_strava = await getActivity(Number(activity_id));
-  const streams_strava = await getActivityStreams(Number(activity_id));
-  const photos_strava = await getActivityPhotos(Number(activity_id));
-  const activity = extract_data(activity_strava, photos_strava, streams_strava);
-  console.log("data collected")
-  console.log(activity)
-
-  try {
-    console.log("to POST")
-    const client = await clientPromise;
-    const db = client.db("hike");
-    console.log("db accesses")
-
-    const new_activity = await db.collection("activities").insertOne(activity);
-    console.log("normally inserted")
-
-  } catch (e) {
-    console.error(e);
+    try {
+      const client = await clientPromise;
+      const db = client.db("hike");
+      const existing_activity = await db
+        .collection("activities")
+        .find({
+          strava_activity_id: activity_id,
+        })
+        .toArray();
+      if (!existing_activity) {
+        const new_activity = await db
+          .collection("activities")
+          .insertOne(activity);
+        console.log("Activity inserted", activity);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return new Response("EVENT_RECEIVED", {
@@ -145,10 +161,6 @@ export async function GET(request: Request) {
   let token = searchParams.get("hub.verify_token");
   let challenge = searchParams.get("hub.challenge");
   // Checks if a token and mode is in the query string of the request
-  console.log(mode);
-  console.log(token);
-  console.log(challenge);
-
   if (mode && token) {
     // Verifies that the mode and token sent are valid
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
@@ -164,82 +176,3 @@ export async function GET(request: Request) {
     }
   }
 }
-
-const photo = [];
-
-const stream = [
-  {
-    type: "latlng",
-    data: [], //coordinates
-    series_type: "distance",
-    original_size: 1861,
-    resolution: "high",
-  },
-  {
-    type: "distance",
-    data: [], //distances
-    series_type: "distance",
-    original_size: 1861,
-    resolution: "high",
-  },
-  {
-    type: "altitude",
-    data: [], // altitudes
-    series_type: "distance",
-    original_size: 1861,
-    resolution: "high",
-  },
-];
-
-const activity = {
-  athlete: {
-    id: 147153150, // strava user id
-  },
-  name: "test", //project name
-  distance: 2438.1, // total distance
-  moving_time: 1829, // moving time
-  total_elevation_gain: 6.7, //elevation gain
-  id: 12452922440, //activity id
-  start_date_local: "2024-09-19T18:41:27Z", //start date
-  map: {
-    id: "a12452922440",
-    polyline:
-      "eetpGrrnBA?GDQ`@_@FQJy@ESNSDMPF`@?`@Lh@BTCb@IHAFH\\Af@Nd@Fr@BHANKDM@OBc@AIBB@ACOAQFQBw@WL@AE@CBDH@NL@AP@ZAVId@RTANIFM?m@UaBMc@BIb@Qx@ITIJ?NKBGDQC]@SCmAX]NAHGJQLBL?f@MJDD?HCHE`ABTMHMB?@EBA@IBG?kADUCQ@Mo@bB@DCCDGB@DW@B?AKlFBPKBWGW?]FIFk@lAKBELc@JS?_@FD^Jd@A`@DJA?@DFD?I@LHLEHSJ]A]PECKBMKG?I?KHMAEDSBIDMPC@YEm@@KBUEWLWJWBEBI?AAQBSw@?gAGg@BYAc@BIASCI@@BKAa@Fs@Ia@OGM?_@LK@GGk@OKDIF_@JUGQAC@[OYGKKDCBQBc@^o@BCCUFU?YBECOBCDWHOPEJ@@EAA@Q",
-    resource_state: 3,
-    summary_polyline:
-      "qjtpGn}nBNf@Fr@BJALCBe@Fc@AIBB@ACOAQFQBw@WL@AE@CBDH@NL@AP@ZAVId@RTANIFM?m@UaBMc@BIb@Qx@ITIJ?NKBGDQC]@SCmAX]NAHGJQLBL?f@MJDD?HCHE`ABTMHMB?@EBA@IBG?kADUCQ@Mo@bB@DCCDGB@DW@B?AKlFBPKBWGW?]FIFk@lAKBELc@JS?_@FD^Jd@A`@DJA?@DFD?I@LHLEJG?KH]A]PECKBMKG?I?KHMAEDSBIDMPC@YEm@@KBUEWLWJWBEBI?AAQBSw@?gAGg@BYAC",
-  },
-  elev_high: 17.1, //max altitude
-  elev_low: 11.2, //min altitude
-};
-
-const photos = [
-  {
-    unique_id: "314af5ab-7870-4e8a-9cf9-d4c830e3f594",
-    athlete_id: 147153150,
-    activity_id: 12431737609,
-    activity_name: "test",
-    urls: {
-      "5000":
-        "https://dgtzuqphqg23d.cloudfront.net/VLVrAJKqgrFhXv3ZkMBMguX41NbTIuAz3Ap_qSAz5KM-2048x2048.jpg",
-    },
-  },
-  {
-    athlete_id: 147153150,
-    activity_id: 12431737609,
-    activity_name: "test",
-    urls: {
-      "5000":
-        "https://dgtzuqphqg23d.cloudfront.net/XHQe2GWQq-J6tHBUbVmn52NJxf7Moy5rnrq1IUU1xa0-2048x2048.jpg",
-    },
-  },
-  {
-    athlete_id: 147153150,
-    activity_id: 12431737609,
-    activity_name: "test",
-    urls: {
-      "5000":
-        "https://dgtzuqphqg23d.cloudfront.net/lXfuBO9hehistImo4jvZx-VIuJMCYetjRk4aPeP7Txo-2048x2048.jpg",
-    },
-  },
-];

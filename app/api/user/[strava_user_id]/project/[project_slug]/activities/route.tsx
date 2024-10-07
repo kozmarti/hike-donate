@@ -30,10 +30,10 @@ export async function GET(
 
   const { strava_user_id, project_slug } = params;
 
-
   try {
     const client = await clientPromise;
     const db = client.db("hike");
+
     const activities = await db
       .collection("activities")
       .find({
@@ -48,19 +48,24 @@ export async function GET(
 }
 
 export async function POST(request: Request) {
-  const activityData:Activity = await request.json();
+  const activityData: Activity = await request.json();
   try {
-    console.log("to POST")
     const client = await clientPromise;
     const db = client.db("hike");
-    console.log("db accesses")
-
-    db.collection("activities").insertOne(activityData);
-    console.log("normally inserted")
-
+    const activity = await db
+      .collection("activities")
+      .updateOne(
+        { strava_activity_id: activityData.strava_activity_id },
+        { $set: activityData },
+        { upsert: true }
+      );
+    console.log("Activity upserted", activity);
   } catch (e) {
     console.error(e);
   }
 
-  return Response.json({ message: "Hello world", activityData });
+  return Response.json(
+    { message: "Activity data posted", activityData },
+    { status: 200 }
+  );
 }

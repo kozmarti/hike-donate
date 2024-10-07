@@ -195,3 +195,84 @@ db.activities.aggregate([
     },
   },
 ]);
+
+
+
+const photo = [];
+
+const stream = [
+  {
+    type: "latlng",
+    data: [], //coordinates
+    series_type: "distance",
+    original_size: 1861,
+    resolution: "high",
+  },
+  {
+    type: "distance",
+    data: [], //distances
+    series_type: "distance",
+    original_size: 1861,
+    resolution: "high",
+  },
+  {
+    type: "altitude",
+    data: [], // altitudes
+    series_type: "distance",
+    original_size: 1861,
+    resolution: "high",
+  },
+];
+
+const activity = {
+  athlete: {
+    id: 147153150, // strava user id
+  },
+  name: "test", //project name
+  distance: 2438.1, // total distance
+  moving_time: 1829, // moving time
+  total_elevation_gain: 6.7, //elevation gain
+  id: 12452922440, //activity id
+  start_date_local: "2024-09-19T18:41:27Z", //start date
+  map: {
+    id: "a12452922440",
+    polyline:
+      "eetpGrrnBA?GDQ`@_@FQJy@ESNSDMPF`@?`@Lh@BTCb@IHAFH\\Af@Nd@Fr@BHANKDM@OBc@AIBB@ACOAQFQBw@WL@AE@CBDH@NL@AP@ZAVId@RTANIFM?m@UaBMc@BIb@Qx@ITIJ?NKBGDQC]@SCmAX]NAHGJQLBL?f@MJDD?HCHE`ABTMHMB?@EBA@IBG?kADUCQ@Mo@bB@DCCDGB@DW@B?AKlFBPKBWGW?]FIFk@lAKBELc@JS?_@FD^Jd@A`@DJA?@DFD?I@LHLEHSJ]A]PECKBMKG?I?KHMAEDSBIDMPC@YEm@@KBUEWLWJWBEBI?AAQBSw@?gAGg@BYAc@BIASCI@@BKAa@Fs@Ia@OGM?_@LK@GGk@OKDIF_@JUGQAC@[OYGKKDCBQBc@^o@BCCUFU?YBECOBCDWHOPEJ@@EAA@Q",
+    resource_state: 3,
+    summary_polyline:
+      "qjtpGn}nBNf@Fr@BJALCBe@Fc@AIBB@ACOAQFQBw@WL@AE@CBDH@NL@AP@ZAVId@RTANIFM?m@UaBMc@BIb@Qx@ITIJ?NKBGDQC]@SCmAX]NAHGJQLBL?f@MJDD?HCHE`ABTMHMB?@EBA@IBG?kADUCQ@Mo@bB@DCCDGB@DW@B?AKlFBPKBWGW?]FIFk@lAKBELc@JS?_@FD^Jd@A`@DJA?@DFD?I@LHLEJG?KH]A]PECKBMKG?I?KHMAEDSBIDMPC@YEm@@KBUEWLWJWBEBI?AAQBSw@?gAGg@BYAC",
+  },
+  elev_high: 17.1, //max altitude
+  elev_low: 11.2, //min altitude
+};
+
+const photos = [
+  {
+    unique_id: "314af5ab-7870-4e8a-9cf9-d4c830e3f594",
+    athlete_id: 147153150,
+    activity_id: 12431737609,
+    activity_name: "test",
+    urls: {
+      "5000":
+        "https://dgtzuqphqg23d.cloudfront.net/VLVrAJKqgrFhXv3ZkMBMguX41NbTIuAz3Ap_qSAz5KM-2048x2048.jpg",
+    },
+  },
+  {
+    athlete_id: 147153150,
+    activity_id: 12431737609,
+    activity_name: "test",
+    urls: {
+      "5000":
+        "https://dgtzuqphqg23d.cloudfront.net/XHQe2GWQq-J6tHBUbVmn52NJxf7Moy5rnrq1IUU1xa0-2048x2048.jpg",
+    },
+  },
+  {
+    athlete_id: 147153150,
+    activity_id: 12431737609,
+    activity_name: "test",
+    urls: {
+      "5000":
+        "https://dgtzuqphqg23d.cloudfront.net/lXfuBO9hehistImo4jvZx-VIuJMCYetjRk4aPeP7Txo-2048x2048.jpg",
+    },
+  },
+];
