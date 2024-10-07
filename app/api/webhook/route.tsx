@@ -120,7 +120,7 @@ export async function POST(request: Request) {
     const activity_strava = await getActivity(Number(activity_id));
     const streams_strava = await getActivityStreams(Number(activity_id));
     const photos_strava = await getActivityPhotos(Number(activity_id));
-    const activity: Activity = extract_data(
+    const activity_extracted: Activity = extract_data(
       activity_strava,
       photos_strava,
       streams_strava
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
         .collection("activities")
         .updateOne(
           { strava_activity_id: activity_id },
-          { $set: activity },
+          { $set: activity_extracted },
           { upsert: true }
         );
       console.log("Activity upserted", activity);
