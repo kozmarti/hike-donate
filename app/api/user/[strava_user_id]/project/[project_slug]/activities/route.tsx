@@ -17,7 +17,7 @@ export interface Activity {
   total_distance: number; //metre
   min_altitude: number; //metre
   max_altitude: number; //metre
-  tota_elevation_gain: number;
+  total_elevation_gain: number;
   total_elevation_loss: number; //metre
   polyline: string; //metre
 }

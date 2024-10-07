@@ -98,7 +98,7 @@ const extract_data = (
     delta_altitudes: delta_altitudes,
     delta_distances: delta_distances,
     total_elevation_loss: total_elevation_loss,
-    tota_elevation_gain: total_elevation_gain,
+    total_elevation_gain: total_elevation_gain,
   };
   return activity;
 };
