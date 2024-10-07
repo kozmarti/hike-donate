@@ -123,7 +123,7 @@ export async function POST(request: Request) {
     const db = client.db("hike");
     console.log("db accesses")
 
-    db.collection("activities").insertOne(activity);
+    const new_activity = await db.collection("activities").insertOne(activity);
     console.log("normally inserted")
 
   } catch (e) {
