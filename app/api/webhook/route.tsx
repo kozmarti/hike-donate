@@ -126,6 +126,8 @@ export async function POST(request: Request) {
       photos_strava,
       streams_strava
     );
+    console.log("Activity data extracted", activity_extracted)
+
 
     try {
       const client = await clientPromise;
