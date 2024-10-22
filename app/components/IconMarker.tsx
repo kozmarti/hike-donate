@@ -1,5 +1,3 @@
-"use client"; 
-
 import {icon} from 'leaflet';
 
 const iconPerson = icon({

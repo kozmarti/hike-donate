@@ -12,11 +12,12 @@ import {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 import "leaflet/dist/leaflet.css";
 import { iconPerson } from "../IconMarker";
+import { LatLngExpression } from "leaflet";
 //npm install --save leaflet react-leaflet
 const MapComponent = () => {
     const [zoomInitial, setZoomInitial] = useState(5);
 
-    const polyline = [
+    const polyline:LatLngExpression[] = [
       [43.247654, -1.524588],
       [43.239563, -1.607093],
       [43.26903, -1.648346],
@@ -27,15 +28,14 @@ const MapComponent = () => {
     
     return (
       <>
-      <button >HI</button>
         <MapContainer
           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           className="full-height-map"
           center={[43.247654, -1.524588]}
           zoom={zoomInitial}
           zoomControl={false}
-          minZoom={3}
-          maxZoom={23}
+          minZoom={1}
+          maxZoom={18}
           maxBounds={[
             [-85.06, -180],
             [85.06, 180],
@@ -43,7 +43,7 @@ const MapComponent = () => {
           scrollWheelZoom={false}
          
         >
-          <ZoomControl position="topleft" zoomInText="🧐" zoomOutText="🗺️" />
+          <ZoomControl position="topleft"/>
   
           <TileLayer
             attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
@@ -53,11 +53,7 @@ const MapComponent = () => {
           />
           <Polyline
             pathOptions={purpleOptions}
-            positions={[
-              [43.247654, -1.524588],
-              [43.239563, -1.607093],
-              [43.26903, -1.648346],
-            ]}
+            positions={polyline}
           />
           <Marker icon={iconPerson} position={[43.26903, -1.648346]}>
             <Popup>We are here now</Popup>
