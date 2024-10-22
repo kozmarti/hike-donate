@@ -25,3 +25,19 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+.full-height-map {
+  width: 1000px; 
+  height: 500px;
+  border-radius: 20px;
+}
+.test{
+  background-color: red;
+  position: absolute;
+  right: 10px;
+  bottom: 30px;
+  z-index: 500;
+  height: 100px
+}
+.leaflet-icon{
+  background-color: transparent;
+}
