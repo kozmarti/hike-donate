@@ -1,8 +1,8 @@
 import {icon} from 'leaflet';
 
 const iconPerson = icon({
-    iconUrl: "./us.png",
-    iconSize: [32, 32],
+    iconUrl: "./here.gif",
+    iconSize: [66, 99],
     className: 'leaflet-icon'
 });
 

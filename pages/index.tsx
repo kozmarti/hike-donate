@@ -4,7 +4,7 @@ import client from "@/lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import BasicArea from "@/app/components/TestChart";
 import { MapComponent } from "@/app/components/MapComponent";
-import { PerformanceComponent } from "@/app/components/PerformanceComponent";
+import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 
 type ConnectionStatus = {
   isConnected: boolean;
@@ -33,23 +33,23 @@ export default function Home({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex min-h-screen flex-col items-center justify-between p-24 global-background ${inter.className}`}
     >
-      <Image
+       <Image
         src="/logo.png"
         alt="Vercel Logo"
-        className="dark:invert"
-        width={100}
-        height={24}
+        width={200}
+        height={48}
         priority
       />
-      <Image
-        src="/logo.png"
-        alt="Vercel Logo"
-        width={100}
-        height={24}
-        priority
-      />
+      <p>Would you sponsor one kilometer of my fundraising hike? 
+      </p>
+      <p>I am embarking on an exciting journey. The goal is simple: for every kilometer I trek, I aim to raise an equal number of euros for [Association] to [support …]. 
+Whether I walk 10 kilometers or 100, every euro raised will go toward transforming lives and providing much-needed support.
+</p>
+<p>How far do you think I will make it ?</p>
+
+     
       {isConnected ? (
         <h2 className="text-lg text-green-500">
           You are connected to MongoDB!
@@ -60,7 +60,16 @@ export default function Home({
           instructions.
         </h2>
       )}
-      <PerformanceComponent title="totalDistance" quantity={100}/>
+      <PerformanceItemComponent title="totalDistance" quantity={100}/>
+      <PerformanceItemComponent title="totalElevationGain" quantity={100}/>
+      <PerformanceItemComponent title="totalElevationLoss" quantity={100}/>
+      <PerformanceItemComponent title="minAltitude" quantity={100}/>
+
+      <PerformanceItemComponent title="maxAltitude" quantity={100}/>
+      <PerformanceItemComponent title="timeElapsed" quantity={100}/>
+
+
+
       <MapComponent />
       <BasicArea />
     </main>

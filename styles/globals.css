@@ -30,7 +30,7 @@ body {
   height: 500px;
   border-radius: 20px;
 }
-.test{
+.label-on-map{
   background-color: red;
   position: absolute;
   right: 10px;
@@ -40,4 +40,14 @@ body {
 }
 .leaflet-icon{
   background-color: transparent;
+}
+.global-background{
+  background-image: url('/bg-1.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgba(255,255,255,0.6);
+  background-blend-mode: lighten;
+  position: absolute;
+  display: block;
+  background-attachment: fixed;
 }

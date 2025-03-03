@@ -22,7 +22,7 @@ const MapComponent = () => {
       [43.239563, -1.607093],
       [43.26903, -1.648346],
     ];
-    const purpleOptions = { color: "red", weight: 5 };
+    const purpleOptions = { color: "#EC506A", weight: 3 };
   
 
     
@@ -58,7 +58,7 @@ const MapComponent = () => {
           <Marker icon={iconPerson} position={[43.26903, -1.648346]}>
             <Popup>We are here now</Popup>
           </Marker>
-          <div className="test">Helloooo</div>
+          <div className="label-on-map">Helloooo</div>
           <ScaleControl position="bottomleft" imperial={false}/>
         </MapContainer>
       </>
