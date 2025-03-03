@@ -42,13 +42,14 @@ export default function Home({
         height={48}
         priority
       />
+      {/*
       <p>Would you sponsor one kilometer of my fundraising hike? 
       </p>
       <p>I am embarking on an exciting journey. The goal is simple: for every kilometer I trek, I aim to raise an equal number of euros for [Association] to [support …]. 
 Whether I walk 10 kilometers or 100, every euro raised will go toward transforming lives and providing much-needed support.
 </p>
 <p>How far do you think I will make it ?</p>
-
+*/}
      
       {isConnected ? (
         <h2 className="text-lg text-green-500">
