@@ -15,7 +15,7 @@ export async function GET(
     const stats = await db
       .collection("activities")
       .aggregate([
-        { $sort: { start_time: -1 } },
+        { $sort: { start_time: 1 } },
         {
           $match: {
             strava_user_id: parseInt((process.env.STRAVA_USER_ID ??= "")),
@@ -29,7 +29,7 @@ export async function GET(
             totalElevationGain: { $sum: "$total_elevation_gain" },
             totalElevationLoss: { $sum: "$total_elevation_loss" },
             minAltitude: { $min: "$min_altitude" },
-            maxAltitude: { $min: "$max_altitude" },
+            maxAltitude: { $max: "$max_altitude" },
             photosUrl: {
               $push: { hikeDate: "$start_time", photos: "$strava_photo_urls" },
             },
