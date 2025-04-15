@@ -90,7 +90,7 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
 
       </div>
 
-      <MapComponent coordinates={coords} currentLocation={lastCords} centerCoordinates={lastCords}/> 
+      <MapComponent coordinates={coords as [number, number][]} currentLocation={lastCords as [number, number]} centerCoordinates={lastCords as [number, number]}/> 
 
       <ElevationChart altitude={stats.altitudes} distance={stats.distance_aggregated}/>
     </main>
