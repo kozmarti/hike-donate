@@ -31,7 +31,7 @@ body {
   border-radius: 20px;
 }
 .label-on-map{
-  background-color: red;
+  background-color:  rgba(255,255,255,0.4);
   position: absolute;
   right: 10px;
   bottom: 30px;
@@ -45,9 +45,39 @@ body {
   background-image: url('/bg-1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  background-color: rgba(255,255,255,0.6);
+  background-color: rgba(255,255,255,0.4);
   background-blend-mode: lighten;
   position: relative;
   display: flex;
   background-attachment: fixed;
+}
+
+.performance-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 300px;
+  gap: 6px;
+  padding: 16px;
+
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+  gap: 16px; /* spacing between items */
+  width: 100%;
+  justify-items: center; /* center items horizontally */
+  align-items: center; /* center items vertically */
+  margin-bottom: 100px;;
+}
+
+.wrapper {
+  color:#010808;
+  font-size: 1rem;
 }

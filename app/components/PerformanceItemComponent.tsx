@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 interface PerformanceItemData {
   title: string;
-  icon: IconType;
+  icon: string;
   measure: string;
 }
 
@@ -20,33 +20,33 @@ export interface PerformanceItemProps {
 export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemProps) => {
   const dataMap: { [key: string]: PerformanceItemData } = {
     totalDistance: {
-      title: "Total Distance",
-      icon: GiPathDistance,
+      title: "Distance",
+      icon: "/distance.svg",
       measure: "km",
     },
     totalElevationGain: {
-        title: "Total Elevation Gain",
-        icon: IoMdTrendingUp,
+        title: "Elevation Gain",
+        icon: "/elevationGain.svg",
         measure: "m"
     },
     totalElevationLoss: {
-        title: "Total Elevation Loss",
-        icon: IoMdTrendingDown,
+        title: "Elevation Loss",
+        icon: "/elevationLoss.svg",
         measure: "m"
     },
     minAltitude: {
         title: "Lowest Altitude",
-        icon: FaArrowDown,
+        icon: "/minAltitude.svg",
         measure: "m",
     },
     maxAltitude: {
         title: "Highest Altitude",
-        icon: FaArrowUp,
+        icon: "/maxAltitude.svg",
         measure: "m",
     },
     timeElapsed: {
         title: "Time Elapsed",
-        icon: FaRegCalendarAlt,
+        icon: "/timeElapsed.svg",
         measure: "days"
     }
 
@@ -55,26 +55,14 @@ export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemPro
   const DataIcon = dataMap[title].icon
   
   return (
-    <div>
-      <Image
-      src="/distance.svg"
+<div className="performance-container">
+     
+<Image
+      src={dataMap[title].icon}
       width={50}
       height={50}
       alt="Picture of the author"
-    />
-          <Image
-      src="/donation-heart.svg"
-      width={50}
-      height={50}
-      alt="Picture of the author"
-    />
-    <Image
-      src="/diagram-up.svg"
-      width={50}
-      height={50}
-      alt="Picture of the author"
-    />
-      <DataIcon/> {dataMap[title].title}: <CountUp end={quantity} suffix={dataMap[title].measure} />
+    />{dataMap[title].title} : <CountUp end={quantity} suffix={dataMap[title].measure} />
     </div>
   );
 };

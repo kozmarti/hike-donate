@@ -1,43 +1,70 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
+import { Fredoka } from 'next/font/google';
 import client from "@/lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import BasicArea from "@/app/components/TestChart";
+import ElevationChart from "@/app/components/ElevationChart";
 import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 
-type ConnectionStatus = {
-  isConnected: boolean;
+type Stats = {
+  totalDistance: number;
+  totalElevationGain: number;
+  totalElevationLoss: number;
+  minAltitude: number;
+  maxAltitude: number;
+  timeElapsed: number;
+  photosUrl: { hikeDate: string; photos: string[] }[];
+  coordinates: number[][];
+  altitudes: number[];
+  distance_by_day: number[][];
+  coordinate_by_day: number[][];
+  startHikeDate: Date;
+  lastHikeDate: Date;
+  distances: number[];
+  altitude_by_day: number[][];
+  distance_aggregated: number[];
+  delta_distances: number[];
+  delta_altitudes: number[];  
+  // Add other fields as needed
 };
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Fredoka({ subsets: ["latin"] });
 
-export const getServerSideProps: GetServerSideProps<
-  ConnectionStatus
-> = async () => {
+
+export const getServerSideProps: GetServerSideProps<{ stats: Stats | null }> = async () => {
   try {
-    await client.connect(); // `await client.connect()` will use the default database passed in the MONGODB_URI
+    const res = await fetch("http://localhost:3000/api/user/147153150/project/test/stats");
+    const data = await res.json();
+
     return {
-      props: { isConnected: true },
+      props: {
+        stats: data,
+      },
     };
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error("Failed to fetch stats:", error);
     return {
-      props: { isConnected: false },
+      props: {
+        stats: null,
+      },
     };
   }
 };
 
-export default function Home({
-  isConnected,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home({ stats }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!stats) return <p>Failed to load stats</p>;
+  const coords = stats.coordinates;
+  const lastCords = stats.coordinates.slice(-1)[0];
+
+
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 global-background ${inter.className}`}
     >
+
        <Image
         src="/logo.png"
-        alt="Vercel Logo"
+        alt="Hike&Donate Logo"
         width={200}
         height={48}
         priority
@@ -50,29 +77,22 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
 </p>
 <p>How far do you think I will make it ?</p>
 */}
-     
-      {isConnected ? (
-        <h2 className="text-lg text-green-500">
-          You are connected to MongoDB!
-        </h2>
-      ) : (
-        <h2 className="text-lg text-red-500">
-          You are NOT connected to MongoDB. Check the <code>README.md</code> for
-          instructions.
-        </h2>
-      )}
-      <PerformanceItemComponent title="totalDistance" quantity={100}/>
-      <PerformanceItemComponent title="totalElevationGain" quantity={100}/>
-      <PerformanceItemComponent title="totalElevationLoss" quantity={100}/>
-      <PerformanceItemComponent title="minAltitude" quantity={100}/>
+<div className="container wrapper">
 
-      <PerformanceItemComponent title="maxAltitude" quantity={100}/>
-      <PerformanceItemComponent title="timeElapsed" quantity={100}/>
+      <PerformanceItemComponent title="totalDistance" quantity={stats.totalDistance / 1000}/>
+      <PerformanceItemComponent title="timeElapsed" quantity={stats.timeElapsed + 1}/>
 
+      <PerformanceItemComponent title="totalElevationGain" quantity={stats.totalElevationGain}/>
+      <PerformanceItemComponent title="totalElevationLoss" quantity={stats.totalElevationLoss}/>
+      <PerformanceItemComponent title="maxAltitude" quantity={stats.maxAltitude}/>
 
+      <PerformanceItemComponent title="minAltitude" quantity={stats.minAltitude}/>
 
-      <MapComponent />
-      <BasicArea />
+      </div>
+
+      <MapComponent coordinates={coords} currentLocation={lastCords} centerCoordinates={lastCords}/> 
+
+      <ElevationChart altitude={stats.altitudes} distance={stats.distance_aggregated}/>
     </main>
   );
 }

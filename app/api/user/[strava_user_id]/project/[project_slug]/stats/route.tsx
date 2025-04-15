@@ -60,7 +60,10 @@ export async function GET(
               $reduce: {
                 input: "$altitude_by_day",
                 initialValue: [],
-                in: { $concatArrays: ["$$value", "$$this"] },
+                in: { $concatArrays: [
+                  "$$value",
+                  { $slice: ["$$this", 1, { $size: "$$this" }] }
+                ] },
               },
             },
             distances: {
