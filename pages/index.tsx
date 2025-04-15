@@ -32,8 +32,12 @@ const inter = Fredoka({ subsets: ["latin"] });
 
 
 export const getServerSideProps: GetServerSideProps<{ stats: Stats | null }> = async () => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const userId = process.env.STRAVA_USER_ID;
+
+
   try {
-    const res = await fetch("http://localhost:3000/api/user/147153150/project/test/stats");
+    const res = await fetch(`${apiUrl}/api/user/${userId}/project/test/stats`);
     const data = await res.json();
 
     return {
