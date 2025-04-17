@@ -131,7 +131,14 @@ export async function POST(request: Request) {
     try {
       const client = await clientPromise;
       const db = client.db("hike");
-      let last_distance = await db.collection("activities").find().sort({ _id: -1 }).limit(1)
+
+      const previousHike = await db.collection('hikes')
+      .find({ start_hike: { $lt: activity_strava["start_date_local"] } }, { projection: { distances_aggregated: 1 } })
+      .sort({ start_hike: -1 })
+      .limit(1)
+      .toArray();
+
+      let last_distance = previousHike[0]?.distances_aggregated.at(-1);
       console.log("Last activity distance found", last_distance);
     } catch (e) {
       console.error(e);
