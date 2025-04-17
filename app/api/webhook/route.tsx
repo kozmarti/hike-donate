@@ -41,7 +41,8 @@ interface Photo {
 const extract_data = (
   activity_strava: any,
   photos_strava: any,
-  streams_strava: any
+  streams_strava: any,
+  last_distance: number
 ) => {
   // @ts-ignore
   var streams_extracted: Stream = {};
@@ -52,6 +53,10 @@ const extract_data = (
   const photo_urls: any = photos_strava.map(
     // @ts-ignore
     (photo: Photo) => photo.urls["5000"]
+  );
+  const delta_distances_aggregated = streams_extracted["distance"].map(
+    (d, _) =>
+      Math.round((d + last_distance) * 10) / 10
   );
   const delta_distances = streams_extracted["distance"].map(
     (d, index) =>
@@ -99,6 +104,7 @@ const extract_data = (
     delta_distances: delta_distances,
     total_elevation_loss: total_elevation_loss,
     total_elevation_gain: total_elevation_gain,
+    distances_aggregated: delta_distances_aggregated,
   };
   return activity;
 };
@@ -121,13 +127,22 @@ export async function POST(request: Request) {
     const activity_strava = await getActivity(Number(activity_id));
     const streams_strava = await getActivityStreams(Number(activity_id));
     const photos_strava = await getActivityPhotos(Number(activity_id));
+    let last_distance = 0;
+    try {
+      const client = await clientPromise;
+      const db = client.db("hike");
+      let last_distance = await db.collection("activities").find().sort({ _id: -1 }).limit(1)
+      console.log("Last activity distance found", last_distance);
+    } catch (e) {
+      console.error(e);
+    }
     const activity_extracted: Activity = extract_data(
       activity_strava,
       photos_strava,
-      streams_strava
+      streams_strava,
+      last_distance
     );
     console.log("Activity data extracted", activity_extracted)
-
 
     try {
       const client = await clientPromise;

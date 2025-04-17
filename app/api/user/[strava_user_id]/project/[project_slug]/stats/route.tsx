@@ -79,7 +79,7 @@ export async function GET(
           $addFields: {
             distance_aggregated: {
               $reduce: {
-                input: { $range: [ 0, { $size: "$distances" } ] },
+                input: { $range: [0, { $size: "$distances" }] },
                 initialValue: [],
                 in: {
                   $concatArrays: [
@@ -88,7 +88,7 @@ export async function GET(
                       {
                         $add: [
                           { $arrayElemAt: ["$distances", "$$this"] },
-                          { $sum: {$slice: ["$distances", "$$this"]} },
+                          { $sum: { $slice: ["$distances", "$$this"] } },
                         ],
                       },
                     ],

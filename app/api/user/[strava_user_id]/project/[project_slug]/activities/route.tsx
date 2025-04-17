@@ -20,6 +20,7 @@ export interface Activity {
   total_elevation_gain: number;
   total_elevation_loss: number; //metre
   polyline: string; //metre
+  distances_aggregated: number[]; //metre
 }
 
 export async function GET(
