@@ -20,7 +20,7 @@ interface CoordinateData {
   centerCoordinates: LatLngExpression;
 }
 const MapComponent = ({coordinates, currentLocation, centerCoordinates}: CoordinateData) => {
-    const [zoomInitial, setZoomInitial] = useState(7);
+    const [zoomInitial, setZoomInitial] = useState(8);
 
     const polyline:LatLngExpression[] = coordinates;
     const purpleOptions = { color: "#EC506A", weight: 3 };
@@ -29,6 +29,7 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
     
     return (
       <>
+      <div className="map-wrapper">
         <MapContainer
           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           className="full-height-map"
@@ -57,11 +58,13 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
             positions={polyline}
           />
           <Marker icon={iconPerson} position={currentLocation}>
-            <Popup>We are here now</Popup>
+            <Popup>I am here now</Popup>
           </Marker>
           <div className="label-on-map">Helloooo</div>
           <ScaleControl position="bottomleft" imperial={false}/>
         </MapContainer>
+
+        </div>
       </>
     );  
 }

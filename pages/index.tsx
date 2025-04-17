@@ -93,10 +93,10 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
       <PerformanceItemComponent title="minAltitude" quantity={stats.minAltitude}/>
 
       </div>
+      <ElevationChart altitude={stats.altitudes} distance={stats.distance_aggregated}/>
 
       <MapComponent coordinates={coords as [number, number][]} currentLocation={lastCords as [number, number]} centerCoordinates={lastCords as [number, number]}/> 
 
-      <ElevationChart altitude={stats.altitudes} distance={stats.distance_aggregated}/>
     </main>
   );
 }
