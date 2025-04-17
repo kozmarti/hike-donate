@@ -132,9 +132,9 @@ export async function POST(request: Request) {
       const client = await clientPromise;
       const db = client.db("hike");
 
-      const previousHike = await db.collection('hikes')
-      .find({ start_hike: { $lt: activity_strava["start_date_local"] } }, { projection: { distances_aggregated: 1 } })
-      .sort({ start_hike: -1 })
+      const previousHike = await db.collection('activities')
+      .find({ start_time: { $lt: activity_strava["start_date_local"] } }, { projection: { distances_aggregated: 1 } })
+      .sort({ start_time: -1 })
       .limit(1)
       .toArray();
 
