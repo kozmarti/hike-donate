@@ -13,6 +13,8 @@ import {
 import "leaflet/dist/leaflet.css";
 import { iconPerson } from "../IconMarker";
 import { LatLngExpression } from "leaflet";
+import { FullscreenControl } from "react-leaflet-fullscreen";
+import "react-leaflet-fullscreen/styles.css";
 //npm install --save leaflet react-leaflet
 interface CoordinateData {
   coordinates: LatLngExpression[];
@@ -46,7 +48,8 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
           scrollWheelZoom={false}
          
         >
-          <ZoomControl position="topleft"/>
+          <ZoomControl position="bottomright" zoomInText="+" zoomOutText="-"/>
+          <FullscreenControl position="bottomright"/>
   
           <TileLayer
             //attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
@@ -64,7 +67,7 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
           </Marker>
           )}
           <div className="label-on-map">Helloooo</div>
-          <ScaleControl position="bottomleft" imperial={false}/>
+          <ScaleControl position="bottomleft"/>
         </MapContainer>
 
         </div>

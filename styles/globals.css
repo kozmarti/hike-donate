@@ -65,8 +65,8 @@ body {
 .label-on-map{
   background-color:  rgba(255,255,255,0.4);
   position: absolute;
-  right: 10px;
-  bottom: 30px;
+  left: 10px;
+  top: 30px;
   z-index: 500;
   height: 100px;
   font-family: 'Fredoka', sans-serif;
@@ -107,7 +107,6 @@ body {
     pointer-events: none;
   }
 }
-
 
 .performance-container{
   display: flex;
