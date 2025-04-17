@@ -81,24 +81,30 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
         <>
           <div className="container wrapper">
 
-            <PerformanceItemComponent title="totalDistance" quantity={100} />
-            <PerformanceItemComponent title="timeElapsed" quantity={100} />
+            <PerformanceItemComponent title="totalDistance" />
+            <PerformanceItemComponent title="timeElapsed" />
 
-            <PerformanceItemComponent title="totalElevationGain" quantity={100} />
-            <PerformanceItemComponent title="totalElevationLoss" quantity={100} />
-            <PerformanceItemComponent title="maxAltitude" quantity={100} />
+            <PerformanceItemComponent title="totalElevationGain" />
+            <PerformanceItemComponent title="totalElevationLoss" />
+            <PerformanceItemComponent title="maxAltitude" />
 
-            <PerformanceItemComponent title="minAltitude" quantity={100} />
+            <PerformanceItemComponent title="minAltitude" />
           </div>
-          <ElevationChart altitude={[]} distance={[]} />
-          <Image
+          <ElevationChart
+            altitude={stats?.altitudes ?? []}
+            distance={stats?.distance_aggregated ?? []}
+            loading={loading}
+          />
+          <div className="map-wrapper">
+            <div className="full-height-map">
+              <Image
                 src={"/map-loading.gif"}
-                width={50}
-                height={50}
+                width={200}
+                height={200}
                 alt="Picture of the author"
               />
-
-      <MapComponent coordinates={[]} />
+            </div>
+          </div>
 
 
         </>
@@ -119,11 +125,14 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
             <PerformanceItemComponent title="maxAltitude" quantity={stats.maxAltitude} />
             <PerformanceItemComponent title="minAltitude" quantity={stats.minAltitude} />
           </div>
-          <ElevationChart altitude={stats.altitudes} distance={stats.distance_aggregated} />
-          <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
+          <ElevationChart
+            altitude={stats?.altitudes ?? []}
+            distance={stats?.distance_aggregated ?? []}
+            loading={loading}
+          />          <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
         </>)}
 
-      
+
     </main>
   );
 }

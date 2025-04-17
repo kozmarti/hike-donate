@@ -7,17 +7,19 @@ import { Fredoka } from 'next/font/google';
 interface ElevationData {
   altitude: number[];
   distance: number[];
+  loading: boolean;
 }
 const fredoka = Fredoka({
   subsets: ['latin'],
   weight: '400', // You can change weight as needed (e.g., '400' for normal, '700' for bold)
 });
 
-export default function ElevationChart({altitude, distance}: ElevationData) {
+export default function ElevationChart({altitude, distance, loading}: ElevationData) {
   const distanceInKm = distance.map((d) => d / 1000);
   return (
     <div className='border-wrapper'>
     <LineChart
+    loading={loading}
       width={1000}
       height={300}
       grid={{ vertical: true, horizontal: true  }}
