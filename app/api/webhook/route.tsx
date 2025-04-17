@@ -44,6 +44,8 @@ const extract_data = (
   streams_strava: any,
   last_distance: number
 ) => {
+  console.log("Extracting data");
+
   // @ts-ignore
   var streams_extracted: Stream = {};
   streams_strava.map((stream: StreamStrava) => {
@@ -55,7 +57,7 @@ const extract_data = (
     (photo: Photo) => photo.urls["5000"]
   );
   const delta_distances_aggregated = streams_extracted["distance"].map(
-    (d, _) =>
+    (d, index) =>
       Math.round((d + last_distance) * 10) / 10
   );
   console.log("HEREEE last distance", last_distance);
