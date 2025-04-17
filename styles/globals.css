@@ -25,11 +25,43 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
 .full-height-map {
-  width: 1000px; 
-  height: 500px;
   border-radius: 20px;
 }
+/* Desktops and large laptops: 1025px to 1280px */
+@media (min-width: 1025px) {
+  .full-height-map, .border-wrapper {
+    height: 500px;
+    width: 1000px;
+
+  }
+}
+
+/* Large tablets and small laptops: between 769px and 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .full-height-map, .border-wrapper {
+    height: 500px;
+    width: 760px;
+  }
+}
+
+/* Tablets: between 481px and 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .full-height-map, .border-wrapper {
+    height: 500px;
+    width: 480px;
+  }
+}
+
+/* Mobile phones: up to 480px */
+@media (max-width: 480px) {
+  .full-height-map, .border-wrapper {
+    height: 500px;
+    width: 300px;
+  }
+}
+
 .label-on-map{
   background-color:  rgba(255,255,255,0.4);
   position: absolute;
@@ -72,7 +104,7 @@ body {
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
-  padding: 16px;
+  padding: 8px;
 }
 
 .border-wrapper{
@@ -87,6 +119,12 @@ body {
   justify-items: center; /* center items horizontally */
   align-items: center; /* center items vertically */
   margin-bottom: 20px;;
+}
+
+@media (max-width: 650px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
 }
 
 .wrapper {

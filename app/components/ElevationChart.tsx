@@ -20,8 +20,6 @@ export default function ElevationChart({altitude, distance, loading}: ElevationD
     <div className='border-wrapper'>
     <LineChart
     loading={loading}
-      width={1000}
-      height={300}
       grid={{ vertical: true, horizontal: true  }}
       margin={{ top: 60, bottom: 60, left: 80, right: 60 }}
       series={[{ data: altitude, area: true, showMark: false, baseline: 'min', color: '#FD5770' }]}

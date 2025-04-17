@@ -58,7 +58,7 @@ export default function Home() {
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 global-background ${inter.className}`}
+      className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${inter.className}`}
     >
 
       <Image
@@ -129,7 +129,8 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
             altitude={stats?.altitudes ?? []}
             distance={stats?.distance_aggregated ?? []}
             loading={loading}
-          />          <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
+          />      
+          <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
         </>)}
 
 
