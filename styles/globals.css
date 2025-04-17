@@ -88,7 +88,23 @@ body {
 
 @media (max-width: 768px) {
   .global-background {
-    background-attachment: fixed;
+    position: relative;
+    z-index: 1;
+  }
+  .global-background::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/bg-1.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-blend-mode: lighten;
+    background-color: rgba(255, 255, 255, 0.4); /* optional blend */
+    z-index: -1;
+    pointer-events: none;
   }
 }
 
