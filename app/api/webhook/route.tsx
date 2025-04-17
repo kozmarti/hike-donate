@@ -141,11 +141,13 @@ export async function POST(request: Request) {
       .limit(1)
       .toArray();
 
-      let last_distance = previousHike[0]?.distances_aggregated.at(-1);
+      last_distance = previousHike[0]?.distances_aggregated.at(-1);
       console.log("Last activity distance found", last_distance);
     } catch (e) {
       console.error(e);
     }
+    console.log("Last activity distance to pass forward", last_distance);
+
     const activity_extracted: Activity = extract_data(
       activity_strava,
       photos_strava,
