@@ -5,6 +5,7 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import ElevationChart from "@/app/components/ElevationChart";
 import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
+import { Suspense } from 'react'
 
 type Stats = {
   totalDistance: number;
@@ -53,28 +54,6 @@ export default function Home() {
     fetchStats();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="loader">
-        <Image
-          src="/logo.png"
-          alt="Hike&Donate Logo"
-          width={200}
-          height={48}
-          priority
-        />
-        {/* Show loading spinner or skeleton screen while data is loading */}
-        <p>Loading...</p>
-      </div>
-    );
-  }
-  if (!stats) {
-    return <p>Failed to load stats</p>;
-  }
-
-
-  const coords = stats.coordinates;
-  const lastCords = stats.coordinates.slice(-1)[0];
 
 
   return (
@@ -97,22 +76,54 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
 </p>
 <p>How far do you think I will make it ?</p>
 */}
-      <div className="container wrapper">
 
-        <PerformanceItemComponent title="totalDistance" quantity={stats.totalDistance / 1000} />
-        <PerformanceItemComponent title="timeElapsed" quantity={stats.timeElapsed + 1} />
+      {loading && (
+        <>
+          <div className="container wrapper">
 
-        <PerformanceItemComponent title="totalElevationGain" quantity={stats.totalElevationGain} />
-        <PerformanceItemComponent title="totalElevationLoss" quantity={stats.totalElevationLoss} />
-        <PerformanceItemComponent title="maxAltitude" quantity={stats.maxAltitude} />
+            <PerformanceItemComponent title="totalDistance" quantity={100} />
+            <PerformanceItemComponent title="timeElapsed" quantity={100} />
 
-        <PerformanceItemComponent title="minAltitude" quantity={stats.minAltitude} />
+            <PerformanceItemComponent title="totalElevationGain" quantity={100} />
+            <PerformanceItemComponent title="totalElevationLoss" quantity={100} />
+            <PerformanceItemComponent title="maxAltitude" quantity={100} />
 
-      </div>
-      <ElevationChart altitude={stats.altitudes} distance={stats.distance_aggregated} />
+            <PerformanceItemComponent title="minAltitude" quantity={100} />
+          </div>
+          <ElevationChart altitude={[]} distance={[]} />
+          <Image
+                src={"/map-loading.gif"}
+                width={50}
+                height={50}
+                alt="Picture of the author"
+              />
 
-      <MapComponent coordinates={coords as [number, number][]} currentLocation={lastCords as [number, number]} centerCoordinates={lastCords as [number, number]} />
+      <MapComponent coordinates={[]} />
 
+
+        </>
+      )}
+      {!loading && !stats && (
+        <p>Failed to load stats</p>
+      )}
+
+
+      {!loading && stats && (
+        <>
+          <div className="container wrapper">
+
+            <PerformanceItemComponent title="totalDistance" quantity={stats.totalDistance / 1000} />
+            <PerformanceItemComponent title="timeElapsed" quantity={stats.timeElapsed + 1} />
+            <PerformanceItemComponent title="totalElevationGain" quantity={stats.totalElevationGain} />
+            <PerformanceItemComponent title="totalElevationLoss" quantity={stats.totalElevationLoss} />
+            <PerformanceItemComponent title="maxAltitude" quantity={stats.maxAltitude} />
+            <PerformanceItemComponent title="minAltitude" quantity={stats.minAltitude} />
+          </div>
+          <ElevationChart altitude={stats.altitudes} distance={stats.distance_aggregated} />
+          <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
+        </>)}
+
+      
     </main>
   );
 }

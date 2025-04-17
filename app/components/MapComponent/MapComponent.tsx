@@ -16,15 +16,16 @@ import { LatLngExpression } from "leaflet";
 //npm install --save leaflet react-leaflet
 interface CoordinateData {
   coordinates: LatLngExpression[];
-  currentLocation: LatLngExpression;
-  centerCoordinates: LatLngExpression;
+  currentLocation?: LatLngExpression;
+  centerCoordinates?: LatLngExpression;
 }
 const MapComponent = ({coordinates, currentLocation, centerCoordinates}: CoordinateData) => {
     const [zoomInitial, setZoomInitial] = useState(8);
 
     const polyline:LatLngExpression[] = coordinates;
     const purpleOptions = { color: "#EC506A", weight: 3 };
-  
+    const mapCenter: LatLngExpression =
+    centerCoordinates ?? coordinates[0] ?? [42.848023, -0.490336];
 
     
     return (
@@ -33,7 +34,7 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
         <MapContainer
           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           className="full-height-map"
-          center={centerCoordinates}
+          center={mapCenter}
           zoom={zoomInitial}
           zoomControl={false}
           minZoom={1}
@@ -57,9 +58,11 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
             pathOptions={purpleOptions}
             positions={polyline}
           />
+          {currentLocation && (
           <Marker icon={iconPerson} position={currentLocation}>
             <Popup>I am here now</Popup>
           </Marker>
+          )}
           <div className="label-on-map">Helloooo</div>
           <ScaleControl position="bottomleft" imperial={false}/>
         </MapContainer>

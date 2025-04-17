@@ -9,12 +9,12 @@ import Image from 'next/image'
 interface PerformanceItemData {
   title: string;
   icon: string;
-  measure: string;
+  measure?: string;
 }
 
 export interface PerformanceItemProps {
   title: string;
-  quantity: number;
+  quantity?: number;
 }
 
 export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemProps) => {
@@ -62,7 +62,18 @@ export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemPro
       width={50}
       height={50}
       alt="Picture of the author"
-    />{dataMap[title].title} : <CountUp end={quantity} suffix={dataMap[title].measure} />
+    />{dataMap[title].title} : 
+    {quantity && (
+    <CountUp end={quantity} suffix={dataMap[title].measure} />
+    )}
+    {!quantity && (
+    <Image
+    src={"/loading.gif"}
+    width={50}
+    height={50}
+    alt="Loading data..."
+  />
+    )}
     </div>
   );
 };
