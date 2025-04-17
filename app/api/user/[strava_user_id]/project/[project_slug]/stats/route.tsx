@@ -23,6 +23,22 @@ export async function GET(
           },
         },
         {
+          $project: {
+            strava_user_id: 1,
+            start_time: 1,
+            strava_project_name: 1,
+            total_distance: 1,
+            total_elevation_gain: 1,
+            total_elevation_loss: 1,
+            min_altitude: 1,
+            max_altitude: 1,
+            strava_photo_urls: 1,
+            coordinates: 1,
+            altitudes: 1,
+            distances_aggregated: 1,
+          },
+        },
+        {
           $group: {
             _id: "stats",
             totalDistance: { $sum: "$total_distance" },
@@ -35,7 +51,6 @@ export async function GET(
             },
             coordinate_by_day: { $push: "$coordinates" },
             altitude_by_day: { $push: "$altitudes" },
-            distance_by_day: { $push: "$delta_distances" },
             distance_aggregated_by_day: { $push: "$distances_aggregated" },
 
             startHikeDate: { $min: { $toDate: "$start_time" } },
@@ -64,13 +79,6 @@ export async function GET(
                 in: { $concatArrays: ["$$value", "$$this"] },
               },
             },
-            distances: {
-              $reduce: {
-                input: "$distance_by_day",
-                initialValue: [],
-                in: { $concatArrays: ["$$value", "$$this"] },
-              },
-            },
             distance_aggregated: {
               $reduce: {
                 input: "$distance_aggregated_by_day",
@@ -84,11 +92,10 @@ export async function GET(
           $unset: [
             "coordinate_by_day",
             "altitude_by_day",
-            "distance_by_day",
+            "distance_aggregated_by_day",
             "startHikeDate",
             "lastHikeDate",
             "_id",
-            "distances"
           ],
         },
       ])
