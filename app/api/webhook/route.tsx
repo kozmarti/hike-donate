@@ -58,6 +58,7 @@ const extract_data = (
     (d, _) =>
       Math.round((d + last_distance) * 10) / 10
   );
+  console.log("HEREEE last distance", last_distance);
   const delta_distances = streams_extracted["distance"].map(
     (d, index) =>
       Math.round((d - streams_extracted["distance"][index - 1]) * 10) / 10
