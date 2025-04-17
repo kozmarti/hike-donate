@@ -36,6 +36,7 @@ export async function GET(
             coordinate_by_day: { $push: "$coordinates" },
             altitude_by_day: { $push: "$altitudes" },
             distance_by_day: { $push: "$delta_distances" },
+            distance_aggregated_by_day: { $push: "$distances_aggregated" },
 
             startHikeDate: { $min: { $toDate: "$start_time" } },
             lastHikeDate: { $max: { $toDate: "$start_time" } },
@@ -60,10 +61,7 @@ export async function GET(
               $reduce: {
                 input: "$altitude_by_day",
                 initialValue: [],
-                in: { $concatArrays: [
-                  "$$value",
-                  { $slice: ["$$this", 1, { $size: "$$this" }] }
-                ] },
+                in: { $concatArrays: ["$$value", "$$this"] },
               },
             },
             distances: {
@@ -73,27 +71,11 @@ export async function GET(
                 in: { $concatArrays: ["$$value", "$$this"] },
               },
             },
-          },
-        },
-        {
-          $addFields: {
             distance_aggregated: {
               $reduce: {
-                input: { $range: [0, { $size: "$distances" }] },
+                input: "$distance_aggregated_by_day",
                 initialValue: [],
-                in: {
-                  $concatArrays: [
-                    "$$value",
-                    [
-                      {
-                        $add: [
-                          { $arrayElemAt: ["$distances", "$$this"] },
-                          { $sum: { $slice: ["$distances", "$$this"] } },
-                        ],
-                      },
-                    ],
-                  ],
-                },
+                in: { $concatArrays: ["$$value", "$$this"] },
               },
             },
           },
