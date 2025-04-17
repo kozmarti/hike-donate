@@ -7,7 +7,7 @@ export async function GET(
 ) {
   // endpoint: api/user/{strava_user_id}/project/{project_slug}/stats
 
-  const { strava_user_id, project_slug } = params;
+  const { strava_user_id, project_slug } = params;    
 
   try {
     const client = await clientPromise;
@@ -15,7 +15,6 @@ export async function GET(
     const stats = await db
       .collection("activities")
       .aggregate([
-        { $sort: { start_time: 1 } },
         {
           $match: {
             strava_user_id: parseInt((process.env.STRAVA_USER_ID ??= "")),
@@ -38,6 +37,7 @@ export async function GET(
             distances_aggregated: 1,
           },
         },
+        { $sort: { start_time: 1 } },
         {
           $group: {
             _id: "stats",
@@ -99,6 +99,7 @@ export async function GET(
           ],
         },
       ])
+      
       .toArray();
 
     return NextResponse.json(stats[0]);
