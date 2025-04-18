@@ -2,6 +2,7 @@ import * as React from 'react';
 import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { Fredoka } from 'next/font/google';
+import { useEffect, useState } from 'react';
 
 
 interface ElevationData {
@@ -16,9 +17,17 @@ const fredoka = Fredoka({
 
 export default function ElevationChart({altitude, distance, loading}: ElevationData) {
   const distanceInKm = distance.map((d) => d / 1000);
+  const [chartKey, setChartKey] = useState(0);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setChartKey((prevKey) => prevKey + 1);  
+    }, 3000); 
+    return () => clearTimeout(timeout);
+  }, []);
   return (
     <div className='border-wrapper'>
     <LineChart
+    key={chartKey}
     loading={loading}
       grid={{ vertical: true, horizontal: true  }}
       margin={{ top: 10, bottom: 50, left: 65, right: 10 }}
