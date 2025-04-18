@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500&display=swap');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -59,7 +60,16 @@ body {
 }
 
 /* Mobile phones: up to 480px */
-@media (max-width: 480px) {
+@media (min-width: 360px) and (max-width: 480px) {
+
+  .full-height-map,
+  .border-wrapper {
+    height: 220px;
+    width: 358px;
+  }
+}
+/* Mobile phones: up to 480px */
+@media (max-width: 359px) {
 
   .full-height-map,
   .border-wrapper {
@@ -221,4 +231,15 @@ body {
   width: 100vw !important;
   height: 100vh !important;
   z-index: 99999;
+}
+
+
+.react-photo-album--masonry .react-photo-album--photo {
+  background-color: rgb(255, 255, 255);
+}
+
+.photo-date{
+text-align: right;
+font-size: 1rem;
+padding-top: 2px;
 }

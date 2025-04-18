@@ -6,6 +6,7 @@ import ElevationChart from "@/app/components/ElevationChart";
 import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { Suspense } from 'react'
+import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
 
 type Stats = {
   totalDistance: number;
@@ -35,6 +36,7 @@ export default function Home() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const fetchStats = async () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -57,6 +59,7 @@ export default function Home() {
 
 
   return (
+
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${inter.className}`}
     >
@@ -68,7 +71,8 @@ export default function Home() {
         height={48}
         priority
       />
-      {/*
+ 
+ {/*
       <p>Would you sponsor one kilometer of my fundraising hike? 
       </p>
       <p>I am embarking on an exciting journey. The goal is simple: for every kilometer I trek, I aim to raise an equal number of euros for [Association] to [support …]. 
@@ -132,8 +136,10 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
           />      
           <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
         </>)}
-
+        <PhotoAlbumComponent   />      
 
     </main>
+
+
   );
 }
