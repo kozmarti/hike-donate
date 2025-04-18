@@ -12,18 +12,32 @@ interface ElevationData {
 }
 const fredoka = Fredoka({
   subsets: ['latin'],
-  weight: '400', // You can change weight as needed (e.g., '400' for normal, '700' for bold)
+  weight: '400',
 });
 
 export default function ElevationChart({altitude, distance, loading}: ElevationData) {
   const distanceInKm = distance.map((d) => d / 1000);
   const [chartKey, setChartKey] = useState(0);
-  useEffect(() => {
+  const forceRerender = () => {
+    setChartKey((prevKey) => prevKey + 1);
+  };
+
+  React.useEffect(() => {
     const timeout = setTimeout(() => {
-      setChartKey((prevKey) => prevKey + 1);  
-    }, 3000); 
-    return () => clearTimeout(timeout);
+      forceRerender();
+    }, 1000);
+
+    const handleResize = () => {
+      forceRerender();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('resize', handleResize); 
+    };
   }, []);
+
   return (
     <div className='border-wrapper'>
     <LineChart
