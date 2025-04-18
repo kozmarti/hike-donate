@@ -30,7 +30,7 @@ const ResizeMap = () => {
   useEffect(() => {
     setTimeout(() => {
       map.invalidateSize();
-    }, 10); // delay allows CSS transition or DOM resize
+    }, 10);
   }, []);
 
   return null;
@@ -44,13 +44,23 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
   const mapCenter: LatLngExpression =
     centerCoordinates ?? coordinates[0] ?? [42.848023, -0.490336];
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const mapRef = useRef<any>(null); // ✅ Add mapRef
 
   const fakeFullscreen = () => {
     const el = document.getElementById("map-wrapper");
     el?.classList.toggle("fullscreen-sim");
     const map = document.getElementById("map");
     map?.classList.toggle("fullscreen-sim");
-    setIsFullscreen((prev) => !prev); // trigger re-render
+    setIsFullscreen((prev) => !prev);
+
+    setTimeout(() => {
+      mapRef.current?.invalidateSize();
+      console.log("recentered")
+      mapRef.current?.flyTo(mapCenter, zoomInitial, { 
+        duration: 2.0
+      });
+      console.log("recentered")
+    }, 10);
   };
 
   return (
@@ -70,6 +80,8 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
             [85.06, 180],
           ]}
           scrollWheelZoom={false}
+          ref={mapRef}
+
 
         >
           {isFullscreen && <ResizeMap />}
@@ -92,7 +104,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
               <Popup>I am here now</Popup>
             </Marker>
           )}
-          <div onClick={fakeFullscreen} className="label-on-map">Helloooo</div>
+          <div className="label-on-map">Helloooo</div>
           <div onClick={fakeFullscreen} className="fullscreen-button">
             <Image
               src={"/full-screen.png"}
