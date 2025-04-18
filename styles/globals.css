@@ -171,19 +171,13 @@ body {
 }
 
 .leaflet-container:fullscreen {
-  width: 100vw !important;
-  height: 100vh !important;
+  display: flex;
+  position: relative;
+  z-index: 1;
+
 }
 
 
-
-@media (min-width: 481px) and (max-width: 768px) {
-    #fullScreenInfo {
-      position: fixed;
-    width: 100vw !important;
-    height: 100vh !important;
-  }
-}
 
 .css-l0h214-MuiResponsiveChart-container {
   border-radius: 20px;
