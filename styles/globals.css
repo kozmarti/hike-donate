@@ -18,20 +18,20 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 .full-height-map {
   border-radius: 20px;
 }
+
 /* Desktops and large laptops: 1025px to 1280px */
 @media (min-width: 1025px) {
-  .full-height-map, .border-wrapper {
+
+  .full-height-map,
+  .border-wrapper {
     height: 500px;
     width: 1000px;
 
@@ -40,7 +40,9 @@ body {
 
 /* Large tablets and small laptops: between 769px and 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
-  .full-height-map, .border-wrapper {
+
+  .full-height-map,
+  .border-wrapper {
     height: 500px;
     width: 760px;
   }
@@ -48,7 +50,9 @@ body {
 
 /* Tablets: between 481px and 768px */
 @media (min-width: 481px) and (max-width: 768px) {
-  .full-height-map, .border-wrapper {
+
+  .full-height-map,
+  .border-wrapper {
     height: 300px;
     width: 480px;
   }
@@ -56,30 +60,35 @@ body {
 
 /* Mobile phones: up to 480px */
 @media (max-width: 480px) {
-  .full-height-map, .border-wrapper {
+
+  .full-height-map,
+  .border-wrapper {
     height: 200px;
     width: 300px;
   }
 }
 
-.label-on-map{
-  background-color:  rgba(255,255,255,0.4);
+.label-on-map {
+  background-color: rgba(255, 255, 255, 0.4);
   position: absolute;
   left: 10px;
   top: 30px;
   z-index: 500;
   height: 100px;
   font-family: 'Fredoka', sans-serif;
-
+  border-radius: 5px;
+  padding: 2px;
 }
-.leaflet-icon{
+
+.leaflet-icon {
   background-color: transparent;
 }
-.global-background{
+
+.global-background {
   background-image: url('/bg-1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  background-color: rgba(255,255,255,0.4);
+  background-color: rgba(255, 255, 255, 0.4);
   background-blend-mode: lighten;
   position: relative;
   display: flex;
@@ -91,6 +100,7 @@ body {
     position: relative;
     z-index: 1;
   }
+
   .global-background::before {
     content: "";
     position: fixed;
@@ -108,7 +118,7 @@ body {
   }
 }
 
-.performance-container{
+.performance-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -121,7 +131,8 @@ body {
   gap: 6px;
   padding: 16px;
 }
-.map-wrapper{
+
+.map-wrapper {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -129,18 +140,23 @@ body {
   padding: 8px;
 }
 
-.border-wrapper{
+.border-wrapper {
   margin-bottom: 50px;
 }
 
 .container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
-  gap: 16px; /* spacing between items */
+  grid-template-columns: repeat(2, 1fr);
+  /* 2 equal columns */
+  gap: 16px;
+  /* spacing between items */
   width: 100%;
-  justify-items: center; /* center items horizontally */
-  align-items: center; /* center items vertically */
-  margin-bottom: 20px;;
+  justify-items: center;
+  /* center items horizontally */
+  align-items: center;
+  /* center items vertically */
+  margin-bottom: 20px;
+  ;
 }
 
 @media (max-width: 650px) {
@@ -150,11 +166,47 @@ body {
 }
 
 .wrapper {
-  color:#010808;
+  color: #010808;
   font-size: 1rem;
 }
 
 .leaflet-container:fullscreen {
   width: 100vw !important;
   height: 100vh !important;
+}
+
+
+
+@media (min-width: 481px) and (max-width: 768px) {
+    #fullScreenInfo {
+      position: fixed;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+}
+
+.css-l0h214-MuiResponsiveChart-container {
+  border-radius: 20px;
+}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+  background-color: rgba(255, 255, 255, 0.6);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+
+}
+
+.leaflet-touch .leaflet-bar a {
+  background-color: rgba(255, 255, 255, 0.6);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+}
+
+.fullscreen-icon { background-image: url('/full-screen.png')!important; }
+
+.leaflet-control-scale-line {
+  background-color: rgba(255, 255, 255, 0.6)!important;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+  text-shadow: none!important;
 }

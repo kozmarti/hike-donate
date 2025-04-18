@@ -21,13 +21,13 @@ export default function ElevationChart({altitude, distance, loading}: ElevationD
     <LineChart
     loading={loading}
       grid={{ vertical: true, horizontal: true  }}
-      margin={{ top: 60, bottom: 60, left: 80, right: 60 }}
+      margin={{ top: 10, bottom: 50, left: 65, right: 10 }}
       series={[{ data: altitude, area: true, showMark: false, baseline: 'min', color: '#FD5770' }]}
       xAxis={[{ data: distanceInKm, label: 'Distance (km)', scaleType: 'linear', max:distanceInKm[distanceInKm.length - 1]}]}
       yAxis={[{
         label: 'Altitude (m)',
       }]}
-      tooltip={{ trigger: 'none' }}
+      // tooltip={{ trigger: 'none' }}
       
       sx={{
         backgroundColor: 'rgba(255, 255, 255, 0.1)', 

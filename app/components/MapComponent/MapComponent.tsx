@@ -48,8 +48,9 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
           scrollWheelZoom={false}
          
         >
+          <FullscreenControl position="bottomright" forcePseudoFullscreen={false}/>
           <ZoomControl position="bottomright" zoomInText="+" zoomOutText="-"/>
-          <FullscreenControl position="bottomright"/>
+
   
           <TileLayer
             //attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
