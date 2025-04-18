@@ -10,6 +10,7 @@ import {
   ZoomControl,
   useMap
 } from "react-leaflet";
+import Image from "next/image";
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 import "leaflet/dist/leaflet.css";
 import { iconPerson } from "../IconMarker";
@@ -72,8 +73,8 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
 
         >
           {isFullscreen && <ResizeMap />}
-          <FullscreenControl position="bottomright" forcePseudoFullscreen={false} />
-          <ZoomControl position="bottomright" zoomInText="+" zoomOutText="-" />
+          <ZoomControl position="topright" zoomInText="+" zoomOutText="-" />
+          {/*<FullscreenControl position="topright" forcePseudoFullscreen={false} />*/}
 
 
           <TileLayer
@@ -92,6 +93,14 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
             </Marker>
           )}
           <div onClick={fakeFullscreen} className="label-on-map">Helloooo</div>
+          <div onClick={fakeFullscreen} className="fullscreen-button">
+            <Image
+              src={"/full-screen.png"}
+              width={50}
+              height={50}
+              alt="FullScreen"
+            /></div>
+
           <ScaleControl position="bottomleft" />
         </MapContainer>
 
