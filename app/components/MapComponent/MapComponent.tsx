@@ -1,5 +1,5 @@
-"use client"; 
-import { useState } from "react";
+"use client";
+import { useState, useRef, useEffect } from "react";
 import {
   MapContainer,
   Marker,
@@ -8,6 +8,7 @@ import {
   ScaleControl,
   TileLayer,
   ZoomControl,
+  useMap
 } from "react-leaflet";
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 import "leaflet/dist/leaflet.css";
@@ -21,21 +22,43 @@ interface CoordinateData {
   currentLocation?: LatLngExpression;
   centerCoordinates?: LatLngExpression;
 }
-const MapComponent = ({coordinates, currentLocation, centerCoordinates}: CoordinateData) => {
-    const [zoomInitial, setZoomInitial] = useState(8);
 
-    const polyline:LatLngExpression[] = coordinates;
-    const purpleOptions = { color: "#EC506A", weight: 3 };
-    const mapCenter: LatLngExpression =
+const ResizeMap = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 10); // delay allows CSS transition or DOM resize
+  }, []);
+
+  return null;
+};
+
+const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: CoordinateData) => {
+  const [zoomInitial, setZoomInitial] = useState(8);
+
+  const polyline: LatLngExpression[] = coordinates;
+  const purpleOptions = { color: "#EC506A", weight: 3 };
+  const mapCenter: LatLngExpression =
     centerCoordinates ?? coordinates[0] ?? [42.848023, -0.490336];
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-    
-    return (
-      <>
-      <div className="map-wrapper">
+  const fakeFullscreen = () => {
+    const el = document.getElementById("map-wrapper");
+    el?.classList.toggle("fullscreen-sim");
+    const map = document.getElementById("map");
+    map?.classList.toggle("fullscreen-sim");
+    setIsFullscreen((prev) => !prev); // trigger re-render
+  };
+
+  return (
+    <>
+      <div className="map-wrapper" id="map-wrapper">
         <MapContainer
           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           className="full-height-map"
+          id="map"
           center={mapCenter}
           zoom={zoomInitial}
           zoomControl={false}
@@ -46,12 +69,13 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
             [85.06, 180],
           ]}
           scrollWheelZoom={false}
-         
-        >
-          <FullscreenControl position="bottomright" forcePseudoFullscreen={false}/>
-          <ZoomControl position="bottomright" zoomInText="+" zoomOutText="-"/>
 
-  
+        >
+          {isFullscreen && <ResizeMap />}
+          <FullscreenControl position="bottomright" forcePseudoFullscreen={false} />
+          <ZoomControl position="bottomright" zoomInText="+" zoomOutText="-" />
+
+
           <TileLayer
             //attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
             // attribution='Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.'
@@ -63,17 +87,17 @@ const MapComponent = ({coordinates, currentLocation, centerCoordinates}: Coordin
             positions={polyline}
           />
           {currentLocation && (
-          <Marker icon={iconPerson} position={currentLocation}>
-            <Popup>I am here now</Popup>
-          </Marker>
+            <Marker icon={iconPerson} position={currentLocation}>
+              <Popup>I am here now</Popup>
+            </Marker>
           )}
-          <div className="label-on-map">Helloooo</div>
-          <ScaleControl position="bottomleft"/>
+          <div onClick={fakeFullscreen} className="label-on-map">Helloooo</div>
+          <ScaleControl position="bottomleft" />
         </MapContainer>
 
-        </div>
-      </>
-    );  
+      </div>
+    </>
+  );
 }
 
 export default MapComponent
