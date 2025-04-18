@@ -104,7 +104,6 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
               <Popup>I am here now</Popup>
             </Marker>
           )}
-          <div className="label-on-map">Helloooo</div>
           <div onClick={fakeFullscreen} className="fullscreen-button">
             <Image
               src={"/full-screen.png"}
