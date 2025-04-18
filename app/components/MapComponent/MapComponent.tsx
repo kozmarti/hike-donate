@@ -37,7 +37,7 @@ const ResizeMap = () => {
 };
 
 const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: CoordinateData) => {
-  const [zoomInitial, setZoomInitial] = useState(8);
+  const [zoomInitial, setZoomInitial] = useState(6);
 
   const polyline: LatLngExpression[] = coordinates;
   const purpleOptions = { color: "#EC506A", weight: 3 };
