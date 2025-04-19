@@ -53,12 +53,7 @@ export const ActivityFormComponent = () => {
     const removeCoord = (index: number) => () => {
         setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
         setCounter(prevCounter => prevCounter - 1);
-        const coords = getValues(`coords[${index}]`);
-        console.log(coords);
         unregister(`coords[${index}]`);
-        const coords1 = getValues(`coords`);
-        console.log(coords1);
-
         
     };
 
