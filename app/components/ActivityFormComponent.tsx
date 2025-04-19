@@ -138,10 +138,10 @@ export const ActivityFormComponent = () => {
                 clickedLocationAbled
                 onMapClick={(latlng) => {
                     if (indexes.length === 0) return;
-
                     const lastIndex = indexes[indexes.length - 1];
-                    setValue(`coords.${lastIndex}.latitude`, latlng[0].toString());
-                    setValue(`coords.${lastIndex}.longitude`, latlng[1].toString());
+                    const { lat, lng } = latlng as { lat: number; lng: number };
+                    setValue(`coords.${lastIndex}.latitude`, lat.toString());
+                    setValue(`coords.${lastIndex}.longitude`, lng.toString());
                 }}
             />
 
