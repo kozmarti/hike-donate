@@ -8,7 +8,8 @@ import {
   ScaleControl,
   TileLayer,
   ZoomControl,
-  useMap
+  useMap,
+  useMapEvent
 } from "react-leaflet";
 import Image from "next/image";
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -19,9 +20,11 @@ import { FullscreenControl } from "react-leaflet-fullscreen";
 import "react-leaflet-fullscreen/styles.css";
 //npm install --save leaflet react-leaflet
 interface CoordinateData {
-  coordinates: LatLngExpression[];
+  coordinates?: LatLngExpression[];
   currentLocation?: LatLngExpression;
   centerCoordinates?: LatLngExpression;
+  clickedLocationAbled?: boolean;
+  onMapClick?: (latlng: LatLngExpression) => void;
 }
 
 const ResizeMap = () => {
@@ -35,14 +38,22 @@ const ResizeMap = () => {
 
   return null;
 };
+const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void }) => {
+  useMapEvent("click", (e) => {
+    console.log("Clicked LatLng:", [e.latlng.lat, e.latlng.lng]);
+    onClick([e.latlng.lat, e.latlng.lng]);
+  });
+  return null;
+};
 
-const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: CoordinateData) => {
+const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick }: CoordinateData) => {
   const [zoomInitial, setZoomInitial] = useState(6);
+  const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
 
-  const polyline: LatLngExpression[] = coordinates;
+  const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];
   const purpleOptions = { color: "#EC506A", weight: 3 };
   const mapCenter: LatLngExpression =
-    centerCoordinates ?? coordinates[0] ?? [42.848023, -0.490336];
+    centerCoordinates ?? (coordinates?.[0] ?? [42.848023, -0.490336]);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const mapRef = useRef<any>(null); // ✅ Add mapRef
 
@@ -56,7 +67,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
     setTimeout(() => {
       mapRef.current?.invalidateSize();
       console.log("recentered")
-      mapRef.current?.flyTo(mapCenter, zoomInitial, { 
+      mapRef.current?.flyTo(mapCenter, zoomInitial, {
         duration: 2.0
       });
       console.log("recentered")
@@ -106,13 +117,25 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates }: Coord
           )}
           <div onClick={fakeFullscreen} className="fullscreen-button">
             <Image
-              src={"/full-screen.png"}
+              src={isFullscreen ? "/full-screen-exit.png" : "/full-screen.png"}
               width={50}
               height={50}
-              alt="FullScreen"
+              alt={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
             /></div>
 
           <ScaleControl position="bottomleft" />
+          {clickedLocationAbled && (
+            <ClickHandler onClick={(latlng) => {
+              setClickedLocation(latlng);
+              onMapClick?.(latlng); // 👈 Call parent’s callback
+            }} />
+          )}
+
+          {clickedLocation && (
+            <Marker icon={iconPerson} position={clickedLocation}>
+              <Popup>Clicked here</Popup>
+            </Marker>
+          )}
         </MapContainer>
 
       </div>

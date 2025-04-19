@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { Fredoka } from 'next/font/google';
 import { useEffect, useState } from "react";
@@ -7,6 +9,7 @@ import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { Suspense } from 'react'
 import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
+import { ActivityFormComponent } from "./components/ActivityFormComponent";
 
 type Stats = {
   totalDistance: number;
