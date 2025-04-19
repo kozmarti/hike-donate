@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { Fredoka } from 'next/font/google';
@@ -22,19 +21,26 @@ export default function ElevationChart({altitude, distance, loading}: ElevationD
     setChartKey((prevKey) => prevKey + 1);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
+    let prevWidth = window.innerWidth;
+  
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      if (currentWidth !== prevWidth) {
+        prevWidth = currentWidth;
+        forceRerender();
+      }
+    };
+  
     const timeout = setTimeout(() => {
       forceRerender();
     }, 1000);
-
-    const handleResize = () => {
-      forceRerender();
-    };
-
+  
     window.addEventListener('resize', handleResize);
+  
     return () => {
       clearTimeout(timeout);
-      window.removeEventListener('resize', handleResize); 
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
