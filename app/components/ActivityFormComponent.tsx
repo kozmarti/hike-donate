@@ -114,7 +114,7 @@ export const ActivityFormComponent = () => {
                                 min="-90"
                                 max="90"
 
-                                {...register(`${fieldCoord}.latitude`)}
+                                {...register(`coords.${index}.latitude`)}
                             />
                         </label>
 
@@ -125,7 +125,7 @@ export const ActivityFormComponent = () => {
                                 step="any"
                                 min="-180"
                                 max="180"
-                                {...register(`${fieldCoord}.longitude`)}
+                                {...register(`coords.${index}.longitude`)}
                             />
                         </label>
                         <button type="button" onClick={removeCoord(index)}>
