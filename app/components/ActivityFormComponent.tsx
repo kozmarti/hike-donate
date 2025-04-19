@@ -53,7 +53,7 @@ export const ActivityFormComponent = () => {
     const removeCoord = (index: number) => () => {
         setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
         setCounter(prevCounter => prevCounter - 1);
-        unregister(`coords[${index}]`);
+        unregister(`coords.${index}`);
         
     };
 
@@ -91,7 +91,7 @@ export const ActivityFormComponent = () => {
                                 onChange={(e) => {
                                     handleFileChange(e);
                                     if (e.target.files) {
-                                        setValue(`photos[${index}]`, e.target.files[0]);
+                                        setValue(`photos.${index}`, e.target.files[0]);
                                     }
                                 }}
                             />
@@ -140,8 +140,8 @@ export const ActivityFormComponent = () => {
                     if (indexes.length === 0) return;
 
                     const lastIndex = indexes[indexes.length - 1];
-                    setValue(`coords[${lastIndex}].latitude`, latlng[0].toString());
-                    setValue(`coords[${lastIndex}].longitude`, latlng[1].toString());
+                    setValue(`coords.${lastIndex}.latitude`, latlng[0].toString());
+                    setValue(`coords.${lastIndex}.longitude`, latlng[1].toString());
                 }}
             />
 
