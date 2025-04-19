@@ -152,19 +152,20 @@ body {
 
 .border-wrapper {
   margin-bottom: 50px;
+  border-radius: 20px;
+}
+
+.border-wrapper div {
+  border-radius: 20px !important;
 }
 
 .container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* 2 equal columns */
   gap: 16px;
-  /* spacing between items */
   width: 100%;
   justify-items: center;
-  /* center items horizontally */
   align-items: center;
-  /* center items vertically */
   margin-bottom: 20px;
   ;
 }
@@ -178,11 +179,6 @@ body {
 .wrapper {
   color: #010808;
   font-size: 1rem;
-}
-
-
-.css-l0h214-MuiResponsiveChart-container {
-  border-radius: 20px;
 }
 
 .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
