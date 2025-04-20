@@ -49,41 +49,38 @@ export const PhotoAlbumComponent = () => {
     }
   }
 
-  let photosForGallery = (imgArr: string[]) => {
-    let imgs:any = [];
-    console.log("photosForGallery", imgArr)
-    imgArr.forEach(img => {
-      var mockImage = document.createElement('img');
-      console.log("mockImage", mockImage)
-      /* do this if you are passing in user submitted form-data images
-      var src = URL.createObjectURL(img);
-      */
-
-      /* if just using urls set 'src' to whatever in your object is the url to your image */
-      var src = img;
-      console.log("src", src)
-      mockImage.src = src;
-      mockImage.onload = function () {
-        let aspect = aspectRatio(mockImage.height, mockImage.width)
-        imgs.push({
-          src: src,
-          width: aspect.width,
-          height: aspect.height,
-          date: "2023-09-11"
-        })
-        console.log("IMGS", imgs)
-      }
-    })
-    console.log("photosForGallery", imgs)
-    return imgs
-  }
+  const photosForGallery = async (imgArr: string[]) => {
+    const loadImage = (src: string): Promise<any> => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          const aspect = aspectRatio(img.height, img.width);
+          resolve({
+            src,
+            width: aspect.width,
+            height: aspect.height,
+            date: "2023-09-11",
+          });
+        };
+        img.onerror = () => resolve(null); // skip if failed to load
+      });
+    };
+  
+    const imagePromises = imgArr.map(loadImage);
+    const loadedImages = await Promise.all(imagePromises);
+    return loadedImages.filter(Boolean); // remove any failed ones
+  };
 
   /* when photos is passed into the component run the function and update the state */
   useEffect(() => {
-    if (imageUrls.length > 0) {
-      setImages(photosForGallery(imageUrls))
-    }
-  }, [imageUrls]);
+    const loadImages = async () => {
+      const galleryImages = await photosForGallery(imageUrls);
+      // @ts-ignore
+      setImages(galleryImages);
+    };
+    loadImages();
+  }, []);
 
   const { photos, columns, targetRowHeight, spacing, padding, width } = {
     photos: images,
