@@ -7,15 +7,16 @@ import { MapComponent } from "./MapComponent";
 import { useMapEvent } from "react-leaflet";
 import { get } from "http";
 import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";
+import { aggregateData, dataAggregateWithConstant, deltaData, getDeltaDistances, getLastDistance, totalElevationGain, totalElevationLoss } from "../utils/calculation_functions_client";
 
-interface DataInput {
+interface DataInputFromForm {
     coordinates: { latitude: string; longitude: string }[];
     photos: File[];
     start_time: Date;
     moving_time: string;
 }
 
-interface DataOutput {
+interface DataOutputFromForm {
     coordinates: number[][];
     photos: File[];
     start_time: Date;
@@ -24,62 +25,105 @@ interface DataOutput {
 }
 
 
-const transformData = (dataIn: DataOutput): Activity => {
+const transformData = (dataIn: DataOutputFromForm, altitudes: number[], last_distance: number): Activity => {
+    const delta_altitudes = deltaData(altitudes);
+    const total_elevation_gain = totalElevationGain(delta_altitudes);
+    const total_elevation_loss = totalElevationLoss(delta_altitudes);
+    const delta_distances = getDeltaDistances(dataIn.coordinates);
+    const distances = aggregateData(delta_distances)
+    const delta_distances_aggregated = dataAggregateWithConstant(distances, last_distance);
+
     const activity: Activity = {
-        strava_user_id: Number(process.env.STRAVA_USER_ID) ?? 0,
-        strava_activity_id: 2,
+        strava_user_id: 147153150,
+        strava_activity_id: Number(Date.now().toString(36)),
         start_time: dataIn.start_time,
-        strava_project_name: process.env.STRAVA_PROJECT_NAME ?? "",
+        strava_project_name: "test",
         moving_time: dataIn.moving_time,
 
-        total_distance: activity_strava["distance"],
-        min_altitude: activity_strava["elev_low"],
-        max_altitude: activity_strava["elev_high"],
+        total_distance: Math.max(...distances),
+        min_altitude: Math.min(...altitudes),
+        max_altitude: Math.max(...altitudes),
         polyline: "",
-    
-        strava_photo_urls: photo_urls,
-    
+
+        strava_photo_urls: ["photo_urls"],
+
         coordinates: dataIn.coordinates,
 
-        altitudes: streams_extracted["altitude"],
-        distances: streams_extracted["distance"],
-    
+        altitudes: altitudes,
+        distances: distances,
+
         delta_altitudes: delta_altitudes,
         delta_distances: delta_distances,
         total_elevation_loss: total_elevation_loss,
         total_elevation_gain: total_elevation_gain,
         distances_aggregated: delta_distances_aggregated,
-      };
-      return activity;
+    };
+    return activity;
 }
 
-const getAltitudes = (coords: number[][]): number[] => {
+const getAltitudes = async (coords: number[][]): Promise<number[]> => {
+    const altitudePromises = coords.map(async ([lat, lng]) => {
+        try {
+            const response = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lng}`);
+            const data = await response.json();
+            return data.elevation;
+        } catch (error) {
+            console.error("Error fetching altitude:", error);
+            return null;
+        }
+    });
 
-}
+    const altitudes = await Promise.all(altitudePromises);
+    return altitudes;
+};
 
 export const ActivityFormComponent = () => {
     const [indexes, setIndexes] = useState<number[]>([]);
     const [counter, setCounter] = useState(0);
-    const { register, unregister, handleSubmit, resetField, setValue, getValues } = useForm<DataInput>();
+    const { register, unregister, handleSubmit, resetField, setValue, getValues } = useForm<DataInputFromForm>();
     const [files, setFiles] = useState<File[]>([]);
     const [coords, setCoords] = useState<number[][]>([]);
+    const [centerLocation, setCenterLocation] = useState<[number, number]>([0, 0]);
 
 
 
-    const onSubmit = (dataIn: DataInput) => {
+    const onSubmit = async (dataIn: DataInputFromForm) => {
         const transformed = {
             coords: dataIn.coordinates.map(({ latitude, longitude }) => [
                 parseFloat(latitude),
                 parseFloat(longitude)
             ])
         };
-        const dataOut: DataOutput = {
+        const dataOut: DataOutputFromForm = {
             coordinates: transformed.coords,
             photos: dataIn.photos,
             start_time: dataIn.start_time,
             moving_time: timeStringToSeconds(dataIn.moving_time)
         }
-        console.log(dataOut);
+        console.log("Data Out:", dataOut.coordinates);
+        const altitudes = await getAltitudes(dataOut.coordinates);
+        const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
+        const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
+
+        const last_distance = await getLastDistance(dataOut.start_time.toString(), stravaUserId, projectName);
+        console.log("Last distance:", last_distance);
+        const final_data = transformData(dataOut, altitudes, last_distance);
+        console.log(final_data);
+
+        // 👇 Call the API with final_data
+        const res = await fetch(
+            `/api/user/${stravaUserId}/project/${projectName}/activities`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(final_data)
+            }
+        );
+
+        const responseJson = await res.json();
+        console.log("Activity post response:", responseJson);
     };
 
     function timeStringToSeconds(timeStr: string): number {
@@ -117,7 +161,29 @@ export const ActivityFormComponent = () => {
         console.log("Updated coords:", coords);
     }, [coords]);
 
+    useEffect(() => {
+        const fetchLastActivity = async () => {
+          const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
+          const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      
+          const res = await fetch(`${apiUrl}/api/user/${stravaUserId}/project/${projectName}/activities`);
+          const activities: Activity[] = await res.json();
+      
+          if (activities.length > 0) {
+            const lastCoords = activities[activities.length -1].coordinates;
 
+            if (lastCoords.length > 0) {
+                const lastCoord = lastCoords[lastCoords.length - 1];
+                setCenterLocation([lastCoord[0], lastCoord[1]]); 
+              }
+            }
+             
+          
+        };
+      
+        fetchLastActivity();
+      }, []);
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <label className="data-label">
@@ -164,6 +230,7 @@ export const ActivityFormComponent = () => {
                 <div>Coordinates </div>
                 <p>Please add at least 10 coordinate points</p>
                 <MapComponent
+                    currentLocation={centerLocation}
                     // @ts-ignore
                     coordinates={coords}
                     clickedLocationAbled
@@ -171,9 +238,9 @@ export const ActivityFormComponent = () => {
                         if (indexes.length === 0) return;
                         const lastIndex = indexes[indexes.length - 1];
                         // @ts-ignore
-                        setValue(`coords.${lastIndex}.latitude`, latlng[0].toString());
+                        setValue(`coordinates.${lastIndex}.latitude`, latlng[0].toString());
                         // @ts-ignore
-                        setValue(`coords.${lastIndex}.longitude`, latlng[1].toString());
+                        setValue(`coordinates.${lastIndex}.longitude`, latlng[1].toString());
                         const coordinates = getValues("coordinates");
                         console.log("coords", coordinates);
                         setCoords(coordinates.map((c) => [

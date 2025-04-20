@@ -133,7 +133,6 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
 
           {clickedLocation && (
             <Marker icon={iconPerson} position={clickedLocation}>
-              <Popup>Clicked here</Popup>
             </Marker>
           )}
         </MapContainer>

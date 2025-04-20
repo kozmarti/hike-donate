@@ -5,6 +5,8 @@ import {
 } from "@/lib/strava";
 import { Activity } from "../user/[strava_user_id]/project/[project_slug]/activities/route";
 import clientPromise from "@/lib/mongodb";
+import { deltaData, dataAggregateWithConstant, totalElevationLoss } from "@/app/utils/calculation_functions_client";
+import { get_last_distance } from "@/app/utils/calculation_functions_server";
 
 interface Webhook {
   aspect_type: "update" | "create" | "delete";
@@ -56,35 +58,16 @@ const extract_data = (
     // @ts-ignore
     (photo: Photo) => photo.urls["5000"]
   );
-  const delta_distances_aggregated = streams_extracted["distance"].map(
-    (d, index) =>
-      Math.round((d + last_distance) * 10) / 10
+  const delta_distances_aggregated = dataAggregateWithConstant(
+    streams_extracted["distance"],
+    last_distance
   );
   console.log("HEREEE last distance", last_distance);
-  const delta_distances = streams_extracted["distance"].map(
-    (d, index) =>
-      Math.round((d - streams_extracted["distance"][index - 1]) * 10) / 10
-  );
-  delta_distances.shift();
-  const delta_altitudes = streams_extracted["altitude"].map(
-    (d, index) =>
-      Math.round((d - streams_extracted["altitude"][index - 1]) * 10) / 10
-  );
-  delta_altitudes.shift();
-  const total_elevation_loss =
-    Math.round(
-      delta_altitudes.reduce(
-        (partialSum, a) => partialSum + (a < 0 ? a : 0),
-        0
-      ) * 10
-    ) / 10;
-  const total_elevation_gain =
-    Math.round(
-      delta_altitudes.reduce(
-        (partialSum, a) => partialSum + (a > 0 ? a : 0),
-        0
-      ) * 10
-    ) / 10;
+  const delta_distances =  deltaData(streams_extracted["distance"]) 
+  const delta_altitudes = deltaData(streams_extracted["altitude"])
+
+  const total_elevation_loss = totalElevationLoss(delta_altitudes);
+  const total_elevation_gain = totalElevationLoss(delta_altitudes);
 
   const activity: Activity = {
     strava_user_id: activity_strava["athlete"]["id"],
@@ -130,22 +113,7 @@ export async function POST(request: Request) {
     const activity_strava = await getActivity(Number(activity_id));
     const streams_strava = await getActivityStreams(Number(activity_id));
     const photos_strava = await getActivityPhotos(Number(activity_id));
-    let last_distance = 0;
-    try {
-      const client = await clientPromise;
-      const db = client.db("hike");
-
-      const previousHike = await db.collection('activities')
-      .find({ start_time: { $lt: activity_strava["start_date_local"] } }, { projection: { distances_aggregated: 1 } })
-      .sort({ start_time: -1 })
-      .limit(1)
-      .toArray();
-
-      last_distance = previousHike[0]?.distances_aggregated.at(-1);
-      console.log("Last activity distance found", last_distance);
-    } catch (e) {
-      console.error(e);
-    }
+    const last_distance = await get_last_distance(activity_strava.start_date_local);
     console.log("Last activity distance to pass forward", last_distance);
 
     const activity_extracted: Activity = extract_data(
