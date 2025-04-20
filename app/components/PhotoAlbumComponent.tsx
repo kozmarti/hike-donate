@@ -152,6 +152,7 @@ export const PhotoAlbumComponent = () => {
             />
           ),
           extras: (_, { photo, index }) => (
+            // @ts-ignore
             <div className={`${fredoka.className} photo-date`}>{photo.date}</div>
           ),
         }}
