@@ -18,7 +18,7 @@ interface DataInputFromForm {
 
 interface DataOutputFromForm {
     coordinates: number[][];
-    photos: File[];
+    photos: string[];
     start_time: Date;
     moving_time: number;
 
@@ -35,23 +35,18 @@ const transformData = (dataIn: DataOutputFromForm, altitudes: number[], last_dis
 
     const activity: Activity = {
         strava_user_id: 147153150,
-        strava_activity_id: Number(Date.now().toString(36)),
+        strava_activity_id: Number(Date.now()),
         start_time: dataIn.start_time,
         strava_project_name: "test",
         moving_time: dataIn.moving_time,
-
         total_distance: Math.max(...distances),
         min_altitude: Math.min(...altitudes),
         max_altitude: Math.max(...altitudes),
         polyline: "",
-
-        strava_photo_urls: ["photo_urls"],
-
+        strava_photo_urls: dataIn.photos,
         coordinates: dataIn.coordinates,
-
         altitudes: altitudes,
         distances: distances,
-
         delta_altitudes: delta_altitudes,
         delta_distances: delta_distances,
         total_elevation_loss: total_elevation_loss,
@@ -86,31 +81,63 @@ export const ActivityFormComponent = () => {
     const [centerLocation, setCenterLocation] = useState<[number, number]>([0, 0]);
 
 
+    const handleUpload = async (file: File) => {
+        if (!file) return;
+    
+        const formData = new FormData();
+        formData.append("file", file);
+    
+        try {
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+    
+          const result = await res.json();
+          if (res.ok) {
+            console.log(result);
+            return result.UploadedFileName;
+          } else {
+          }
+        } catch (err) {
+          console.error(err);
+          return null;
+        }
+      };
 
     const onSubmit = async (dataIn: DataInputFromForm) => {
-        const transformed = {
-            coords: dataIn.coordinates.map(({ latitude, longitude }) => [
+        const coordsTransformed = 
+            dataIn.coordinates.map(({ latitude, longitude }) => [
                 parseFloat(latitude),
                 parseFloat(longitude)
             ])
-        };
+        ;
+        
+        let photos: string[] = [];
+
+        if (dataIn.photos && dataIn.photos.length > 0) {
+            photos = await Promise.all(
+              dataIn.photos.map(async (file) => {
+                const fileName = await handleUpload(file);
+                console.log("File uploaded:", fileName);
+                return "uploads/" + fileName;
+              })
+            );
+          }
         const dataOut: DataOutputFromForm = {
-            coordinates: transformed.coords,
-            photos: dataIn.photos,
+            coordinates: coordsTransformed,
+            photos: photos,
             start_time: dataIn.start_time,
             moving_time: timeStringToSeconds(dataIn.moving_time)
         }
-        console.log("Data Out:", dataOut.coordinates);
         const altitudes = await getAltitudes(dataOut.coordinates);
         const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
         const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
 
         const last_distance = await getLastDistance(dataOut.start_time.toString(), stravaUserId, projectName);
-        console.log("Last distance:", last_distance);
         const final_data = transformData(dataOut, altitudes, last_distance);
-        console.log(final_data);
 
-        // 👇 Call the API with final_data
+        
         const res = await fetch(
             `/api/user/${stravaUserId}/project/${projectName}/activities`,
             {
@@ -120,10 +147,13 @@ export const ActivityFormComponent = () => {
                 },
                 body: JSON.stringify(final_data)
             }
-        );
+           
 
+
+        );
         const responseJson = await res.json();
         console.log("Activity post response:", responseJson);
+
     };
 
     function timeStringToSeconds(timeStr: string): number {
@@ -294,7 +324,6 @@ export const ActivityFormComponent = () => {
                                             const value = parseFloat(e.target.value);
                                             console.log(Number(getValues(`coordinates.${index}.latitude`)));
                                             if (!isNaN(value) && Number(getValues(`coordinates.${index}.latitude`)) !== 0) {
-                                                console.log("HIIIII");
                                                 console.log(Number(getValues(`coordinates.${index}.latitude`)));
                                                 setValue(`coordinates.${index}.longitude`, value.toString());
                                                 const coordinates = getValues("coordinates");

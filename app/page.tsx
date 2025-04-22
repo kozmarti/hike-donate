@@ -3,13 +3,11 @@
 import Image from "next/image";
 import { Fredoka } from 'next/font/google';
 import { useEffect, useState } from "react";
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import ElevationChart from "@/app/components/ElevationChart";
 import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
-import { Suspense } from 'react'
 import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
-import { ActivityFormComponent } from "./components/ActivityFormComponent";
+import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_client";
 
 type Stats = {
   totalDistance: number;
@@ -18,7 +16,7 @@ type Stats = {
   minAltitude: number;
   maxAltitude: number;
   timeElapsed: number;
-  photosUrl: { hikeDate: string; photos: string[] }[];
+  photosUrl: PhotoEntry [];
   coordinates: number[][];
   altitudes: number[];
   distance_by_day: number[][];
@@ -58,7 +56,6 @@ export default function Home() {
 
     fetchStats();
   }, []);
-
 
 
   return (
@@ -138,11 +135,13 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
             loading={loading}
           />      
           <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
+          <PhotoAlbumComponent imageUrls={convertHikePhotos(stats.photosUrl)}/>      
+
         </>)}
-        <PhotoAlbumComponent   />      
 
     </main>
 
 
   );
 }
+
