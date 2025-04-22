@@ -1,3 +1,6 @@
+import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";
+import { DataOutputFromForm } from "../components/ActivityFormComponent";
+
 export const getLastDistance = async (
   startDateLocal: string,
   stravaUserId: number,
@@ -128,4 +131,55 @@ export const convertHikePhotos = (data: PhotoEntry[]): PhotoOutput[] => {
   });
 
   return result;
+}
+
+export const transformData = (dataIn: DataOutputFromForm, altitudes: number[], last_distance: number): Activity => {
+    const delta_altitudes = deltaData(altitudes);
+    const total_elevation_gain = totalElevationGain(delta_altitudes);
+    const total_elevation_loss = totalElevationLoss(delta_altitudes);
+    const delta_distances = getDeltaDistances(dataIn.coordinates);
+    const distances = aggregateData(delta_distances)
+    const delta_distances_aggregated = dataAggregateWithConstant(distances, last_distance);
+
+    return {
+        strava_user_id: 147153150,
+        strava_activity_id: Number(Date.now()),
+        start_time: dataIn.start_time,
+        strava_project_name: "test",
+        moving_time: dataIn.moving_time,
+        total_distance: Math.max(...distances),
+        min_altitude: Math.min(...altitudes),
+        max_altitude: Math.max(...altitudes),
+        polyline: "",
+        strava_photo_urls: dataIn.photos,
+        coordinates: dataIn.coordinates,
+        altitudes: altitudes,
+        distances: distances,
+        delta_altitudes: delta_altitudes,
+        delta_distances: delta_distances,
+        total_elevation_loss: total_elevation_loss,
+        total_elevation_gain: total_elevation_gain,
+        distances_aggregated: delta_distances_aggregated,
+    };
+}
+
+export const getCalculatedAltitudes = async (coords: number[][]): Promise<number[]> => {
+    const altitudePromises = coords.map(async ([lat, lng]) => {
+        try {
+            const response = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lng}`);
+            const data = await response.json();
+            return data.elevation;
+        } catch (error) {
+            console.error("Error fetching altitude:", error);
+            return null;
+        }
+    });
+
+    const altitudes = await Promise.all(altitudePromises);
+    return altitudes;
+};
+
+export function timeStringToSeconds(timeStr: string): number {
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  return hours * 3600 + minutes * 60;
 }
