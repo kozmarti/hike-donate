@@ -18,7 +18,7 @@ export const EditableImageComponent = ({imageUrls, onClearImage} : EditableImage
           />
           <button
             onClick={() => onClearImage(index)}  // Call parent's function on click
-            className="bg-red-600 text-white hover:bg-red-700 hover:text-white px-4 py-2 rounded-md"
+            className="warn-button text-white hover:bg-red-700 hover:text-white px-4 py-2 rounded-md"
           >
             Delete photo
           </button>

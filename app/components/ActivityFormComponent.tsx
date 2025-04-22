@@ -11,7 +11,9 @@ import { aggregateData, dataAggregateWithConstant, deltaData, getCalculatedAltit
 import { UploadButton } from "../src/utils/uploadthing";
 import "@uploadthing/react/styles.css";
 import EditableImageComponent from "./EditableImageComponent";
-import { onBeforeUploadBegin } from "../utils/resize_phot_helpers";
+import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
+import { useRouter } from "next/navigation";
+
 
 interface DataInputFromForm {
     coordinates: { latitude: string; longitude: string }[];
@@ -36,45 +38,43 @@ export const ActivityFormComponent = () => {
     const [coords, setCoords] = useState<number[][]>([]);
     const [centerLocation, setCenterLocation] = useState<[number, number]>([0, 0]);
     const [editableImages, setEditableImages] = useState<string[]>([]);
+    const router = useRouter();
+
 
 
     const onSubmitForm = async (dataIn: DataInputFromForm) => {
-        const coordsTransformed =
-            dataIn.coordinates.map(({ latitude, longitude }) => [
-                parseFloat(latitude),
-                parseFloat(longitude)
-            ])
-            ;
-
-        const dataOut: DataOutputFromForm = {
-            coordinates: coordsTransformed,
-            photos: dataIn.photos,
-            start_time: dataIn.start_time,
-            moving_time: timeStringToSeconds(dataIn.moving_time)
-        }
-        const altitudes = await getCalculatedAltitudes(dataOut.coordinates);
-        const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
-        const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
-
-        const last_distance = await getLastDistance(dataOut.start_time.toString(), stravaUserId, projectName);
-        const final_data = transformData(dataOut, altitudes, last_distance);
-
-
-        const res = await fetch(
-            `/api/user/${stravaUserId}/project/${projectName}/activities`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(final_data)
+        try {
+            const dataOut: DataOutputFromForm = {
+                coordinates: coords,
+                photos: dataIn.photos,
+                start_time: dataIn.start_time,
+                moving_time: timeStringToSeconds(dataIn.moving_time)
             }
+            const altitudes = await getCalculatedAltitudes(dataOut.coordinates);
+            const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
+            const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
+
+            const last_distance = await getLastDistance(dataOut.start_time.toString(), stravaUserId, projectName);
+            const final_data = transformData(dataOut, altitudes, last_distance);
 
 
-
-        );
-        const responseJson = await res.json();
-        console.log("Activity post response:", responseJson);
+            const res = await fetch(
+                `/api/user/${stravaUserId}/project/${projectName}/activities`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(final_data)
+                }
+            );
+            const responseJson = await res.json();
+            console.log("Activity post response:", responseJson);
+            router.push("/");
+        }
+        catch (error) {
+            console.error("Error submitting form:", error);
+        }
 
     };
 
@@ -85,12 +85,12 @@ export const ActivityFormComponent = () => {
             ...prevImages,
             // @ts-ignore
             ...res.map(file => file.ufsUrl),
-          ]);
+        ]);
         setFiles((prevFiles) => [
             ...prevFiles,
             // @ts-ignore
             ...res.map(file => file.ufsUrl),
-          ]);
+        ]);
     }
 
     const OnUploadPhotoChange = (filesToUpload: any) => {
@@ -99,17 +99,17 @@ export const ActivityFormComponent = () => {
 
     const handleClearImage = (index: number) => {
         setFiles((prevFiles) => {
-          const updatedFiles = [...prevFiles];
-          updatedFiles.splice(index, 1);  // Remove image at the given index
-          return updatedFiles;
+            const updatedFiles = [...prevFiles];
+            updatedFiles.splice(index, 1);  // Remove image at the given index
+            return updatedFiles;
         });
         setEditableImages((prevImages) => {
-          const updatedImages = [...prevImages];
-          updatedImages.splice(index, 1);  // Remove image at the given index
-          return updatedImages;
+            const updatedImages = [...prevImages];
+            updatedImages.splice(index, 1);  // Remove image at the given index
+            return updatedImages;
         }
         );
-      };
+    };
 
 
 
@@ -127,7 +127,8 @@ export const ActivityFormComponent = () => {
         setIndexes([]);
         resetField("coordinates");
         setCounter(0);
-        setCoords([]);
+
+        setCoords([centerLocation]);
     };
     useEffect(() => {
         console.log("Updated coords:", coords);
@@ -136,7 +137,6 @@ export const ActivityFormComponent = () => {
 
     useEffect(() => {
         setValue("photos", files);
-        console.log("USEEFFECTForm photo urls updated:", files);
     }, [files]);
 
     useEffect(() => {
@@ -154,6 +154,8 @@ export const ActivityFormComponent = () => {
                 if (lastCoords.length > 0) {
                     const lastCoord = lastCoords[lastCoords.length - 1];
                     setCenterLocation([lastCoord[0], lastCoord[1]]);
+                    setCoords([lastCoord]);
+
                 }
             }
 
@@ -202,15 +204,41 @@ export const ActivityFormComponent = () => {
                             setValue(`coordinates.${lastIndex}.longitude`, latlng[1].toString());
                             const coordinates = getValues("coordinates");
                             console.log("coords", coordinates);
-                            setCoords(coordinates.map((c) => [
-                                parseFloat(c.latitude),
-                                parseFloat(c.longitude)
-                            ]));
+                            setCoords([centerLocation,
+                                ...coordinates.map((c) => [
+                                    parseFloat(c.latitude),
+                                    parseFloat(c.longitude)
+                                ])]);
                             console.log("coords", coordinates);
                         }}
                     />
 
                     <div className="coords-container">
+                        {coords.length > 0 && (
+                            <fieldset className="bg-gray-200 p-4 rounded-md">
+                                <label>
+                                    Latitude (start):
+                                    <input
+                                        type="text"
+                                        step="any"
+                                        value={coords[0][0]}
+                                        readOnly
+                                    />
+                                </label>
+                                <label>
+                                    Longitude (start):
+                                    <input
+                                        type="text"
+                                        step="any"
+                                        value={coords[0][1]}
+                                        readOnly
+                                    />
+                                </label>
+                                <button className="adds-button" type="button" disabled>
+                                        Starting Point
+                                    </button>
+                            </fieldset>
+                        )}
                         {indexes.map(index => {
                             const fieldCoord = `coords[${index}]`;
                             return (
@@ -230,10 +258,11 @@ export const ActivityFormComponent = () => {
                                                 if (!isNaN(value) && Number(getValues(`coordinates.${index}.longitude`)) !== 0) {
                                                     setValue(`coordinates.${index}.latitude`, value.toString());
                                                     const coordinates = getValues("coordinates");
-                                                    setCoords(coordinates.map((c) => [
-                                                        parseFloat(c.latitude),
-                                                        parseFloat(c.longitude)
-                                                    ]));
+                                                    setCoords([centerLocation,
+                                                        ...coordinates.map((c) => [
+                                                            parseFloat(c.latitude),
+                                                            parseFloat(c.longitude)
+                                                        ])]);
                                                 }
                                             }
                                             }
@@ -256,10 +285,11 @@ export const ActivityFormComponent = () => {
                                                     console.log(Number(getValues(`coordinates.${index}.latitude`)));
                                                     setValue(`coordinates.${index}.longitude`, value.toString());
                                                     const coordinates = getValues("coordinates");
-                                                    setCoords(coordinates.map((c) => [
-                                                        parseFloat(c.latitude),
-                                                        parseFloat(c.longitude)
-                                                    ]));
+                                                    setCoords([centerLocation,
+                                                        ...coordinates.map((c) => [
+                                                            parseFloat(c.latitude),
+                                                            parseFloat(c.longitude)
+                                                        ])]);
                                                 }
                                             }
                                             }
@@ -280,19 +310,19 @@ export const ActivityFormComponent = () => {
                         Clear Coords
                     </button>
                 </div>
-                <EditableImageComponent imageUrls={editableImages} onClearImage={handleClearImage}/>
-            <UploadButton
-                endpoint="imageUploader"
-                config={{
-                    mode: "manual",
-                }}
-                onBeforeUploadBegin={onBeforeUploadBegin}
-                onClientUploadComplete={onClientUploadComplete}
-                onUploadError={(error: Error) => {
-                    alert(`ERROR! ${error.message}`);
-                }}
-                onChange={OnUploadPhotoChange}                
-            />
+                <EditableImageComponent imageUrls={editableImages} onClearImage={handleClearImage} />
+                <UploadButton
+                    endpoint="imageUploader"
+                    config={{
+                        mode: "manual",
+                    }}
+                    onBeforeUploadBegin={onBeforeUploadBegin}
+                    onClientUploadComplete={onClientUploadComplete}
+                    onUploadError={(error: Error) => {
+                        alert(`ERROR! ${error.message}`);
+                    }}
+                    onChange={OnUploadPhotoChange}
+                />
                 <input type="submit" />
             </form>
 
