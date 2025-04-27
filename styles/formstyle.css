@@ -151,3 +151,14 @@ button {
   background-color: #379268 !important;
 
 }
+
+
+.disabled-button {
+  background-color: grey !important;
+
+}
+
+.activity-header {
+    text-align: center;
+    padding: 20px;
+  }

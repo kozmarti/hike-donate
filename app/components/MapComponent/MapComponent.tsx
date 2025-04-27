@@ -15,9 +15,11 @@ import Image from "next/image";
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 import "leaflet/dist/leaflet.css";
 import { iconPerson } from "../IconMarker";
-import { LatLngExpression } from "leaflet";
+import { Icon, LatLngExpression } from "leaflet";
 import { FullscreenControl } from "react-leaflet-fullscreen";
 import "react-leaflet-fullscreen/styles.css";
+import { iconStartPin } from "../IconStartPinMarker copy";
+import { iconFinishPin } from "../IconFinishPinMarker";
 //npm install --save leaflet react-leaflet
 interface CoordinateData {
   coordinates?: LatLngExpression[];
@@ -25,6 +27,7 @@ interface CoordinateData {
   centerCoordinates?: LatLngExpression;
   clickedLocationAbled?: boolean;
   onMapClick?: (latlng: LatLngExpression) => void;
+  pinIcon?: Icon;
 }
 
 const ResizeMap = () => {
@@ -46,7 +49,7 @@ const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void
   return null;
 };
 
-const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick }: CoordinateData) => {
+const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIcon = iconPerson }: CoordinateData) => {
   const [zoomInitial, setZoomInitial] = useState(6);
   const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
 
@@ -111,8 +114,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
             positions={polyline}
           />
           {currentLocation && (
-            <Marker icon={iconPerson} position={currentLocation}>
-              <Popup>I am here now</Popup>
+            <Marker icon={pinIcon} position={currentLocation}>
             </Marker>
           )}
           <div onClick={fakeFullscreen} className="fullscreen-button">
@@ -132,7 +134,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
           )}
 
           {clickedLocation && (
-            <Marker icon={iconPerson} position={clickedLocation}>
+            <Marker icon={iconFinishPin} position={clickedLocation}>
             </Marker>
           )}
         </MapContainer>

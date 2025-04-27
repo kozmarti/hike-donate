@@ -13,6 +13,7 @@ import "@uploadthing/react/styles.css";
 import EditableImageComponent from "./EditableImageComponent";
 import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
 import { useRouter } from "next/navigation";
+import { iconStartPin } from "./IconStartPinMarker copy";
 
 
 interface DataInputFromForm {
@@ -114,14 +115,13 @@ export const ActivityFormComponent = () => {
 
 
     const addCoord = () => {
+        console.log(counter);
+        if ((counter) && Number(getValues(`coordinates.${counter-1}.longitude`)) == 0 || Number(getValues(`coordinates.${counter-1}.latitude`)) == 0) {
+            alert("Please fill the last coordinate before adding a new one");
+            return;
+        }
         setIndexes(prevIndexes => [...prevIndexes, counter]);
         setCounter(prevCounter => prevCounter + 1);
-    };
-    const removeCoord = (index: number) => () => {
-        setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
-        setCounter(prevCounter => prevCounter - 1);
-        unregister(`coordinates.${index}`);
-
     };
     const clearCoords = () => {
         setIndexes([]);
@@ -169,7 +169,10 @@ export const ActivityFormComponent = () => {
 
     return (
         <>
+        <h1 className="activity-header">Add new activity</h1>
             <form onSubmit={handleSubmit(onSubmitForm)}>
+            
+
                 <label className="data-label">
                     Start Date and Time:
                     <input
@@ -191,7 +194,8 @@ export const ActivityFormComponent = () => {
                     <div>Coordinates </div>
                     <p>Please add at least 10 coordinate points for good looking data </p>
                     <MapComponent
-                        currentLocation={centerLocation}
+                    pinIcon={iconStartPin}
+                    currentLocation={centerLocation}
                         // @ts-ignore
                         coordinates={coords}
                         clickedLocationAbled
@@ -234,7 +238,7 @@ export const ActivityFormComponent = () => {
                                         readOnly
                                     />
                                 </label>
-                                <button className="adds-button" type="button" disabled>
+                                <button className="disabled-button" type="button" disabled>
                                         Starting Point
                                     </button>
                             </fieldset>
@@ -243,6 +247,7 @@ export const ActivityFormComponent = () => {
                             const fieldCoord = `coords[${index}]`;
                             return (
                                 <fieldset name={fieldCoord} key={fieldCoord}>
+                                    {getValues(`coordinates.${index}.longitude`) == undefined && <p>Click on the map to add coordinates</p>}
                                     <label>
                                         Latitude {index}:
                                         <input
@@ -295,17 +300,15 @@ export const ActivityFormComponent = () => {
                                             }
                                         />
                                     </label>
-                                    <button className="warn-button" type="button" onClick={removeCoord(index)}>
-                                        Remove
-                                    </button>
                                 </fieldset>
                             );
                         })}
-                    </div>
-
-                    <button className="adds-button" type="button" onClick={addCoord}>
+                                            <button className="adds-button" type="button" onClick={addCoord}>
                         Add Coord
                     </button>
+                    </div>
+
+
                     <button className="warn-button" type="button" onClick={clearCoords}>
                         Clear Coords
                     </button>
@@ -313,9 +316,9 @@ export const ActivityFormComponent = () => {
                 <EditableImageComponent imageUrls={editableImages} onClearImage={handleClearImage} />
                 <UploadButton
                     endpoint="imageUploader"
-                    config={{
-                        mode: "manual",
-                    }}
+                    // config={{
+                        //mode: "manual",
+                    //}}
                     onBeforeUploadBegin={onBeforeUploadBegin}
                     onClientUploadComplete={onClientUploadComplete}
                     onUploadError={(error: Error) => {
