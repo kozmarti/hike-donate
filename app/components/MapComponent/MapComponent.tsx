@@ -13,11 +13,9 @@ import {
 import Image from "next/image";
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 import "leaflet/dist/leaflet.css";
-import { iconPerson } from "../IconMarker";
 import { Icon, LatLngExpression } from "leaflet";
 import { FullscreenControl } from "react-leaflet-fullscreen";
 import "react-leaflet-fullscreen/styles.css";
-import { iconFinishPin } from "../IconFinishPinMarker";
 import { createIconMarker } from "../IconMarkerComponent";
 //npm install --save leaflet react-leaflet
 interface CoordinateData {
@@ -26,8 +24,8 @@ interface CoordinateData {
   centerCoordinates?: LatLngExpression;
   clickedLocationAbled?: boolean;
   onMapClick?: (latlng: LatLngExpression) => void;
-  pinIconUrl?: string;
   clickedLocation?: LatLngExpression | null;
+  pinIconUrl?: string;
   startIconPinSize?: number[];
 }
 
@@ -50,7 +48,7 @@ const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void
   return null;
 };
 
-const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIconUrl = "./here.gif", clickedLocation, startIconPinSize }: CoordinateData) => {
+const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIconUrl, clickedLocation, startIconPinSize }: CoordinateData) => {
   const [zoomInitial, setZoomInitial] = useState(6);
   const startIconPin = createIconMarker(pinIconUrl, startIconPinSize);
   const iconFinishPin = createIconMarker("./finish-point.png", [40, 40]);

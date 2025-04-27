@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import "/styles/formstyle.css";
-import { start } from "repl";
 import { MapComponent } from "./MapComponent";
-import { useMapEvent } from "react-leaflet";
-import { get } from "http";
 import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";
-import { aggregateData, dataAggregateWithConstant, deltaData, getCalculatedAltitudes, getDeltaDistances, getLastDistance, timeStringToSeconds, totalElevationGain, totalElevationLoss, transformData } from "../utils/calculation_functions_client";
+import { getCalculatedAltitudes, getLastDistance, timeStringToSeconds, transformData } from "../utils/calculation_functions_client";
 import { UploadButton } from "../src/utils/uploadthing";
 import "@uploadthing/react/styles.css";
 import EditableImageComponent from "./EditableImageComponent";
