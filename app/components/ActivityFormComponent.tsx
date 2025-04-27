@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import "/styles/formstyle.css";
 import { MapComponent } from "./MapComponent";
 import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";
@@ -125,7 +125,7 @@ export const ActivityFormComponent = () => {
         setIndexes([]);
         resetField("coordinates");
         setCounter(0);
-
+        setClickedLocation(null);
         setCoords([centerLocation]);
     };
     useEffect(() => {
@@ -190,9 +190,9 @@ export const ActivityFormComponent = () => {
                 </label>
                 <div className="data-label">
                     <div>Coordinates </div>
-                    <p>Please add at least 10 coordinate points for good looking data </p>
+
                     <MapComponent
-                    startIconPinSize={[40, 40]}
+                        startIconPinSize={[40, 40]}
                         clickedLocation={clickedLocation}
                         pinIconUrl={"./map-pin.png"}
                         currentLocation={centerLocation}
@@ -217,10 +217,10 @@ export const ActivityFormComponent = () => {
                             console.log("coords", coordinates);
                         }}
                     />
-
+                    <p className="p-5">Please add at least 10 coordinate points for good looking data </p>
                     <div className="coords-container">
                         {coords.length > 0 && (
-                            <fieldset className="bg-gray-200 p-4 rounded-md">
+                            <fieldset className="bg-gray-200 p-2 m-2 rounded-md">
                                 <label>
                                     Latitude (start):
                                     <input
@@ -247,8 +247,8 @@ export const ActivityFormComponent = () => {
                         {indexes.map(index => {
                             const fieldCoord = `coords[${index}]`;
                             return (
-                                <fieldset name={fieldCoord} key={fieldCoord}>
-                                    {getValues(`coordinates.${index}.longitude`) == undefined && <p>Click on the map to add coordinates</p>}
+                                <fieldset name={fieldCoord} key={fieldCoord} className="p-2 m-2">
+                                    {getValues(`coordinates.${index}.longitude`) == undefined && <p>Click on the map</p>}
                                     <label>
                                         Latitude {index}:
                                         <input
@@ -312,8 +312,8 @@ export const ActivityFormComponent = () => {
                                 </fieldset>
                             );
                         })}
-                        <button className="adds-button" type="button" onClick={addCoord}>
-                            Add Coord
+                        <button className="adds-button m-5" type="button" onClick={addCoord}>
+                            +
                         </button>
                     </div>
 
