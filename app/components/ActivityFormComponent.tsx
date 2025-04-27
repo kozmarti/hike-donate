@@ -13,7 +13,7 @@ import "@uploadthing/react/styles.css";
 import EditableImageComponent from "./EditableImageComponent";
 import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
 import { useRouter } from "next/navigation";
-import { iconStartPin } from "./IconStartPinMarker copy";
+import { iconStartPin } from "./IconStartPinMarker";
 import { LatLngExpression } from "leaflet";
 
 
@@ -273,10 +273,10 @@ export const ActivityFormComponent = () => {
                                                             parseFloat(c.latitude),
                                                             parseFloat(c.longitude)
                                                         ])]);
-                                                        setClickedLocation([
-                                                            parseFloat(getValues(`coordinates.${index}.latitude`)),
-                                                            parseFloat(getValues(`coordinates.${index}.longitude`))
-                                                          ]);
+                                                    setClickedLocation([
+                                                        parseFloat(getValues(`coordinates.${index}.latitude`)),
+                                                        parseFloat(getValues(`coordinates.${index}.longitude`))
+                                                    ]);
                                                 }
                                             }
                                             }
@@ -304,10 +304,10 @@ export const ActivityFormComponent = () => {
                                                             parseFloat(c.latitude),
                                                             parseFloat(c.longitude)
                                                         ])]);
-                                                        setClickedLocation([
-                                                            parseFloat(getValues(`coordinates.${index}.latitude`)),
-                                                            parseFloat(getValues(`coordinates.${index}.longitude`))
-                                                          ]);
+                                                    setClickedLocation([
+                                                        parseFloat(getValues(`coordinates.${index}.latitude`)),
+                                                        parseFloat(getValues(`coordinates.${index}.longitude`))
+                                                    ]);
                                                 }
                                             }
                                             }

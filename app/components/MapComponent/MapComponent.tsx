@@ -18,7 +18,7 @@ import { iconPerson } from "../IconMarker";
 import { Icon, LatLngExpression } from "leaflet";
 import { FullscreenControl } from "react-leaflet-fullscreen";
 import "react-leaflet-fullscreen/styles.css";
-import { iconStartPin } from "../IconStartPinMarker copy";
+import { iconStartPin } from "../IconStartPinMarker";
 import { iconFinishPin } from "../IconFinishPinMarker";
 //npm install --save leaflet react-leaflet
 interface CoordinateData {
