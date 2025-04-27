@@ -28,6 +28,7 @@ interface CoordinateData {
   clickedLocationAbled?: boolean;
   onMapClick?: (latlng: LatLngExpression) => void;
   pinIcon?: Icon;
+  clickedLocation?: LatLngExpression | null;
 }
 
 const ResizeMap = () => {
@@ -49,9 +50,8 @@ const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void
   return null;
 };
 
-const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIcon = iconPerson }: CoordinateData) => {
+const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIcon = iconPerson, clickedLocation }: CoordinateData) => {
   const [zoomInitial, setZoomInitial] = useState(6);
-  const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
 
   const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];
   const purpleOptions = { color: "#EC506A", weight: 3 };
@@ -128,7 +128,6 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
           <ScaleControl position="bottomleft" />
           {clickedLocationAbled && (
             <ClickHandler onClick={(latlng) => {
-              setClickedLocation(latlng);
               onMapClick?.(latlng); // 👈 Call parent’s callback
             }} />
           )}

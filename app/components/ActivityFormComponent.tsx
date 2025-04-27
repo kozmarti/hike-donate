@@ -14,6 +14,7 @@ import EditableImageComponent from "./EditableImageComponent";
 import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
 import { useRouter } from "next/navigation";
 import { iconStartPin } from "./IconStartPinMarker copy";
+import { LatLngExpression } from "leaflet";
 
 
 interface DataInputFromForm {
@@ -40,6 +41,8 @@ export const ActivityFormComponent = () => {
     const [centerLocation, setCenterLocation] = useState<[number, number]>([0, 0]);
     const [editableImages, setEditableImages] = useState<string[]>([]);
     const router = useRouter();
+    const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
+
 
 
 
@@ -116,7 +119,7 @@ export const ActivityFormComponent = () => {
 
     const addCoord = () => {
         console.log(counter);
-        if ((counter) && Number(getValues(`coordinates.${counter-1}.longitude`)) == 0 || Number(getValues(`coordinates.${counter-1}.latitude`)) == 0) {
+        if ((counter) && Number(getValues(`coordinates.${counter - 1}.longitude`)) == 0 || Number(getValues(`coordinates.${counter - 1}.latitude`)) == 0) {
             alert("Please fill the last coordinate before adding a new one");
             return;
         }
@@ -169,9 +172,9 @@ export const ActivityFormComponent = () => {
 
     return (
         <>
-        <h1 className="activity-header">Add new activity</h1>
+            <h1 className="activity-header">Add new activity</h1>
             <form onSubmit={handleSubmit(onSubmitForm)}>
-            
+
 
                 <label className="data-label">
                     Start Date and Time:
@@ -194,12 +197,14 @@ export const ActivityFormComponent = () => {
                     <div>Coordinates </div>
                     <p>Please add at least 10 coordinate points for good looking data </p>
                     <MapComponent
-                    pinIcon={iconStartPin}
-                    currentLocation={centerLocation}
+                        clickedLocation={clickedLocation}
+                        pinIcon={iconStartPin}
+                        currentLocation={centerLocation}
                         // @ts-ignore
                         coordinates={coords}
                         clickedLocationAbled
                         onMapClick={(latlng) => {
+                            setClickedLocation(latlng);
                             if (indexes.length === 0) return;
                             const lastIndex = indexes[indexes.length - 1];
                             // @ts-ignore
@@ -239,8 +244,8 @@ export const ActivityFormComponent = () => {
                                     />
                                 </label>
                                 <button className="disabled-button" type="button" disabled>
-                                        Starting Point
-                                    </button>
+                                    Starting Point
+                                </button>
                             </fieldset>
                         )}
                         {indexes.map(index => {
@@ -268,6 +273,10 @@ export const ActivityFormComponent = () => {
                                                             parseFloat(c.latitude),
                                                             parseFloat(c.longitude)
                                                         ])]);
+                                                        setClickedLocation([
+                                                            parseFloat(getValues(`coordinates.${index}.latitude`)),
+                                                            parseFloat(getValues(`coordinates.${index}.longitude`))
+                                                          ]);
                                                 }
                                             }
                                             }
@@ -295,6 +304,10 @@ export const ActivityFormComponent = () => {
                                                             parseFloat(c.latitude),
                                                             parseFloat(c.longitude)
                                                         ])]);
+                                                        setClickedLocation([
+                                                            parseFloat(getValues(`coordinates.${index}.latitude`)),
+                                                            parseFloat(getValues(`coordinates.${index}.longitude`))
+                                                          ]);
                                                 }
                                             }
                                             }
@@ -303,9 +316,9 @@ export const ActivityFormComponent = () => {
                                 </fieldset>
                             );
                         })}
-                                            <button className="adds-button" type="button" onClick={addCoord}>
-                        Add Coord
-                    </button>
+                        <button className="adds-button" type="button" onClick={addCoord}>
+                            Add Coord
+                        </button>
                     </div>
 
 
@@ -317,7 +330,7 @@ export const ActivityFormComponent = () => {
                 <UploadButton
                     endpoint="imageUploader"
                     // config={{
-                        //mode: "manual",
+                    //mode: "manual",
                     //}}
                     onBeforeUploadBegin={onBeforeUploadBegin}
                     onClientUploadComplete={onClientUploadComplete}
