@@ -4,7 +4,6 @@ import {
   MapContainer,
   Marker,
   Polyline,
-  Popup,
   ScaleControl,
   TileLayer,
   ZoomControl,
@@ -18,8 +17,8 @@ import { iconPerson } from "../IconMarker";
 import { Icon, LatLngExpression } from "leaflet";
 import { FullscreenControl } from "react-leaflet-fullscreen";
 import "react-leaflet-fullscreen/styles.css";
-import { iconStartPin } from "../IconStartPinMarker";
 import { iconFinishPin } from "../IconFinishPinMarker";
+import { createIconMarker } from "../IconMarkerComponent";
 //npm install --save leaflet react-leaflet
 interface CoordinateData {
   coordinates?: LatLngExpression[];
@@ -27,8 +26,9 @@ interface CoordinateData {
   centerCoordinates?: LatLngExpression;
   clickedLocationAbled?: boolean;
   onMapClick?: (latlng: LatLngExpression) => void;
-  pinIcon?: Icon;
+  pinIconUrl?: string;
   clickedLocation?: LatLngExpression | null;
+  startIconPinSize?: number[];
 }
 
 const ResizeMap = () => {
@@ -50,9 +50,10 @@ const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void
   return null;
 };
 
-const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIcon = iconPerson, clickedLocation }: CoordinateData) => {
+const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIconUrl = "./here.gif", clickedLocation, startIconPinSize }: CoordinateData) => {
   const [zoomInitial, setZoomInitial] = useState(6);
-
+  const startIconPin = createIconMarker(pinIconUrl, startIconPinSize);
+  const iconFinishPin = createIconMarker("./finish-point.png", [40, 40]);
   const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];
   const purpleOptions = { color: "#EC506A", weight: 3 };
   const mapCenter: LatLngExpression =
@@ -114,7 +115,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
             positions={polyline}
           />
           {currentLocation && (
-            <Marker icon={pinIcon} position={currentLocation}>
+            <Marker icon={startIconPin} position={currentLocation}>
             </Marker>
           )}
           <div onClick={fakeFullscreen} className="fullscreen-button">

@@ -13,7 +13,6 @@ import "@uploadthing/react/styles.css";
 import EditableImageComponent from "./EditableImageComponent";
 import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
 import { useRouter } from "next/navigation";
-import { iconStartPin } from "./IconStartPinMarker";
 import { LatLngExpression } from "leaflet";
 
 
@@ -197,8 +196,9 @@ export const ActivityFormComponent = () => {
                     <div>Coordinates </div>
                     <p>Please add at least 10 coordinate points for good looking data </p>
                     <MapComponent
+                    startIconPinSize={[40, 40]}
                         clickedLocation={clickedLocation}
-                        pinIcon={iconStartPin}
+                        pinIconUrl={"./map-pin.png"}
                         currentLocation={centerLocation}
                         // @ts-ignore
                         coordinates={coords}
