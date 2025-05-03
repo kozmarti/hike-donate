@@ -2,6 +2,7 @@ import clientPromise from "@/lib/mongodb";
 
 import { NextRequest, NextResponse } from "next/server";
 
+
 export interface Activity {
   strava_user_id: number;
   start_time: Date;
@@ -28,6 +29,7 @@ export async function GET(
   { params }: { params: { strava_user_id: number; project_slug: string } }
 ) {
   // endpoint: api/user/{strava_user_id}/project/{project_slug}/activities
+  
 
   const { strava_user_id, project_slug } = params;
   const startDate = req.nextUrl.searchParams.get("start_date_local");

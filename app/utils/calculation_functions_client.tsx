@@ -1,13 +1,19 @@
 import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";
 import { DataOutputFromForm } from "../components/ActivityFormComponent";
 
+
 export const getLastDistance = async (
   startDateLocal: string,
   stravaUserId: number,
   stravaProjectName: string
 ) => {
   const res = await fetch(
-    `/api/user/${stravaUserId}/project/${stravaProjectName}/activities?start_date_local=${encodeURIComponent(startDateLocal)}`
+    `/api/user/${stravaUserId}/project/${stravaProjectName}/activities?start_date_local=${encodeURIComponent(startDateLocal)}`,
+    {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json",
+      }  }
   );
 
   const data = await res.json();

@@ -8,6 +8,8 @@ import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
 import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_client";
+import { fetchStatsHook } from "@/app/actions/fetchStats";
+
 
 type Stats = {
   totalDistance: number;
@@ -44,8 +46,8 @@ export default function Home() {
       const userId = process.env.STRAVA_USER_ID;
 
       try {
-        const res = await fetch(`${apiUrl}/api/user/${userId}/project/test/stats`);
-        const data = await res.json();
+
+        const data = await fetchStatsHook();
         setStats(data);
       } catch (error) {
         console.error("Failed to fetch stats:", error);

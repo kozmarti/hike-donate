@@ -10,6 +10,7 @@ import EditableImageComponent from "./EditableImageComponent";
 import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
 import { useRouter } from "next/navigation";
 import { LatLngExpression } from "leaflet";
+import { fetchActivitiesHook } from "../actions/fetchActivities";
 
 
 interface DataInputFromForm {
@@ -37,6 +38,7 @@ export const ActivityFormComponent = () => {
     const [editableImages, setEditableImages] = useState<string[]>([]);
     const router = useRouter();
     const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
+    const [lastActivityDate, setLastActivityDate] = useState<string | null>(null);
 
 
 
@@ -62,7 +64,8 @@ export const ActivityFormComponent = () => {
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+
                     },
                     body: JSON.stringify(final_data)
                 }
@@ -143,11 +146,12 @@ export const ActivityFormComponent = () => {
             const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
             const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-            const res = await fetch(`${apiUrl}/api/user/${stravaUserId}/project/${projectName}/activities`);
-            const activities: Activity[] = await res.json();
+            const activities: Activity[] = await fetchActivitiesHook();            
 
             if (activities.length > 0) {
-                const lastCoords = activities[activities.length - 1].coordinates;
+                const lastActivity = activities[activities.length - 1]
+                const lastCoords = lastActivity.coordinates;
+                setLastActivityDate(lastActivity.start_time.toString());
 
                 if (lastCoords.length > 0) {
                     const lastCoord = lastCoords[lastCoords.length - 1];
@@ -172,6 +176,7 @@ export const ActivityFormComponent = () => {
 
 
                 <label className="data-label">
+                    <p>Last activity date : {lastActivityDate}</p>
                     Start Date and Time:
                     <input
                         required
@@ -221,8 +226,9 @@ export const ActivityFormComponent = () => {
                     <div className="coords-container">
                         {coords.length > 0 && (
                             <fieldset className="bg-gray-200 p-2 m-2 rounded-md">
+                                 Starting points
                                 <label>
-                                    Latitude (start):
+                                    Latitude:
                                     <input
                                         type="text"
                                         step="any"
@@ -231,7 +237,7 @@ export const ActivityFormComponent = () => {
                                     />
                                 </label>
                                 <label>
-                                    Longitude (start):
+                                    Longitude:
                                     <input
                                         type="text"
                                         step="any"
@@ -239,9 +245,6 @@ export const ActivityFormComponent = () => {
                                         readOnly
                                     />
                                 </label>
-                                <button className="disabled-button" type="button" disabled>
-                                    Starting Point
-                                </button>
                             </fieldset>
                         )}
                         {indexes.map(index => {
