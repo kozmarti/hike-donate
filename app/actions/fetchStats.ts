@@ -1,18 +1,18 @@
-"use server";
-
+"use client";
 export async function fetchStatsHook() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const token = process.env.API_SECRET_TOKEN;
-  const userId = process.env.STRAVA_USER_ID;
-  const projectName = process.env.STRAVA_PROJECT_NAME;
+  const userId = process.env.NEXT_PUBLIC_STRAVA_USER_ID;
+  const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME;
 
   const res = await fetch(`${apiUrl}/api/user/${userId}/project/${projectName}/stats`, {
-    headers: {
-      "Authorization": `Bearer ${token}`,
-    },
+    method: "GET",
   });
 
-  if (!res.ok) throw new Error("Failed to fetch stats");
+  if (!res.ok) {
+    const errorText = await res.text(); // optional: log more info
+    throw new Error(`Failed to fetch activities: ${res.status} ${errorText}`);
+  }
 
+  
   return await res.json();
 }

@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/auth";
 
-const API_SECRET_TOKEN = process.env.API_SECRET_TOKEN;
+const ALLOWED_HOSTS : string[] = [
+    // @ts-ignore
+    process.env.NEXT_PUBLIC_API_URL];
 
 export async function middleware(request: NextRequest) {
-    const url = request.nextUrl.pathname;
+    const pathname = request.nextUrl.pathname;
 
     
-    if (url.startsWith("/activity")) {
+    if (pathname.startsWith("/activity")) {
         const session = request.cookies.get("session")?.value;
 
         if (!session) {
@@ -21,19 +23,17 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url)); // Redirect to login on failure
         }
     }
-
-    if (url.startsWith("/api")) {
-        const token = request.headers.get("Authorization")?.replace("Bearer ", "");
-
-        if (!token || token !== API_SECRET_TOKEN) {
-            return new NextResponse('Unauthorized', { status: 401 });
+    if (pathname.startsWith("/api")) {
+        const origin = request.headers.get("origin") || request.headers.get("referer");
+        if (!origin || !ALLOWED_HOSTS.some((host) => origin.startsWith(host))) {
+          return NextResponse.json({ error: "Unauthorized origin" }, { status: 403 });
         }
-    }
+      }
 
     return NextResponse.next();
 }
 
 
 export const config = {
-    matcher: ["/activity"],
+    matcher: ["/activity", "/api/user/:path*", "/api/streams/:path*"],
 };

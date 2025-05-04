@@ -5,7 +5,7 @@ import {
 } from "@/lib/strava";
 import { Activity } from "../user/[strava_user_id]/project/[project_slug]/activities/route";
 import clientPromise from "@/lib/mongodb";
-import { deltaData, dataAggregateWithConstant, totalElevationLoss } from "@/app/utils/calculation_functions_client";
+import { deltaData, dataAggregateWithConstant, totalElevationLoss, totalElevationGain } from "@/app/utils/calculation_functions_client";
 import { get_last_distance } from "@/app/utils/calculation_functions_server";
 
 interface Webhook {
@@ -67,7 +67,7 @@ const extract_data = (
   const delta_altitudes = deltaData(streams_extracted["altitude"])
 
   const total_elevation_loss = totalElevationLoss(delta_altitudes);
-  const total_elevation_gain = totalElevationLoss(delta_altitudes);
+  const total_elevation_gain = totalElevationGain(delta_altitudes);
 
   const activity: Activity = {
     strava_user_id: activity_strava["athlete"]["id"],

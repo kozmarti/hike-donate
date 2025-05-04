@@ -42,11 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchStats = async () => {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const userId = process.env.STRAVA_USER_ID;
-
       try {
-
         const data = await fetchStatsHook();
         setStats(data);
       } catch (error) {
