@@ -1,82 +1,123 @@
-## Example app using MongoDB
+# 🥾 Hike & Donate
 
-[MongoDB](https://www.mongodb.com/) is a general purpose, document-based, distributed database built for modern application developers and for the cloud era. This example will show you how to connect to and use MongoDB as your backend for your Next.js app.
+**Hike & Donate** is a long-term trekking tracker that displays real-time hiking stats, visualizes routes on a map, connected to Strava to update data automatically. Built for adventurers who want to log and share their journey — even in remote locations — and for those who want to trek with a purpose.
 
-If you want to learn more about MongoDB, visit the following pages:
+---
 
-- [MongoDB Atlas](https://mongodb.com/atlas)
-- [MongoDB Documentation](https://docs.mongodb.com/)
+## 🌄 Features
 
-## Deploy your own
+- **Live Hiking Stats**  
+  Tracks and displays:  
+  - Total distance covered  
+  - Maximum & minimum altitude  
+  - Total elevation gain & loss  
+  - Elapsed time
 
-Once you have access to the environment variables you'll need, deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+- **Interactive Map View**  
+  Visualize your route with an interactive map powered by **Leaflet**.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=with-mongodb&repository-name=with-mongodb&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-mongodb&integration-ids=oac_jnzmjqM10gllKmSrG0SGrHOH)
+- **Strava Integration (Webhook)**  
+  Automatically pulls real-time activity data from Strava via webhooks.
 
-## How to use
+- **Offline / Manual Logging**  
+  Encounter a dead battery or no signal? Manually log data directly into the system.
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+---
 
-```bash
-npx create-next-app --example with-mongodb with-mongodb-app
-```
+## 🛠️ Tech Stack
 
-```bash
-yarn create next-app --example with-mongodb with-mongodb-app
-```
+- **Frontend:** Next.js with TypeScript  
+- **UI Framework:** Material UI (MUI) for modern and responsive components  
+- **Mapping Library:** Leaflet for dynamic map rendering  
+- **File Upload (Manual Entry):** Uploadthing for fast and secure image uploads — **custom feature added: images are automatically resized for optimizing image quality, performance, and storage efficiency**  
+- **Backend:** API routes within Next.js  
+- **Database:** MongoDB  
+- **External Integration:** Strava API  
 
-```bash
-pnpm create next-app --example with-mongodb with-mongodb-app
-```
+---
 
-## Configuration
+## ⚙️ Setup
 
-### Set up a MongoDB database
+### Prerequisites
 
-Set up a MongoDB database either locally or with [MongoDB Atlas for free](https://mongodb.com/atlas).
+- Node.js  
+- MongoDB  
+- Strava account (to create API credentials)  
 
-### Set up environment variables
-
-Copy the `env.local.example` file in this directory to `.env.local` (which will be ignored by Git):
-
-```bash
-cp .env.local.example .env.local
-```
-
-Set each variable on `.env.local`:
-
-- `MONGODB_URI` - Your MongoDB connection string. If you are using [MongoDB Atlas](https://mongodb.com/atlas) you can find this by clicking the "Connect" button for your cluster.
-
-### Run Next.js in development mode
+### Installation
 
 ```bash
+git clone https://github.com/your-username/hike-and-donate.git
+cd hike-and-donate
 npm install
-npm run dev
-
-# or
-
-yarn install
-yarn dev
 ```
 
-Your app should be up and running on [http://localhost:3000](http://localhost:3000)! If it doesn't work, post on [GitHub discussions](https://github.com/vercel/next.js/discussions).
+### Environment Variables
 
-You will either see a message stating "You are connected to MongoDB" or "You are NOT connected to MongoDB". Ensure that you have provided the correct `MONGODB_URI` environment variable.
+Create a `.env.local` file with the following:
 
-When you are successfully connected, you can refer to the [MongoDB Node.js Driver docs](https://mongodb.github.io/node-mongodb-native/3.4/tutorials/collections/) for further instructions on how to query your database.
+```env
+# MongoDB connection string
+MONGODB_URI=your_mongodb_connection_string
 
-## Deploy on Vercel
+# Strava API credentials
+STRAVA_CLIENT_ID=your_strava_client_id
+STRAVA_CLIENT_SECRET=your_strava_client_secret
+STRAVA_REFRESH_TOKEN=your_strava_refresh_token
+STRAVA_USER_ID=your_strava_user_id
+STRAVA_PROJECT_NAME=your_strava_project_name
+SUBSCRIPTION_ID=your_strava_subscription_id
 
-You can deploy this app to the cloud with [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+# Next.js public environment variables
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_STRAVA_USER_ID=your_strava_user_id
+NEXT_PUBLIC_STRAVA_PROJECT_NAME=your_strava_project_name
 
-#### Deploy Your Local Project
+# Uploadthing file upload token
+UPLOADTHING_TOKEN=your_uploadthing_token
 
-To deploy your local project to Vercel, push it to GitHub/GitLab/Bitbucket and [import to Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example).
+# Session and API secrets
+SESSION_SECRET_KEY=your_session_secret_key
+API_SECRET_TOKEN=your_api_secret_token
+```
 
-**Important**: When you import your project on Vercel, make sure to click on **Environment Variables** and set them to match your `.env.local` file.
+## Run Locally
 
-#### Deploy from Our Template
+Run the development server with:
 
-Alternatively, you can deploy using our template by clicking on the Deploy button below.
+```bash
+npm run dev
+```
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=with-mongodb&repository-name=with-mongodb&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-mongodb&integration-ids=oac_jnzmjqM10gllKmSrG0SGrHOH)
+## 🚨 Manual Data Entry
+
+When trekking offline or facing technical issues, users can manually log key details of the day's hike:
+
+- Starting date  
+- Moving time (duration)  
+- GPS coordinates (displayed as a clickable marker on the map)  
+- Photo upload specific to that day  
+
+🧠 The app will then automatically calculate:
+
+- Distance  
+- Altitude metrics (API used: [Open-Meteo](https://api.open-meteo.com))  
+- Elevation gain & loss  
+
+---
+
+## 🌐 Live Updates via Webhook
+
+When a new activity is recorded in Strava:
+
+- The Strava webhook triggers the backend  
+- Activity data (route, stats, and photos) is fetched  
+- All metrics and visualizations update in real-time in the app  
+
+---
+
+## 📦 Future Enhancements
+
+- Donation Integration: Link your hike to fundraising campaigns  
+- Export Tools: PDF/CSV summaries of your trek  
+- Media Gallery: Organize uploaded photos by day or location  
