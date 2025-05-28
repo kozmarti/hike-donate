@@ -3,7 +3,12 @@
 **Hike & Donate** is a long-term trekking tracker that displays real-time hiking stats, visualizes routes on a map, connected to Strava to update data automatically. Built for adventurers who want to log and share their journey — even in remote locations — and for those who want to trek with a purpose.
 
 ---
+## 🚀 Deployment
 
+The live version of **Hike & Donate** is deployed and accessible at:  
+[https://hike-donate.vercel.app](https://hike-donate.vercel.app)
+
+---
 ## 🌄 Features
 
 - **Live Hiking Stats**  
@@ -26,13 +31,13 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Next.js with TypeScript  
-- **UI Framework:** Material UI (MUI) for modern and responsive components  
-- **Mapping Library:** Leaflet for dynamic map rendering  
-- **File Upload (Manual Entry):** Uploadthing for fast and secure image uploads — **custom feature added: images are automatically resized for optimizing image quality, performance, and storage efficiency**  
-- **Backend:** API routes within Next.js  
-- **Database:** MongoDB  
-- **External Integration:** Strava API  
+- **Frontend:** [Next.js](https://nextjs.org/) with TypeScript  
+- **UI Framework:** [Material UI (MUI)](https://mui.com/) for modern and responsive components  
+- **Mapping Library:** [Leaflet](https://leafletjs.com/) for dynamic map rendering  
+- **File Upload (Manual Entry):** [Uploadthing](https://uploadthing.com/) for fast and secure image uploads — custom feature added: images are automatically resized for optimizing image quality, performance, and storage efficiency  
+- **Backend:** API routes within [Next.js](https://nextjs.org/)  
+- **Database:** [MongoDB](https://www.mongodb.com/)  
+- **External Integration:** [Strava API](https://developers.strava.com/)  
 
 ---
 
@@ -42,13 +47,14 @@
 
 - Node.js  
 - MongoDB  
+- UploadThing account  
 - Strava account (to create API credentials)  
 
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/hike-and-donate.git
-cd hike-and-donate
+git clone https://github.com/kozmarti/hike-donate.git
+cd hike-donate
 npm install
 ```
 
@@ -88,7 +94,7 @@ Run the development server with:
 ```bash
 npm run dev
 ```
-
+---
 ## 🚨 Manual Data Entry
 
 When trekking offline or facing technical issues, users can manually log key details of the day's hike:
