@@ -19,7 +19,7 @@ interface PhotoAlbumProps {
 
 export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
   const [images, setImages] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(5);
+  const [visibleCount, setVisibleCount] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
   const cache = useRef<Map<string, any>>(new Map());
 
