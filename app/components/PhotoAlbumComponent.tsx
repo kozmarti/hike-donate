@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef, useCallback  } from 'react'
 import Box from "@mui/material/Box";
 import PhotoAlbum from "react-photo-album";
 import "react-photo-album/styles.css";
 import { Fredoka } from 'next/font/google';
+import LazyPhoto from './LazyPhoto';
+import { useInView } from 'react-intersection-observer';
+
 
 const fredoka = Fredoka({ subsets: ['latin'] });
 
@@ -16,6 +19,9 @@ interface PhotoAlbumProps {
 
 export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
   const [images, setImages] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const [isLoading, setIsLoading] = useState(true);
+  const cache = useRef<Map<string, any>>(new Map());
 
   const aspectRatio = (height: number, width: number) => {
     if (height > width) {
@@ -26,24 +32,37 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
   }
 
   const photosForGallery = async (imgArr: Photo[]) => {
+    console.log("HEREEEE", imgArr.length)
+    const subset = imgArr.slice(0, visibleCount);
+    console.log("visible count", visibleCount)  
+    console.log("SLICEEED", subset.length)
+
     const loadImage = (photo: Photo): Promise<any> => {
+      const cached = cache.current.get(photo.src); 
+      console.log("already chached", cached)
+      if (cached) return Promise.resolve(cached); 
       return new Promise((resolve) => {
         const img = new Image();
         img.src = photo.src;
         img.onload = () => {
           const aspect = aspectRatio(img.height, img.width);
-          resolve({
+          const result = {
             src: photo.src,
             width: aspect.width,
             height: aspect.height,
             date: photo.date,
-          });
+            key: photo.src
+          };
+          console.log("not cached", result)
+          cache.current.set(photo.src, result);
+          resolve(result);
         };
         img.onerror = () => resolve(null); // skip if failed to load
       });
     };
+
   
-    const imagePromises = imgArr.map(loadImage);
+    const imagePromises = subset.map(loadImage);  
     const loadedImages = await Promise.all(imagePromises);
     return loadedImages.filter(Boolean); // remove any failed ones
   };
@@ -52,14 +71,29 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
   useEffect(() => {
     console.log("Received imageUrls:", imageUrls);
     const loadImages = async () => {
+      setIsLoading(true);
       const galleryImages = await photosForGallery(imageUrls);
+      setIsLoading(false);
       // @ts-ignore
       setImages(galleryImages);
 
     };
     loadImages();
 
+  }, [visibleCount]);
+
+  const loadMore = useCallback(() => {
+    setVisibleCount((prev) => prev + 10);
   }, []);
+
+  const { ref: bottomRef, inView } = useInView({
+    threshold: 0.1,
+  }); 
+
+  useEffect(() => {
+    console.log("ISVISIBLE TRIGEGRED")
+    if (inView && visibleCount < imageUrls.length) loadMore();
+  }, [inView, loadMore]);
 
   const { photos, columns, targetRowHeight, spacing, padding, width } = {
     photos: images,
@@ -113,26 +147,19 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
         spacing={calculateSpacing}
         padding={calculatePadding}
         render={{
-          wrapper: ({ style, ...rest }) => (
-            <div
-              style={{
-                ...style,
-                borderRadius: padding > 2 ? "4px" : 0,
-                boxShadow:
-                  spacing + padding > 0
-                    ? "0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)"
-                    : "none",
-                transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
-              }}
-              {...rest}
-            />
-          ),
-          extras: (_, { photo, index }) => (
-            // @ts-ignore
-            <div className={`${fredoka.className} photo-date`}>{photo.date}</div>
+          photo: (_, { photo, index } ) => (
+            <LazyPhoto key={'photo' + index} src={photo.src} date={photo.date}>
+            </LazyPhoto>
           ),
         }}
       />
+      {isLoading && (
+        <div style={{ textAlign: "center", padding: 20 }}>
+          LOADING...
+        </div>
+      )}
+      
+      <div ref={bottomRef} style={{ height: 1 }} />
     </Box>
   )
 }
