@@ -148,6 +148,7 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
         padding={calculatePadding}
         render={{
           photo: (_, { photo, index } ) => (
+                        // @ts-ignore
             <LazyPhoto key={'photo' + index} src={photo.src} date={photo.date}>
             </LazyPhoto>
           ),
