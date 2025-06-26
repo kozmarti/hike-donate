@@ -2,6 +2,7 @@ import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { Fredoka } from 'next/font/google';
 import { useEffect, useState } from 'react';
+import { AxisValueFormatterContext } from '@mui/x-charts/internals';
 
 
 interface ElevationData {
@@ -51,12 +52,17 @@ export default function ElevationChart({altitude, distance, loading}: ElevationD
     loading={loading}
       grid={{ vertical: true, horizontal: true  }}
       margin={{ top: 10, bottom: 50, left: 65, right: 10 }}
-      series={[{ data: altitude, area: true, showMark: false, baseline: 'min', color: '#FD5770' }]}
-      xAxis={[{ data: distanceInKm, label: 'Distance (km)', scaleType: 'linear', max:distanceInKm[distanceInKm.length - 1]}]}
+      series={[{ data: altitude, area: true, showMark: false, baseline: 'min', color: '#FD5770', valueFormatter: (value, context) => `Altitude: ${value}m` }]}
+      xAxis={[{ data: distanceInKm, label: 'Distance (km)', scaleType: 'linear', 
+        valueFormatter: (value, context: AxisValueFormatterContext) => 
+        context.location === 'tooltip'
+        ? `Distance: ${value.toFixed(2)}km`
+        : value.toFixed(0), 
+        max: distanceInKm[distanceInKm.length - 1]}]}
       yAxis={[{
         label: 'Altitude (m)',
       }]}
-      // tooltip={{ trigger: 'none' }}
+      tooltip={{ trigger: 'axis' }}
       
       sx={{
         backgroundColor: 'rgba(255, 255, 255, 0.1)', 

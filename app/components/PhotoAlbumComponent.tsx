@@ -11,10 +11,10 @@ interface Photo {
   date: string;
 }
 interface PhotoAlbumProps {
-  imageUrls: Photo[];
+  photos: Photo[];
 }
 
-export const PhotoAlbumComponent = ({imageUrls}: PhotoAlbumProps) => {
+export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
   const [images, setImages] = useState([]);
 
   const aspectRatio = (height: number, width: number) => {

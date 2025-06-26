@@ -8,7 +8,7 @@ import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
 import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_client";
-import { fetchStatsHook } from "@/app/actions/fetchStats";
+import { useStats } from "@/app/hooks/useStats";
 
 
 type Stats = {
@@ -43,7 +43,7 @@ export default function Home() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const data = await fetchStatsHook();
+        const data = await useStats();
         setStats(data);
       } catch (error) {
         console.error("Failed to fetch stats:", error);
@@ -133,7 +133,7 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
             loading={loading}
           />      
           <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
-          <PhotoAlbumComponent imageUrls={convertHikePhotos(stats.photosUrl)}/>      
+          <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)}/>      
 
         </>)}
 

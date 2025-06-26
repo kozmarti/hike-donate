@@ -10,7 +10,7 @@ import EditableImageComponent from "./EditableImageComponent";
 import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
 import { useRouter } from "next/navigation";
 import { LatLngExpression } from "leaflet";
-import { fetchActivitiesHook } from "../actions/fetchActivities";
+import { useActivities } from "../hooks/useActivities";
 
 
 interface DataInputFromForm {
@@ -146,7 +146,7 @@ export const ActivityFormComponent = () => {
             const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
             const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-            const activities: Activity[] = await fetchActivitiesHook();            
+            const activities: Activity[] = await useActivities();            
 
             if (activities.length > 0) {
                 const lastActivity = activities[activities.length - 1]
