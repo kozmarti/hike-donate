@@ -8,6 +8,8 @@
 The live version of **Hike & Donate** is deployed and accessible at:  
 [https://hike-donate.vercel.app](https://hike-donate.vercel.app)
 
+![image](https://github.com/user-attachments/assets/020df6bc-fe37-4c57-9723-2ae5141ad861)
+
 ---
 ## 🌄 Features
 
@@ -21,11 +23,19 @@ The live version of **Hike & Donate** is deployed and accessible at:
 - **Interactive Map View**  
   Visualize your route with an interactive map powered by **Leaflet**.
 
+  ![image](https://github.com/user-attachments/assets/8a126634-0652-4b94-90e3-f5120e116525)
+
+
 - **Strava Integration (Webhook)**  
   Automatically pulls real-time activity data from Strava via webhooks.
 
 - **Offline / Manual Logging**  
   Encounter a dead battery or no signal? Manually log data directly into the system.
+![image](https://github.com/user-attachments/assets/abdfe8fe-935b-4f7c-b2fa-01b00f073d8b)
+
+- **Activity Photo Integration**   
+Automatically import photos from Strava or upload them manually. All images are organized chronologically in a seamless photo album linked to your activities.
+![image](https://github.com/user-attachments/assets/3a652585-6a4e-4213-93a6-29f3592c0324)
 
 ---
 
