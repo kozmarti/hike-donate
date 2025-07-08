@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import "/styles/formstyle.css";
 import { MapComponent } from "./MapComponent";
 import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";

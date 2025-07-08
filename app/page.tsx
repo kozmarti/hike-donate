@@ -10,6 +10,7 @@ import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
 import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_client";
 import { useStats } from "@/app/hooks/useStats";
 import Skeleton from '@mui/material/Skeleton';
+import Footer from "./components/Footer";
 
 
 type Stats = {
@@ -142,6 +143,7 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
           <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)}/>      
 
         </>)}
+        <Footer/>
 
     </main>
 
