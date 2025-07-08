@@ -246,6 +246,18 @@ font-style: italic!important;
   justify-content: start;
   align-items: center;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 20px;
+}
+
+.sceleton-conatiner {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
 }

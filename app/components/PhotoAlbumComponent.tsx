@@ -5,6 +5,7 @@ import "react-photo-album/styles.css";
 import { Fredoka } from 'next/font/google';
 import LazyPhoto from './LazyPhoto';
 import { useInView } from 'react-intersection-observer';
+import SceletonLazyPhoto from './SceletonLazyPhoto';
 
 
 const fredoka = Fredoka({ subsets: ['latin'] });
@@ -155,11 +156,8 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
         }}
       />
       {isLoading && (
-        <div style={{ textAlign: "center", padding: 20 }}>
-          LOADING...
-        </div>
+        <SceletonLazyPhoto sceletonCount={calculateColumn(window.innerWidth)}/>
       )}
-      
       <div ref={bottomRef} style={{ height: 1 }} />
     </Box>
   )

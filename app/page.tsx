@@ -9,6 +9,7 @@ import { PerformanceItemComponent } from "@/app/components/PerformanceItemCompon
 import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
 import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_client";
 import { useStats } from "@/app/hooks/useStats";
+import Skeleton from '@mui/material/Skeleton';
 
 
 type Stats = {
@@ -92,19 +93,24 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
 
             <PerformanceItemComponent title="minAltitude" />
           </div>
-          <ElevationChart
-            altitude={stats?.altitudes ?? []}
-            distance={stats?.distance_aggregated ?? []}
-            loading={loading}
-          />
+          <div className="map-wrapper" style={{ marginBottom: "20px" }}>
+          <div className="border-wrapper">
+          <Skeleton
+              animation="wave"
+              height="100%"
+              width="100%"
+              style={{ marginBottom: 6 }}
+            />
+            </div>
+            </div>
           <div className="map-wrapper">
             <div className="full-height-map">
-              <Image
-                src={"/map-loading.gif"}
-                width={200}
-                height={200}
-                alt="Picture of the author"
-              />
+            <Skeleton
+              animation="wave"
+              height="100%"
+              width="100%"
+              style={{ marginBottom: 6 }}
+            />
             </div>
           </div>
 
