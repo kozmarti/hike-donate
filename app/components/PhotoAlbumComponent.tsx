@@ -6,6 +6,7 @@ import { Fredoka } from 'next/font/google';
 import LazyPhoto from './LazyPhoto';
 import { useInView } from 'react-intersection-observer';
 import SceletonLazyPhoto from './SceletonLazyPhoto';
+import { Button } from '@mui/material';
 
 
 const fredoka = Fredoka({ subsets: ['latin'] });
@@ -91,10 +92,10 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
     threshold: 0.1,
   }); 
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("ISVISIBLE TRIGEGRED")
     if (inView && visibleCount < imageUrls.length) loadMore();
-  }, [inView, loadMore]);
+  }, [inView, loadMore]);*/
 
   const { photos, columns, targetRowHeight, spacing, padding, width } = {
     photos: images,
@@ -159,6 +160,29 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
         <SceletonLazyPhoto sceletonCount={calculateColumn(window.innerWidth)}/>
       )}
       <div ref={bottomRef} style={{ height: 1 }} />
+      {visibleCount < imageUrls.length && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1, mb: 2 }}>
+        <Button
+          variant="contained"
+          onClick={loadMore}
+          sx={{
+            color: '#CDE8CE',
+            backgroundColor: '#74816c',
+            fontFamily: fredoka.style.fontFamily,
+            fontSize: '16px',
+            ":hover": {
+              backgroundColor: '#5a6b54',
+            },
+            padding: '10px 20px',
+            boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
+            borderRadius: '20px',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+          See More Photos
+        </Button>
+      </Box>
+      )}
     </Box>
   )
 }
