@@ -45,7 +45,7 @@ export const cleanStreamData = (streamsStrava: StreamStrava[]) => {
   let previousCoordinate: number[] = [0,0];
 
   latlngStream.forEach((coordinate, index) => {
-    if (coordinate != previousCoordinate) {
+    if (JSON.stringify(coordinate) !== JSON.stringify(previousCoordinate)) {
       cleanedlatlngStream.push(coordinate);
       cleaneddistanceStream.push(distanceStream[index]);
       cleanedaltitudeStream.push(altitudeStream[index]);
