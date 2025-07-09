@@ -166,12 +166,12 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
           variant="contained"
           onClick={loadMore}
           sx={{
-            color: '#CDE8CE',
-            backgroundColor: '#74816c',
+            color: 'white',
+            backgroundColor: '#fd5770',
             fontFamily: fredoka.style.fontFamily,
             fontSize: '16px',
             ":hover": {
-              backgroundColor: '#5a6b54',
+              backgroundColor: '#ff6078',
             },
             padding: '10px 20px',
             boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
@@ -179,7 +179,7 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
             transition: 'background-color 0.3s ease',
           }}
         >
-          See More Photos
+          Load More 
         </Button>
       </Box>
       )}

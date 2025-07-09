@@ -1,0 +1,30 @@
+button {
+    background-color: #bf1650;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 
+                0px 3px 4px 0px rgba(0, 0, 0, 0.14), 
+                0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    margin: 10px;
+    max-width: fit-content;
+
+}
+
+input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid rgb(188, 185, 185);
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+.form-container-login {
+     display: flex; 
+     flex-direction: column; 
+     align-items : center; 
+     justify-content: center }

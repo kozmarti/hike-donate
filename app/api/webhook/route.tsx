@@ -3,10 +3,10 @@ import {
   getActivityPhotos,
   getActivityStreams,
 } from "@/lib/strava";
-import { Activity } from "../user/[strava_user_id]/project/[project_slug]/activities/route";
 import clientPromise from "@/lib/mongodb";
-import { deltaData, dataAggregateWithConstant, totalElevationLoss, totalElevationGain } from "@/app/utils/calculation_functions_client";
 import { get_last_distance } from "@/app/utils/calculation_functions_server";
+import { extract_data} from "@/app/utils/transform_data";
+import { Activity } from "@/app/entities/Activity";
 
 interface Webhook {
   aspect_type: "update" | "create" | "delete";
@@ -18,88 +18,13 @@ interface Webhook {
   updates: {};
 }
 
-interface StreamStrava {
-  type: string;
-  data: []; //coordinates
-  series_type: string;
-  original_size: number;
-  resolution: string;
-}
-
-interface Stream {
-  latlng: [];
-  altitude: [];
-  distance: [];
-}
-
-interface Photo {
-  unique_id: string;
-  athlete_id: number;
-  activity_id: number;
-  activity_name: string;
-  urls: {};
-}
-
-const extract_data = (
-  activity_strava: any,
-  photos_strava: any,
-  streams_strava: any,
-  last_distance: number
-) => {
-  console.log("Extracting data");
-
-  // @ts-ignore
-  var streams_extracted: Stream = {};
-  streams_strava.map((stream: StreamStrava) => {
-    // @ts-ignore
-    streams_extracted[stream.type] = stream.data;
-  });
-  const photo_urls: any = photos_strava.map(
-    // @ts-ignore
-    (photo: Photo) => photo.urls["5000"]
-  );
-  const delta_distances_aggregated = dataAggregateWithConstant(
-    streams_extracted["distance"],
-    last_distance
-  );
-  console.log("HEREEE last distance", last_distance);
-  const delta_distances =  deltaData(streams_extracted["distance"]) 
-  const delta_altitudes = deltaData(streams_extracted["altitude"])
-
-  const total_elevation_loss = totalElevationLoss(delta_altitudes);
-  const total_elevation_gain = totalElevationGain(delta_altitudes);
-
-  const activity: Activity = {
-    strava_user_id: activity_strava["athlete"]["id"],
-    strava_activity_id: activity_strava["id"],
-    start_time: activity_strava["start_date_local"],
-    strava_project_name: activity_strava["name"],
-    moving_time: activity_strava["moving_time"],
-    total_distance: activity_strava["distance"],
-    min_altitude: activity_strava["elev_low"],
-    max_altitude: activity_strava["elev_high"],
-    polyline: activity_strava["map"]["polyline"],
-
-    strava_photo_urls: photo_urls,
-
-    coordinates: streams_extracted["latlng"],
-    altitudes: streams_extracted["altitude"],
-    distances: streams_extracted["distance"],
-
-    delta_altitudes: delta_altitudes,
-    delta_distances: delta_distances,
-    total_elevation_loss: total_elevation_loss,
-    total_elevation_gain: total_elevation_gain,
-    distances_aggregated: delta_distances_aggregated,
-  };
-  return activity;
-};
-
 export async function POST(request: Request) {
   const webhook_data: Webhook = await request.json();
   console.log("webhook event received!", webhook_data);
 
-  // if subscription id, aspect type, strava user, object type and project name matches, save data
+  // in scope if :
+  // ubscription id, aspect type, strava user, object type and project name matches
+
   if (
     webhook_data.aspect_type == "update" &&
     webhook_data.subscription_id ==
@@ -145,25 +70,27 @@ export async function POST(request: Request) {
   });
 }
 
+
 export async function GET(request: Request) {
+  // this is the endpoint for verifying the webhook subscription
+  // it is called by Strava when you create a new webhook subscription
+  // and it should respond with the challenge token sent by Strava
+
   console.log(request.url);
   const { searchParams } = new URL(request.url);
-  // Your verify token. Should be a random string.
-  const VERIFY_TOKEN = "STRAVA";
-  // Parses the query params
+  const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+
   let mode = searchParams.get("hub.mode");
   let token = searchParams.get("hub.verify_token");
   let challenge = searchParams.get("hub.challenge");
-  // Checks if a token and mode is in the query string of the request
+
   if (mode && token) {
-    // Verifies that the mode and token sent are valid
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
       // Responds with the challenge token from the request
       console.log("WEBHOOK_VERIFIED");
       console.log({ "hub.challenge": challenge });
       return Response.json({ "hub.challenge": challenge });
     } else {
-      // Responds with '403 Forbidden' if verify tokens do not match
       return new Response("FORBIDDEN", {
         status: 403,
       });

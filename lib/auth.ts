@@ -15,6 +15,8 @@ export async function encrypt(payload: any) {
 }
 
 export async function decrypt(input: string): Promise<any> {
+  console.log("Decrypting input:", input);
+  console.log("Using key:", key);
   const { payload } = await jwtVerify(input, key, {
     algorithms: ["HS256"],
   });
@@ -50,7 +52,13 @@ export async function logout() {
 export async function getSession() {
   const session = cookies().get("session")?.value;
   if (!session) return null;
-  return await decrypt(session);
+  try {
+    return await decrypt(session);
+  } catch (error) {
+    logout();
+    console.warn("Invalid or expired session:", error);
+    return null;
+  }
 }
 
 export async function updateSession(request: NextRequest) {
