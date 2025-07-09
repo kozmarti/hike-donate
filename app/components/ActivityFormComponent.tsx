@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "/styles/formstyle.css";
 import { MapComponent } from "./MapComponent";
-import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";
 import { getCalculatedAltitudes, getLastDistance, timeStringToSeconds, transformData } from "../utils/calculation_functions_client";
 import { UploadButton } from "../src/utils/uploadthing";
 import "@uploadthing/react/styles.css";
@@ -11,6 +10,7 @@ import { onBeforeUploadBegin } from "../utils/resize_photo_helpers";
 import { useRouter } from "next/navigation";
 import { LatLngExpression } from "leaflet";
 import { useActivities } from "../hooks/useActivities";
+import { Activity } from "../entities/Activity";
 
 
 interface DataInputFromForm {
