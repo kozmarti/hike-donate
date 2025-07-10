@@ -41,7 +41,7 @@ const inter = Fredoka({ subsets: ["latin"] });
 
 export default function Home() {
   const [stats, setStats] = useState<Stats | null>(null);
-  const [collectedAmount, setCollectedAmount] = useState<number | null>(null);
+  const [collectedAmount, setCollectedAmount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
 
@@ -132,6 +132,7 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
         <>
           <div className="container wrapper">
             <div>distance : {stats.totalDistance / 1000} collected amount : {collectedAmount}</div>
+            
             <CollectedAmountGauge collectedAmount={collectedAmount} distance={stats.totalDistance / 1000}/>
             <PerformanceItemComponent title="totalDistance" quantity={stats.totalDistance / 1000} />
             <PerformanceItemComponent title="timeElapsed" quantity={stats.timeElapsed + 1} />
