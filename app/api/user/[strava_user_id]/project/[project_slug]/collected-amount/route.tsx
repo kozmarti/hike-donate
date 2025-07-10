@@ -9,7 +9,7 @@ export async function GET(
   {
     "_id": "686f8d924bb799c6428d8960",
     "date": "2025-07-10T10:18:32.646Z",
-    "amount": "36 325,75 €"
+    "amount": "36325.75"
   }
 ]*/
   try {

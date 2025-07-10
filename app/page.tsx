@@ -11,6 +11,8 @@ import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_cli
 import { useStats } from "@/app/hooks/useStats";
 import Skeleton from '@mui/material/Skeleton';
 import Footer from "./components/Footer";
+import { useCollectedAmount } from "./hooks/useCollectedAmount";
+import CollectedAmountGauge from "./components/CollectedAmountGauge";
 
 
 type Stats = {
@@ -39,6 +41,7 @@ const inter = Fredoka({ subsets: ["latin"] });
 
 export default function Home() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [collectedAmount, setCollectedAmount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
 
@@ -46,6 +49,8 @@ export default function Home() {
     const fetchStats = async () => {
       try {
         const data = await useStats();
+        const collectedAmountData = await useCollectedAmount();
+        setCollectedAmount(collectedAmountData[0]?.amount ?? 0);
         setStats(data);
       } catch (error) {
         console.error("Failed to fetch stats:", error);
@@ -126,7 +131,8 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
       {!loading && stats && (
         <>
           <div className="container wrapper">
-
+            <div>distance : {stats.totalDistance / 1000} collected amount : {collectedAmount}</div>
+            <CollectedAmountGauge collectedAmount={collectedAmount} distance={stats.totalDistance / 1000}/>
             <PerformanceItemComponent title="totalDistance" quantity={stats.totalDistance / 1000} />
             <PerformanceItemComponent title="timeElapsed" quantity={stats.timeElapsed + 1} />
             <PerformanceItemComponent title="totalElevationGain" quantity={stats.totalElevationGain} />
