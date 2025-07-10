@@ -37,6 +37,9 @@ The live version of **Hike & Donate** is deployed and accessible at:
 Automatically import photos from Strava or upload them manually. All images are organized chronologically in a seamless photo album linked to your activities.
 ![image](https://github.com/user-attachments/assets/3a652585-6a4e-4213-93a6-29f3592c0324)
 
+- **Scheduled Cron Task Data Collection with GitHub Actions** 
+This project includes a scheduled GitHub Actions workflow that runs dayily to scrape the collected amount from the [Leetchi pot](https://www.leetchi.com/) and save the scraped data to a MongoDB database automatically.
+
 ---
 
 ## 🛠️ Tech Stack
