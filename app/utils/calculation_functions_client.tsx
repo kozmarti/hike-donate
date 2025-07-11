@@ -1,5 +1,5 @@
-import { Activity } from "../api/user/[strava_user_id]/project/[project_slug]/activities/route";
 import { DataOutputFromForm } from "../components/ActivityFormComponent";
+import { Activity } from "../entities/Activity";
 
 
 export const getLastDistance = async (
