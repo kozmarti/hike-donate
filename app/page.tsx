@@ -100,16 +100,16 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
 
             <PerformanceItemComponent title="minAltitude" />
           </div>
-          <div className="map-wrapper" style={{ marginBottom: "20px" }}>
-          <div className="border-wrapper">
-          <Skeleton
+          <div className="map-wrapper">
+            <div className="full-height-map">
+            <Skeleton
               animation="wave"
               height="100%"
               width="100%"
               style={{ marginBottom: 6 }}
             />
             </div>
-            </div>
+          </div>
           <div className="map-wrapper">
             <div className="full-height-map">
             <Skeleton
