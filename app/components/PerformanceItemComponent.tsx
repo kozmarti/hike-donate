@@ -1,9 +1,5 @@
 import React from "react";
-import { IconType } from "react-icons";
 import CountUp from "react-countup";
-import { GiPathDistance } from "react-icons/gi";
-import { IoMdTrendingUp, IoMdTrendingDown } from "react-icons/io";
-import { FaArrowDown, FaArrowUp, FaRegCalendarAlt } from "react-icons/fa";
 import Image from 'next/image'
 
 interface PerformanceItemData {
@@ -61,7 +57,7 @@ export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemPro
       src={dataMap[title].icon}
       width={50}
       height={50}
-      alt="Picture of the author"
+      alt={"Picture of " + dataMap[title].title}
     />{dataMap[title].title} : 
     {quantity && (
     <CountUp end={quantity} suffix={dataMap[title].measure} />

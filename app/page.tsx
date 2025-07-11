@@ -13,6 +13,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Footer from "./components/Footer";
 import { useCollectedAmount } from "./hooks/useCollectedAmount";
 import CollectedAmountGauge from "./components/CollectedAmountGauge";
+import Description from "./components/Description";
 
 
 type Stats = {
@@ -131,9 +132,7 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
       {!loading && stats && (
         <>
           <div className="container wrapper">
-            <div>distance : {stats.totalDistance / 1000} collected amount : {collectedAmount}</div>
             
-            <CollectedAmountGauge collectedAmount={collectedAmount} distance={stats.totalDistance / 1000}/>
             <PerformanceItemComponent title="totalDistance" quantity={stats.totalDistance / 1000} />
             <PerformanceItemComponent title="timeElapsed" quantity={stats.timeElapsed + 1} />
             <PerformanceItemComponent title="totalElevationGain" quantity={stats.totalElevationGain} />
@@ -141,12 +140,14 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
             <PerformanceItemComponent title="maxAltitude" quantity={stats.maxAltitude} />
             <PerformanceItemComponent title="minAltitude" quantity={stats.minAltitude} />
           </div>
-          <ElevationChart
+   
+          <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
+                    <ElevationChart
             altitude={stats?.altitudes ?? []}
             distance={stats?.distance_aggregated ?? []}
             loading={loading}
-          />      
-          <MapComponent coordinates={stats.coordinates as [number, number][]} currentLocation={stats.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats.coordinates.slice(-1)[0] as [number, number]} />
+          />   
+          <Description collectedAmount={collectedAmount} totalDistanceKm={Math.round(stats.totalDistance / 1000)}/>
           <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)}/>      
 
         </>)}

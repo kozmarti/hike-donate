@@ -1,5 +1,6 @@
 import React from 'react'
 import GaugeComponent from 'react-gauge-component';
+import { FaBox } from 'react-icons/fa';
 
 interface Props {
     collectedAmount: number;
@@ -17,6 +18,7 @@ const CollectedAmountGauge = ({collectedAmount, distance}: Props) => {
     const isDistanceCovered = (collectedAmount <= distance) ? false : true;
       
   return (
+    <div className='gauge-container'>
     <GaugeComponent
     arc={{
       nbSubArcs: 100,
@@ -41,6 +43,7 @@ const CollectedAmountGauge = ({collectedAmount, distance}: Props) => {
     value={collectedAmount}
     maxValue={distance}
   />
+  </div>
   )
 }
 

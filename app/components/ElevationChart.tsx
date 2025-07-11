@@ -1,4 +1,4 @@
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { Fredoka } from 'next/font/google';
 import { useEffect, useState } from 'react';

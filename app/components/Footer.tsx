@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { Fredoka } from 'next/font/google';
 import { FaHeart } from "react-icons/fa";
 
