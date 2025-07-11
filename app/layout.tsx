@@ -6,7 +6,7 @@ const inter = Fredoka({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Hike&Donate",
-  description: "Hike&Donate logo",
+  description: "Track my fundraising hike where every kilometer helps raise donations for Ukraine. Follow the journey, view progress, and support the cause.",
   icons: '/favicon.png',
 };
 
