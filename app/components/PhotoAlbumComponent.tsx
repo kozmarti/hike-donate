@@ -160,7 +160,7 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
         <SceletonLazyPhoto sceletonCount={calculateColumn(window.innerWidth)}/>
       )}
       <div ref={bottomRef} style={{ height: 1 }} />
-      {visibleCount < imageUrls.length && (
+      {visibleCount < imageUrls.length && !isLoading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1, mb: 2 }}>
         <Button
           variant="contained"
