@@ -193,11 +193,14 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   padding: 8px;
+  margin: 10px;
+
 }
 
 .border-wrapper {
-  margin-bottom: 50px;
+  margin: 10px;
   border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .border-wrapper div {

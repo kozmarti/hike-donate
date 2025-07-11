@@ -28,14 +28,14 @@ const Description = ({collectedAmount, totalDistanceKm}: Props) => {
   
   <p>I am embarking on an exciting journey with a simple mission: 
     for each kilometer I complete, I aim to raise €1 to support the people 
-    of Ukraine through the <a href='https://france-ukraine.com/' target="_blank">
-             Association France-Ukraine</a> <Image
+    of Ukraine through the <Image
           style={{ display: 'inline-block' }}
               src="/ukraine.png"
               width="20"
               height="20"
               alt="Donate icon"
-            /> .</p>
+            /> <a href='https://france-ukraine.com/' target="_blank">
+    Association France-Ukraine</a> . </p>
 
   <p>This association is dedicated to providing emergency assistance to Ukrainians affected by the war. Their work helps meet essential needs such as food, medical aid, and shelter.</p>
 
@@ -45,11 +45,11 @@ const Description = ({collectedAmount, totalDistanceKm}: Props) => {
     <div className='flexbox-vertical-conatiner'>
     <CollectedAmountGauge collectedAmount={collectedAmount} distance={totalDistanceKm}/>
 {totalDistanceKm > collectedAmount && (
-  <p className="distance-info"><strong>{collectedAmount} km</strong> already covered <FaHeart style={{display: "inline", color: "#a5feca"}} />
+  <p className="distance-info"><strong>{collectedAmount} km</strong> already covered <FaHeart style={{display: "inline", color: "#6BFFAE"}} />
 , <strong>{totalDistanceKm - collectedAmount} km</strong> still waiting for sponsors.</p>    
 )}
 {totalDistanceKm <= collectedAmount && (
-  <p className="distance-info"> <strong>{totalDistanceKm} km</strong> hiked, <strong>€{collectedAmount} </strong> raised — all covered, thank you! <FaHeart style={{display: "inline", color: "#a5feca"}} />
+  <p className="distance-info"> <strong>{totalDistanceKm} km</strong> hiked, <strong>€{collectedAmount} </strong> raised — all covered, thank you! <FaHeart style={{display: "inline", color: "#6BFFAE"}} />
 </p>    
 )}
   <p style={{margin: "20px"}}>Would you consider <span style={{color: "#fd5770"}}>sponsoring one kilometer</span> of my journey?</p>
