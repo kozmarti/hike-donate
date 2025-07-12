@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description: "Track my fundraising hike where every kilometer helps raise donations for Ukraine. Follow the journey, view progress, and support the cause.",
     images: [
       {
-        url: '/logo.png',
+        url: '/preview.png',
         alt: 'Hike&Donate Fundraising Preview',
       },
     ],
