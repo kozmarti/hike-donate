@@ -1,6 +1,8 @@
 import { DataOutputFromForm } from "../components/ActivityFormComponent";
 import { Activity } from "../entities/Activity";
-
+import simplify from '@turf/simplify';
+import type { LatLngExpression } from 'leaflet';
+import { Feature, LineString } from 'geojson';
 
 export const getLastDistance = async (
   startDateLocal: string,
@@ -188,4 +190,54 @@ export const getCalculatedAltitudes = async (coords: number[][]): Promise<number
 export function timeStringToSeconds(timeStr: string): number {
   const [hours, minutes] = timeStr.split(":").map(Number);
   return hours * 3600 + minutes * 60;
+}
+
+
+/**
+ * Simplifies a GPS track to optimize leaflet map rendering. (Ramer–Douglas–Peucker algorithm)
+ * @param coords - original coordinates in [lat, lon] format
+ * @param maxPoints - maximum number of returned points
+ * @param minPoints - minimum number of returned points
+ * @returns simplified coordinates in [lat, lon] format
+ */
+export function simplifyLatLngPolyline(
+  coords: [number, number][],
+  maxPoints = 110,
+  minPoints = 100
+): LatLngExpression[] {
+  if (!coords || coords.length <= 150) return coords;
+
+  const geojson: Feature<LineString> = {
+    type: 'Feature',
+    geometry: {
+      type: 'LineString',
+      coordinates: coords.map(([lat, lon]: [number, number]) => [lon, lat]),
+    },
+    properties: {
+      originalPointCount: coords.length,
+    },
+
+  };
+
+  let tolerance = 0.00001;
+  let simplified = geojson;
+  let simplifiedCoords = geojson.geometry.coordinates;
+
+  while (simplifiedCoords.length > maxPoints && tolerance < 0.001) {
+    const temp = simplify(geojson, { tolerance, highQuality: true });
+    const tempCoords = temp.geometry.coordinates;
+
+    if (tempCoords.length >= minPoints) {
+      simplified = temp;
+      simplifiedCoords = tempCoords;
+    } else {
+      break;
+    }
+
+    tolerance *= 1.2;
+  }
+  console.log(`Simplified coordinates from ${coords.length} to ${simplifiedCoords.length} with tolerance ${tolerance}`);
+  console.log("Simplified coordinates:", simplifiedCoords);
+
+  return simplifiedCoords.map(([lon, lat]) => [lat, lon]);
 }

@@ -5,7 +5,7 @@ import {
 } from "@/lib/strava";
 import clientPromise from "@/lib/mongodb";
 import { get_last_distance } from "@/app/utils/calculation_functions_server";
-import { extract_data} from "@/app/utils/transform_data";
+import { extractData} from "@/app/utils/transform_data";
 import { Activity } from "@/app/entities/Activity";
 
 interface Webhook {
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const last_distance = await get_last_distance(activity_strava.start_date_local);
     console.log("Last activity distance to pass forward", last_distance);
 
-    const activity_extracted: Activity = extract_data(
+    const activity_extracted: Activity = extractData(
       activity_strava,
       photos_strava,
       streams_strava,

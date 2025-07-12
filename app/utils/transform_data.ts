@@ -1,5 +1,5 @@
 import { Activity } from "../entities/Activity";
-import { dataAggregateWithConstant, deltaData, totalElevationGain, totalElevationLoss } from "./calculation_functions_client";
+import { dataAggregateWithConstant, deltaData, simplifyLatLngPolyline, totalElevationGain, totalElevationLoss } from "./calculation_functions_client";
 
 interface StreamStrava {
     type: string;
@@ -23,7 +23,12 @@ interface Photo {
     urls: {};
   }
   
-export const cleanStreamData = (streamsStrava: StreamStrava[]) => {
+
+/** * Removes duplicate coordinates from the Strava streams data.
+ * @param streamsStrava - The Strava streams data to be cleaned.
+ * @returns A cleaned Stream object with unique coordinates.
+ */
+const _removeDuplicatesStreamData = (streamsStrava: StreamStrava[]) => {
   // Transform strava response data to a more usable format
   // @ts-ignore
   let streams_transformed: Stream = {};
@@ -61,8 +66,59 @@ export const cleanStreamData = (streamsStrava: StreamStrava[]) => {
   return cleanedStreams;
 }
 
+/**
+ * Synchronizes the streams data with the simplified coordinates.
+ * @param originalCoords - The original coordinates from the Strava streams.
+ * @param simplifiedCoords - The simplified coordinates after applying the Ramer-Douglas-Peucker algorithm.
+ * @param altitude - The altitude data corresponding to the original coordinates.
+ * @param distance - The distance data corresponding to the original coordinates.
+ * @returns An object containing synchronized latitude/longitude, altitude, and distance arrays.
+ */
+const syncStreamsToSimplifiedCoords = (
+  originalCoords: [number, number][],
+  simplifiedCoords: [number, number][],
+  altitude: number[],
+  distance: number[]
+) => {
+  const indexMap = new Map<string, number>();
 
-export const extract_data = (
+  // Map original coordinate string → index
+  originalCoords.forEach((coord, idx) => {
+    indexMap.set(coord.join(','), idx);
+  });
+
+  const syncedLatLng: [number, number][] = [];
+  const syncedAltitude: number[] = [];
+  const syncedDistance: number[] = [];
+
+  simplifiedCoords.forEach((coord) => {
+    const key = coord.join(',');
+    const idx = indexMap.get(key);
+    if (idx !== undefined) {
+      syncedLatLng.push(coord);
+      syncedAltitude.push(altitude[idx]);
+      syncedDistance.push(distance[idx]);
+    }
+  });
+
+  return {
+    latlng: syncedLatLng,
+    altitude: syncedAltitude,
+    distance: syncedDistance,
+  };
+}
+
+
+
+/**
+ * Extracts and transforms data from Strava activity, photos, and streams into a structured Activity object.
+ * @param activity_strava - The Strava activity data.
+ * @param photos_strava - The Strava photos data.
+ * @param streams_strava - The Strava streams data.
+ * @param last_distance - The last recorded distance to be used in the transformation.
+ * @returns An Activity object containing the extracted and transformed data.
+ */
+export const extractData = (
     activity_strava: any,
     photos_strava: any,
     streams_strava: any, // StreamStrava[],
@@ -70,7 +126,16 @@ export const extract_data = (
   ) => {
     console.log("Extracting data");
   
-    const streams_extracted: Stream = cleanStreamData(streams_strava);
+    const streamsCleaned: Stream = _removeDuplicatesStreamData(streams_strava);
+    const simplifiedLatLng = simplifyLatLngPolyline(streamsCleaned.latlng, 100, 90);
+    const syncedStreams = syncStreamsToSimplifiedCoords(
+      streamsCleaned.latlng,
+      // @ts-ignore
+      simplifiedLatLng,
+      streamsCleaned.altitude,
+      streamsCleaned.distance
+    );
+
   
     const photo_urls: any = photos_strava.map(
       // @ts-ignore
@@ -78,12 +143,12 @@ export const extract_data = (
     );
   
     const delta_distances_aggregated = dataAggregateWithConstant(
-      streams_extracted["distance"],
+      syncedStreams["distance"],
       last_distance
     );
     console.log("HEREEE last distance", last_distance);
-    const delta_distances =  deltaData(streams_extracted["distance"]) 
-    const delta_altitudes = deltaData(streams_extracted["altitude"])
+    const delta_distances =  deltaData(syncedStreams["distance"]) 
+    const delta_altitudes = deltaData(syncedStreams["altitude"])
   
     const total_elevation_loss = totalElevationLoss(delta_altitudes);
     const total_elevation_gain = totalElevationGain(delta_altitudes);
@@ -101,9 +166,9 @@ export const extract_data = (
   
       strava_photo_urls: photo_urls,
   
-      coordinates: streams_extracted["latlng"],
-      altitudes: streams_extracted["altitude"],
-      distances: streams_extracted["distance"],
+      coordinates: syncedStreams["latlng"],
+      altitudes: syncedStreams["altitude"],
+      distances: syncedStreams["distance"],
   
       delta_altitudes: delta_altitudes,
       delta_distances: delta_distances,
