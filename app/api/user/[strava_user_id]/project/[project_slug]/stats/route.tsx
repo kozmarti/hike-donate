@@ -86,6 +86,7 @@ export async function GET(
                 in: { $concatArrays: ["$$value", "$$this"] },
               },
             },
+            photosUrl: { $reverseArray: "$photosUrl" }
           },
         },
         {
