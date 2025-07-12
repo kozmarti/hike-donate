@@ -8,40 +8,18 @@ import { MapComponent } from "@/app/components/MapComponent";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { PhotoAlbumComponent } from "@/app/components/PhotoAlbumComponent";
 import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_client";
-import { useStats } from "@/app/hooks/useStats";
+import { StatsResponse, useStats } from "@/app/hooks/useStats";
 import Skeleton from '@mui/material/Skeleton';
 import Footer from "./components/Footer";
 import { useCollectedAmount } from "./hooks/useCollectedAmount";
-import CollectedAmountGauge from "./components/CollectedAmountGauge";
 import Description from "./components/Description";
 
-
-type Stats = {
-  totalDistance: number;
-  totalElevationGain: number;
-  totalElevationLoss: number;
-  minAltitude: number;
-  maxAltitude: number;
-  timeElapsed: number;
-  photosUrl: PhotoEntry [];
-  coordinates: number[][];
-  altitudes: number[];
-  distance_by_day: number[][];
-  coordinate_by_day: number[][];
-  startHikeDate: Date;
-  lastHikeDate: Date;
-  distances: number[];
-  altitude_by_day: number[][];
-  distance_aggregated: number[];
-  delta_distances: number[];
-  delta_altitudes: number[];
-};
 
 const inter = Fredoka({ subsets: ["latin"] });
 
 
 export default function Home() {
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [stats, setStats] = useState<StatsResponse | null>(null);
   const [collectedAmount, setCollectedAmount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 

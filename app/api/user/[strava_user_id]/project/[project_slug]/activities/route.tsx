@@ -17,7 +17,10 @@ export async function GET(
     const client = await clientPromise;
     const db = client.db("hike");
 
-     // Case 1: return last distance if start_date_local is provided
+     // Case 1: return last activity if start_date_local is provided
+     // This is used to get the last distance for the activity
+     // response example: {"last_distance":8362.5}
+     
      if (startDate) {
       const previousHike = await db
         .collection("activities")

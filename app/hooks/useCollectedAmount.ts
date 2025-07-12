@@ -1,6 +1,12 @@
 "use client";
-import fetchFromApi from "../services/api-clent"
+import fetchFromApi from "../services/api-client"
 
-export async function useCollectedAmount() {
-  return fetchFromApi("collected-amount");
+interface CollectedAmountResponse {
+  _id: string,
+  date: string,
+  amount: number
+}
+
+export async function useCollectedAmount(): Promise<CollectedAmountResponse[]> {
+  return fetchFromApi<CollectedAmountResponse[]>("collected-amount");
 }

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { LatLngExpression } from "leaflet";
 import { useActivities } from "../hooks/useActivities";
 import { Activity } from "../entities/Activity";
+import { createActivity } from "../services/activity-api";
 
 
 interface DataInputFromForm {
@@ -55,23 +56,11 @@ export const ActivityFormComponent = () => {
             const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
             const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
 
-            const last_distance = await getLastDistance(dataOut.start_time.toString(), stravaUserId, projectName);
+            const last_distance = await getLastDistance(dataOut.start_time.toString());
             const final_data = transformData(dataOut, altitudes, last_distance);
 
-
-            const res = await fetch(
-                `/api/user/${stravaUserId}/project/${projectName}/activities`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-
-                    },
-                    body: JSON.stringify(final_data)
-                }
-            );
-            const responseJson = await res.json();
-            console.log("Activity post response:", responseJson);
+            const res = await createActivity(final_data);
+            console.log("Activity post response:", res);
             router.push("/");
         }
         catch (error) {

@@ -3,23 +3,13 @@ import { Activity } from "../entities/Activity";
 import simplify from '@turf/simplify';
 import type { LatLngExpression } from 'leaflet';
 import { Feature, LineString } from 'geojson';
+import { useLastActivityDistance } from "../hooks/useLastActivityDistance";
 
 export const getLastDistance = async (
   startDateLocal: string,
-  stravaUserId: number,
-  stravaProjectName: string
 ) => {
-  const res = await fetch(
-    `/api/user/${stravaUserId}/project/${stravaProjectName}/activities?start_date_local=${encodeURIComponent(startDateLocal)}`,
-    {
-      method: "GET",
-      headers: {
-          "Content-Type": "application/json",
-      }  }
-  );
-
-  const data = await res.json();
-  return data.last_distance;
+  const lastActivityDistance = await useLastActivityDistance(startDateLocal);
+  return lastActivityDistance.last_distance;
 };
 
 export const deltaData = (

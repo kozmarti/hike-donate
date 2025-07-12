@@ -1,7 +1,8 @@
 "use client";
-import fetchFromApi from "../services/api-clent"
+import { Activity } from "../entities/Activity";
+import fetchFromApi from "../services/api-client"
 
 
-export async function useActivities() {
-  return fetchFromApi("activities");
+export async function useActivities(): Promise<Activity[]> {
+  return fetchFromApi<Activity[]>("activities");
 }
