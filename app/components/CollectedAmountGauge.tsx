@@ -1,13 +1,14 @@
 import React from 'react'
 import GaugeComponent from 'react-gauge-component';
-import { FaBox } from 'react-icons/fa';
+import { HiInformationCircle } from 'react-icons/hi';
 
 interface Props {
     collectedAmount: number;
     distance: number;
+    amountLastUpdated: string;
 }
 
-const CollectedAmountGauge = ({collectedAmount, distance}: Props) => {
+const CollectedAmountGauge = ({collectedAmount, distance, amountLastUpdated}: Props) => {
     const distanceKm = (value: number) => {
         return value.toFixed(0) + ' km';
         }
@@ -18,7 +19,14 @@ const CollectedAmountGauge = ({collectedAmount, distance}: Props) => {
     const isDistanceCovered = (collectedAmount <= distance) ? false : true;
       
   return (
-    <div className='gauge-container'>
+    <div className='gauge-container relative'>
+      {/* Info icon in top-right corner */}
+  <div className="absolute top-5 right-5 group cursor-pointer">
+    <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
+    <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
+      Last updated : {amountLastUpdated}
+    </div>
+  </div>
     <GaugeComponent
     arc={{
       nbSubArcs: 100,

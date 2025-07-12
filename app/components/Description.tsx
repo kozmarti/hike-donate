@@ -5,11 +5,12 @@ import { FaHeart } from "react-icons/fa";
 
 interface Props {
     collectedAmount: number;
+    amountLastUpdated: string;
     totalDistanceKm: number;
 
 }
 
-const Description = ({collectedAmount, totalDistanceKm}: Props) => {
+const Description = ({collectedAmount, totalDistanceKm, amountLastUpdated}: Props) => {
   return (
     <div className='map-wrapper description-wrapper'>
        <div className="description-container">
@@ -43,7 +44,7 @@ const Description = ({collectedAmount, totalDistanceKm}: Props) => {
 
   <p>Whether I hike 10 kilometers or 100, every euro you contribute will directly support this humanitarian cause.</p>
     <div className='flexbox-vertical-conatiner'>
-    <CollectedAmountGauge collectedAmount={collectedAmount} distance={totalDistanceKm}/>
+    <CollectedAmountGauge collectedAmount={collectedAmount} amountLastUpdated={amountLastUpdated} distance={totalDistanceKm}/>
 {totalDistanceKm > collectedAmount && (
   <p className="distance-info"><strong>{collectedAmount} km</strong> already covered <FaHeart style={{display: "inline", color: "#6BFFAE"}} />
 , <strong>{totalDistanceKm - collectedAmount} km</strong> still waiting for sponsors.</p>    

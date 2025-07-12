@@ -21,6 +21,8 @@ const inter = Fredoka({ subsets: ["latin"] });
 export default function Home() {
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [collectedAmount, setCollectedAmount] = useState<number>(0);
+  const [amountLastUpdated, setAmountLastUpdated] = useState<string>('');
+
   const [loading, setLoading] = useState(true);
 
 
@@ -30,6 +32,16 @@ export default function Home() {
         const data = await useStats();
         const collectedAmountData = await useCollectedAmount();
         setCollectedAmount(collectedAmountData[0]?.amount ?? 0);
+        const date = new Date(collectedAmountData[0]?.date);
+        const formattedDate = date.toLocaleString('en-GB', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        setAmountLastUpdated(formattedDate ?? '');
         setStats(data);
       } catch (error) {
         console.error("Failed to fetch stats:", error);
@@ -125,7 +137,7 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
             distance={stats?.distance_aggregated ?? []}
             loading={loading}
           />   
-          <Description collectedAmount={collectedAmount} totalDistanceKm={Math.round(stats.totalDistance / 1000)}/>
+          <Description collectedAmount={collectedAmount} amountLastUpdated={amountLastUpdated} totalDistanceKm={Math.round(stats.totalDistance / 1000)}/>
           <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)}/>      
 
         </>)}
