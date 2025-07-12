@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500&display=swap');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -84,6 +83,7 @@ body {
 
   .description-wrapper {
     width: 1000px;
+    height: auto;
 
   }
 }
@@ -93,6 +93,8 @@ body {
 
   .description-wrapper {
     width: 760px;
+    height: auto;
+
   }
 }
 
@@ -101,6 +103,8 @@ body {
 
   .description-wrapper {
     width: 480px;
+    height: auto;
+
   }
 }
 
@@ -109,6 +113,7 @@ body {
 
   .description-wrapper {
     width: 358px;
+    height: auto;
   }
 }
 /* Mobile phones: up to 480px */
@@ -116,6 +121,8 @@ body {
 
   .description-wrapper {
     width: 300px;
+    height: auto;
+
   }
 }
 
@@ -183,6 +190,8 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   width: 300px;
+  height: auto;
+
   gap: 6px;
   padding: 16px;
 }
@@ -211,6 +220,8 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   width: 100%;
+  height: auto;
+
   justify-items: center;
   align-items: center;
   margin-bottom: 20px;
@@ -250,6 +261,8 @@ body {
   z-index: 500;
   height: 30px;
   width: 30px;
+  height: auto;
+
   font-family: 'Fredoka', sans-serif;
   border-radius: 2px;
   padding: 2px;
@@ -307,6 +320,8 @@ font-style: italic!important;
   gap: 10px;
   margin-bottom: 20px;
   width: 100%;
+  height: auto;
+
 }
 
 .description-container{

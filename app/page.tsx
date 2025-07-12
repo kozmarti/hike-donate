@@ -59,15 +59,17 @@ export default function Home() {
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${inter.className}`}
     >
-
+    <div className="relative w-52 h-52">
       <Image
         src="/logo.png"
         alt="Hike&Donate Logo"
-        width={200}
-        height={48}
+        fill
+        className="object-contain"
         priority
+        sizes="(max-width: 300px) 300px"
       />
- 
+    </div>
+    
  {/*
       <p>Would you sponsor one kilometer of my fundraising hike? 
       </p>
