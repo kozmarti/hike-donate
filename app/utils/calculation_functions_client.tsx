@@ -115,7 +115,6 @@ type PhotoOutput = {
 };
 
 export const convertHikePhotos = (data: PhotoEntry[]): PhotoOutput[] => {
-  console.log("Data received in convertHikePhotos:", data);
   const result: PhotoOutput[] = [];
 
   data.forEach(entry => {

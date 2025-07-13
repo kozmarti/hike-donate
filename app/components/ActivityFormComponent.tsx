@@ -131,28 +131,18 @@ export const ActivityFormComponent = () => {
 
     useEffect(() => {
         const fetchLastActivity = async () => {
-            const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
-            const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
             const activities: Activity[] = await useActivities();            
-
             if (activities.length > 0) {
                 const lastActivity = activities[activities.length - 1]
                 const lastCoords = lastActivity.coordinates;
                 setLastActivityDate(lastActivity.start_time.toString());
-
                 if (lastCoords.length > 0) {
                     const lastCoord = lastCoords[lastCoords.length - 1];
                     setCenterLocation([lastCoord[0], lastCoord[1]]);
                     setCoords([lastCoord]);
-
                 }
             }
-
-
         };
-
         fetchLastActivity();
     }, []);
 

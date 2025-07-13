@@ -1,6 +1,9 @@
+import { tooltip } from 'leaflet';
 import React from 'react'
-import GaugeComponent from 'react-gauge-component';
 import { HiInformationCircle } from 'react-icons/hi';
+import dynamic from "next/dynamic";
+
+const GaugeComponent = dynamic(() => import('react-gauge-component'), { ssr: false });
 
 interface Props {
     collectedAmount: number;
@@ -17,24 +20,27 @@ const CollectedAmountGauge = ({collectedAmount, distance, amountLastUpdated}: Pr
             }
 
     const isDistanceCovered = (collectedAmount <= distance) ? false : true;
-      
+    console.log("isDistanceCovered", isDistanceCovered);
   return (
     <div className='gauge-container relative'>
       {/* Info icon in top-right corner */}
-  <div className="absolute top-5 right-5 group cursor-pointer">
-    <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
+      <div className="absolute top-5 right-5 group cursor-pointer">
+      <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
     <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
       Last updated : {amountLastUpdated}
     </div>
   </div>
-    <GaugeComponent
+  <GaugeComponent
     arc={{
       nbSubArcs: 100,
       colorArray: ['#fd5770','#cde8ce', '#6bffae'],
       width: 0.3,
       padding: 0.003,
       emptyColor: '#74816C',
-    }}
+      subArcs: {
+        color: "red"
+      }
+  }}
     labels={{
       valueLabel: {
         matchColorWithArc: !isDistanceCovered,
@@ -43,10 +49,11 @@ const CollectedAmountGauge = ({collectedAmount, distance, amountLastUpdated}: Pr
 
       },
       tickLabels: {
+        ticks: [{value : 0}, {value: distance}],
         defaultTickValueConfig: {
           formatTextValue: distanceKm,
-          style: {fontSize: "10px", fill: "#black"}
-        }
+          style: {fontSize: "10px", fill: "black"}
+        },
     }}}
     value={collectedAmount}
     maxValue={distance}

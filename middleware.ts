@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     
-    if (pathname.startsWith("/activity")) {
+    if (pathname.startsWith("/add-activity")) {
         const session = request.cookies.get("session")?.value;
 
         if (!session) {
@@ -37,5 +37,5 @@ export async function middleware(request: NextRequest) {
 
 
 export const config = {
-    matcher: ["/activity", "/api/user/:path*", "/api/streams/:path*"],
+    matcher: ["/add-activity", "/api/user/:path*", "/api/streams/:path*"],
 };

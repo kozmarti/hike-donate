@@ -34,14 +34,9 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
   }
 
   const photosForGallery = async (imgArr: Photo[]) => {
-    console.log("HEREEEE", imgArr.length)
     const subset = imgArr.slice(0, visibleCount);
-    console.log("visible count", visibleCount)  
-    console.log("SLICEEED", subset.length)
-
     const loadImage = (photo: Photo): Promise<any> => {
       const cached = cache.current.get(photo.src); 
-      console.log("already chached", cached)
       if (cached) return Promise.resolve(cached); 
       return new Promise((resolve) => {
         const img = new Image();
@@ -55,7 +50,6 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
             date: photo.date,
             key: photo.src
           };
-          console.log("not cached", result)
           cache.current.set(photo.src, result);
           resolve(result);
         };
@@ -71,7 +65,6 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
 
   /* when photos is passed into the component run the function and update the state */
   useEffect(() => {
-    console.log("Received imageUrls:", imageUrls);
     const loadImages = async () => {
       setIsLoading(true);
       const galleryImages = await photosForGallery(imageUrls);
