@@ -12,15 +12,17 @@ interface Props {
 }
 
 const CollectedAmountGauge = ({collectedAmount, distance, amountLastUpdated}: Props) => {
+  console.log("Collected Amount Gauge", collectedAmount, distance, amountLastUpdated);
+  console.log("max value", (collectedAmount >= distance) ? collectedAmount : distance);
     const distanceKm = (value: number) => {
+      if (value === collectedAmount) {
+        return distance + ' km';
+      }
         return value.toFixed(0) + ' km';
         }
     const collectedAmountEUR = (value: number) => {
             return '€' + value.toFixed(0);
             }
-
-    const isDistanceCovered = (collectedAmount <= distance) ? false : true;
-    console.log("isDistanceCovered", isDistanceCovered);
   return (
     <div className='gauge-container relative'>
       {/* Info icon in top-right corner */}
@@ -37,26 +39,23 @@ const CollectedAmountGauge = ({collectedAmount, distance, amountLastUpdated}: Pr
       width: 0.3,
       padding: 0.003,
       emptyColor: '#74816C',
-      subArcs: {
-        color: "red"
-      }
+      subArcs: [{color: 'red'}],
   }}
     labels={{
       valueLabel: {
-        matchColorWithArc: !isDistanceCovered,
+        matchColorWithArc: true,
         formatTextValue: collectedAmountEUR,
         style: {fontSize: "35px", fill: "#6bffae", textShadow: "0 0 5px #74816C"},
 
       },
       tickLabels: {
-        ticks: [{value : 0}, {value: distance}],
         defaultTickValueConfig: {
           formatTextValue: distanceKm,
           style: {fontSize: "10px", fill: "black"}
         },
     }}}
     value={collectedAmount}
-    maxValue={distance}
+    maxValue={(collectedAmount >= distance) ? collectedAmount : distance}
   />
   </div>
   )
