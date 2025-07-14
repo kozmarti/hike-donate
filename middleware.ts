@@ -8,8 +8,8 @@ const ALLOWED_HOSTS : string[] = [
 export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
-    
-    if (pathname.startsWith("/add-activity")) {
+   
+    if (pathname.startsWith("/add-activity") || pathname.startsWith("/activities")) {
         const session = request.cookies.get("session")?.value;
 
         if (!session) {
@@ -23,19 +23,19 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url)); // Redirect to login on failure
         }
     }
-    /*
+    
     if (pathname.startsWith("/api")) {
         const origin = request.headers.get("origin") || request.headers.get("referer");
         if (!origin || !ALLOWED_HOSTS.some((host) => origin.startsWith(host))) {
           return NextResponse.json({ error: "Unauthorized origin" }, { status: 403 });
         }
       }
-        */
+
 
     return NextResponse.next();
 }
 
 
 export const config = {
-    matcher: ["/add-activity", "/api/user/:path*", "/api/streams/:path*"],
+    matcher: ["/add-activity","/activities", "/api/user/:path*", "/api/streams/:path*"],
 };

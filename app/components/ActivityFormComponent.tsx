@@ -40,8 +40,10 @@ export const ActivityFormComponent = () => {
     const router = useRouter();
     const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
     const [lastActivityDate, setLastActivityDate] = useState<string | null>(null);
+    const [nextActivityDate, setNextActivityDate] = useState<string | null>(null);
 
 
+ 
 
 
     const onSubmitForm = async (dataIn: DataInputFromForm) => {
@@ -53,8 +55,6 @@ export const ActivityFormComponent = () => {
                 moving_time: timeStringToSeconds(dataIn.moving_time)
             }
             const altitudes = await getCalculatedAltitudes(dataOut.coordinates);
-            const stravaUserId = parseInt(process.env.NEXT_PUBLIC_STRAVA_USER_ID || "0");
-            const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME || "";
 
             const last_distance = await getLastDistance(dataOut.start_time.toString());
             const final_data = transformData(dataOut, altitudes, last_distance);
@@ -161,6 +161,7 @@ export const ActivityFormComponent = () => {
                         required
                         type="datetime-local"
                         {...register("start_time")}
+                        value={lastActivityDate ? lastActivityDate : new Date().toISOString().slice(0, 16)} // Default to current date and time
                     />
                 </label>
                 <label className="data-label">
