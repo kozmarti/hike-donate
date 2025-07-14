@@ -6,7 +6,7 @@ const LazyPhoto = ({ src, date, ...props }: { src: string; date?: string }) => {
   const [loaded, setLoaded] = useState(false);
 
   return (
-      <div ref={inViewRef}>
+      <div ref={inViewRef} style={{ marginBottom: "-25px"}}>
         {inView && (
           <>
               <img
@@ -24,7 +24,7 @@ const LazyPhoto = ({ src, date, ...props }: { src: string; date?: string }) => {
                 }}
                 onLoad={() => setLoaded(true)}
               />
-            <div style={{position: "relative", top: "-30px", right: "20px"}} className={`photo-date`}>{date}</div>
+            <div style={{position: "relative", top: "-30px", right: "25px"}} className={`photo-date`}>{date}</div>
           </>
         )}
       </div>
