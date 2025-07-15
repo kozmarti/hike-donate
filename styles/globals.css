@@ -376,7 +376,6 @@ a {
 }
 
 .scroll-down-button {
-  position: fixed;
   bottom: 10px;
   right: 10px;
   text-decoration: none;
