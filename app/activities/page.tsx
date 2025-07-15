@@ -42,15 +42,22 @@ export default function Page() {
               {activity.altitudes[0] - activity.altitudes[activity.altitudes.length - 1] + activity.total_elevation_gain === - activity.total_elevation_loss ? " ✅" : " ❌"}
             </p>
             {index > 0 && (
-              <p style={{ color: "black" }}>
-                <strong>CHECK Aggregated distances [previous last = first] : </strong>
-                {activity.distances_aggregated[0]} - {activities[index - 1].distances_aggregated[ activities[index - 1].altitudes.length - 1]} = 0 ?
-                {activity.distances_aggregated[0] - activities[index - 1].distances_aggregated[ activities[index - 1].altitudes.length - 1] === 0 ? " ✅" : " ❌"}
-              </p>
+              <>
+                <p style={{ color: "black" }}>
+                  <strong>CHECK Aggregated distances [previous last = first] : </strong>
+                  {activity.distances_aggregated[0]} - {activities[index - 1].distances_aggregated[activities[index - 1].distances_aggregated.length - 1]} = {activity.distances_aggregated[0] - activities[index - 1].distances_aggregated[activities[index - 1].distances_aggregated.length - 1]} = 0 ?
+                  {activity.distances_aggregated[0] - activities[index - 1].distances_aggregated[activities[index - 1].distances_aggregated.length - 1] === 0 ? " ✅" : " ❌"}
+                </p>
+                <p style={{ color: "black" }}>
+                  <strong>CHECK Altitudes [previous last = first] : </strong>
+                  {activity.altitudes[0]} - {activities[index - 1].altitudes[activities[index - 1].altitudes.length - 1]} = {activity.altitudes[0] - activities[index - 1].altitudes[activities[index - 1].altitudes.length - 1]} = 0 ?
+                  {activity.altitudes[0] - activities[index - 1].altitudes[activities[index - 1].altitudes.length - 1] === 0 ? " ✅" : " ❌"}
+                </p>
+              </>
             )}
             <p style={{ color: "black" }}><strong>CHECK number of points : </strong>
-            {activity.coordinates.length} cooridnates = {activity.distances_aggregated.length} distances = {activity.altitudes.length} altitudes ?
-            {activity.coordinates.length === activity.distances_aggregated.length && activity.distances_aggregated.length === activity.altitudes.length ? " ✅" : " ❌"}
+              {activity.coordinates.length} cooridnates = {activity.distances_aggregated.length} distances = {activity.altitudes.length} altitudes ?
+              {activity.coordinates.length === activity.distances_aggregated.length && activity.distances_aggregated.length === activity.altitudes.length ? " ✅" : " ❌"}
             </p>
 
             <p ><strong>Photos: </strong>
