@@ -1,7 +1,5 @@
 import React from 'react'
 import Image from 'next/image'
-import CollectedAmountGauge from './CollectedAmountGauge'
-import { FaHeart } from "react-icons/fa";
 
 interface Props {
   collectedAmount: number;
@@ -12,7 +10,7 @@ interface Props {
 
 const Description = ({ collectedAmount, totalDistanceKm, amountLastUpdated }: Props) => {
   return (
-    <div className='map-wrapper description-wrapper'>
+    <div className='map-wrapper description-wrapper' id='fundraising-description'>
       <div className="description-container">
 
         <h1 className="flexbox-horizontal-conatiner">
@@ -43,16 +41,7 @@ const Description = ({ collectedAmount, totalDistanceKm, amountLastUpdated }: Pr
         <p>Each step I take is a symbol of solidarity — with those forced to flee their homes, those living under constant threat, and those fighting every day to survive.</p>
 
         <p>Whether I hike 10 kilometers or 100, every euro you contribute will directly support this humanitarian cause.</p>
-        <div className='flexbox-vertical-conatiner'>
-          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={totalDistanceKm} />
-          {totalDistanceKm > collectedAmount && (
-            <p className="distance-info"><strong>{collectedAmount} km</strong> already covered <FaHeart style={{ display: "inline", color: "#6BFFAE" }} />
-              , <strong>{totalDistanceKm - collectedAmount} km</strong> still waiting for sponsors.</p>
-          )}
-          {totalDistanceKm <= collectedAmount && (
-            <p className="distance-info"> <strong>{totalDistanceKm} km</strong> hiked, <strong>€{collectedAmount} </strong> raised — all covered, thank you! <FaHeart style={{ display: "inline", color: "#6BFFAE" }} />
-            </p>
-          )}
+        <div className='flexbox-vertical-conatiner'>          
           <p style={{ margin: "20px" }}>Would you consider <span style={{ color: "#fd5770" }}>sponsoring one kilometer</span> of my journey?</p>
           <a href="">
             <Image

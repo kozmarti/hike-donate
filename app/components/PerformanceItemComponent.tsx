@@ -18,32 +18,32 @@ export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemPro
     totalDistance: {
       title: "Distance",
       icon: "/distance.svg",
-      measure: "km",
+      measure: " km",
     },
     totalElevationGain: {
         title: "Elevation Gain",
         icon: "/elevationGain.svg",
-        measure: "m"
+        measure: " m"
     },
     totalElevationLoss: {
         title: "Elevation Loss",
         icon: "/elevationLoss.svg",
-        measure: "m"
+        measure: " m"
     },
     minAltitude: {
         title: "Lowest Altitude",
         icon: "/minAltitude.svg",
-        measure: "m",
+        measure: " m",
     },
     maxAltitude: {
         title: "Highest Altitude",
         icon: "/maxAltitude.svg",
-        measure: "m",
+        measure: " m",
     },
     timeElapsed: {
         title: "Time Elapsed",
         icon: "/timeElapsed.svg",
-        measure: "days"
+        measure: " days"
     }
 
     

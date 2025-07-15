@@ -11,6 +11,22 @@ import Footer from "./components/Footer";
 import { useCollectedAmount } from "./hooks/useCollectedAmount";
 import Description from "./components/Description";
 import dynamic from "next/dynamic";
+import { BsArrowUpSquareFill } from "react-icons/bs";
+
+
+const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmountGauge'), {
+  ssr: false,
+  loading: () => 
+    <div className='gauge-container'>
+    <Skeleton
+    animation="wave"
+    height="300px"
+    width="300px"
+    style={{ marginBottom: 6 }}
+  />
+  </div>
+,
+});
 
 const MapComponent = dynamic(() => import('@/app/components/MapComponent').then((mod) => mod.MapComponent), {
   ssr: false,
@@ -99,15 +115,9 @@ export default function Home() {
         priority
       />
  
- {/*
-      <p>Would you sponsor one kilometer of my fundraising hike? 
-      </p>
-      <p>I am embarking on an exciting journey. The goal is simple: for every kilometer I trek, I aim to raise an equal number of euros for [Association] to [support …]. 
-Whether I walk 10 kilometers or 100, every euro raised will go toward transforming lives and providing much-needed support.
-</p>
-<p>How far do you think I will make it ?</p>
-*/}
-          <div className="container wrapper">  
+
+          <div className="container wrapper" id="statistics">  
+
             <PerformanceItemComponent title="totalDistance" quantity={stats ? stats.totalDistance / 1000 : undefined} />
             <PerformanceItemComponent title="timeElapsed" quantity={stats? stats.timeElapsed + 1 : undefined} />
             <PerformanceItemComponent title="totalElevationGain" quantity={stats?.totalElevationGain} />
@@ -115,6 +125,8 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
             <PerformanceItemComponent title="maxAltitude" quantity={stats?.maxAltitude} />
             <PerformanceItemComponent title="minAltitude" quantity={stats?.minAltitude} />
           </div>
+          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats ? stats.totalDistance /1000 : 0} />
+
           <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
           <ElevationChart
             altitude={stats?.altitudes ?? []}
@@ -131,6 +143,8 @@ Whether I walk 10 kilometers or 100, every euro raised will go toward transformi
           <Description collectedAmount={collectedAmount} amountLastUpdated={amountLastUpdated} totalDistanceKm={Math.round(stats.totalDistance / 1000)}/>
           <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)}/>      
         </>)}
+        <a href="#statistics" className="scroll-down-button"><BsArrowUpSquareFill color="#fd5770" size={20} style={{ display: "inline" }} /></a>
+
         <Footer/>
     </main>
   );
