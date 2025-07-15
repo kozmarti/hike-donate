@@ -125,8 +125,9 @@ export default function Home() {
             <PerformanceItemComponent title="maxAltitude" quantity={stats?.maxAltitude} />
             <PerformanceItemComponent title="minAltitude" quantity={stats?.minAltitude} />
           </div>
-          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats ? stats.totalDistance / 1000 : 10} />
-
+          {!loading && stats && (
+          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats.totalDistance / 1000} />
+          )}
           <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
           <ElevationChart
             altitude={stats?.altitudes ?? []}
