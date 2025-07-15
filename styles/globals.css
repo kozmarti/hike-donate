@@ -361,7 +361,7 @@ a {
 
 .gauge-container {
   max-width: 300px;
-  height: 300px;
+  height: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;

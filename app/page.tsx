@@ -17,7 +17,7 @@ import { BsArrowUpSquareFill } from "react-icons/bs";
 const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmountGauge'), {
   ssr: false,
   loading: () => 
-    <div className='gauge-container'>
+    <div className='gauge-container' style={{ height: "300px" }}>
     <Skeleton
     animation="wave"
     height="300px"
@@ -125,7 +125,7 @@ export default function Home() {
             <PerformanceItemComponent title="maxAltitude" quantity={stats?.maxAltitude} />
             <PerformanceItemComponent title="minAltitude" quantity={stats?.minAltitude} />
           </div>
-          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats ? stats.totalDistance /1000 : 0} />
+          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats ? stats.totalDistance / 1000 : 10} />
 
           <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
           <ElevationChart
