@@ -13,7 +13,7 @@ import Description from "./components/Description";
 import dynamic from "next/dynamic";
 import { BsArrowUpSquareFill } from "react-icons/bs";
 
-
+{/*     
 const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmountGauge'), {
   ssr: false,
   loading: () => 
@@ -30,6 +30,7 @@ const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmo
       </>
 ,
 });
+*/}
 
 const MapComponent = dynamic(() => import('@/app/components/MapComponent').then((mod) => mod.MapComponent), {
   ssr: false,
@@ -127,6 +128,7 @@ export default function Home() {
             <PerformanceItemComponent title="maxAltitude" quantity={stats?.maxAltitude} />
             <PerformanceItemComponent title="minAltitude" quantity={stats?.minAltitude} />
           </div>
+          {/* 
           <div className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
           {!loading && stats && (
           <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats.totalDistance / 1000} />
@@ -145,6 +147,7 @@ export default function Home() {
         </>
           )}
           </div>
+          */}
 
           <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
           <ElevationChart
@@ -158,8 +161,9 @@ export default function Home() {
       )}
       
       {!loading && stats && (
-        <>        
+        <>      {/*   
           <Description collectedAmount={collectedAmount} amountLastUpdated={amountLastUpdated} totalDistanceKm={Math.round(stats.totalDistance / 1000)}/>
+          */} 
           <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)}/>      
         </>)}
         <a href="#statistics" className="scroll-down-button"><BsArrowUpSquareFill color="#fd5770" size={20} style={{ display: "inline" }} /></a>
