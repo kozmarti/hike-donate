@@ -17,7 +17,6 @@ import { BsArrowUpSquareFill } from "react-icons/bs";
 const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmountGauge'), {
   ssr: false,
   loading: () => 
-    // <div className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
       <>
       <Skeleton
         animation="wave"
@@ -29,7 +28,6 @@ const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmo
       <Skeleton animation="wave" height={10} width="70%" />
       <Skeleton animation="wave" height={10} width="60%" />
       </>
-    //</div>
 ,
 });
 
@@ -130,18 +128,11 @@ export default function Home() {
             <PerformanceItemComponent title="minAltitude" quantity={stats?.minAltitude} />
           </div>
           <div className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <CollectedAmountGauge
-            amountLastUpdated={amountLastUpdated}
-            collectedAmount={collectedAmount}
-            distance={stats ? stats.totalDistance / 1000 : 0}
-          />
-          </div>
-          
-      {/*!loading && stats && (
+          {!loading && stats && (
           <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats.totalDistance / 1000} />
           )}
           {loading && !stats && (
-      <div className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <>
         <Skeleton
           animation="wave"
           variant="circular"
@@ -151,8 +142,10 @@ export default function Home() {
         <Skeleton animation="wave" height={10} width="80%" />
         <Skeleton animation="wave" height={10} width="70%" />
         <Skeleton animation="wave" height={10} width="60%" />
-      </div>
-          )*/}
+        </>
+          )}
+          </div>
+
           <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
           <ElevationChart
             altitude={stats?.altitudes ?? []}
