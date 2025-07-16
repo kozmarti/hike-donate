@@ -25,23 +25,16 @@ const Description = ({ collectedAmount, totalDistanceKm, amountLastUpdated }: Pr
           />
           <strong>Turning Kilometers into Solidarity </strong></h1>
 
+
+
         <p>I am embarking on an exciting journey with a simple mission:
-          for each kilometer I complete, I aim to raise €1 to support the people
-          of Ukraine through the <Image
-            style={{ display: 'inline-block' }}
-            src="/ukraine.png"
-            width="20"
-            height="20"
-            alt="Donate icon"
-          /> <a href='https://france-ukraine.com/' target="_blank">
-            Association France-Ukraine</a> . </p>
+          for each kilometer I complete, I aim to raise €1 to support the 🐶🐈 <a href='https://spa33.fr/' target="_blank">Bordeaux SPA animal shelter </a>.</p>
 
-        <p>This association is dedicated to providing emergency assistance to Ukrainians affected by the war. Their work helps meet essential needs such as food, medical aid, and shelter.</p>
+        <p>This shelter is dedicated to caring for and protecting abandoned and vulnerable animals. Your support helps provide food, medical care, and shelter to these animals in need.</p>
 
-        <p>Each step I take is a symbol of solidarity — with those forced to flee their homes, those living under constant threat, and those fighting every day to survive.</p>
 
-        <p>Whether I hike 10 kilometers or 100, every euro you contribute will directly support this humanitarian cause.</p>
-        <div className='flexbox-vertical-conatiner'>          
+        <p>Whether I hike 10 kilometers or 100, every euro you contribute will directly support this vital cause.</p>
+        <div className='flexbox-vertical-conatiner'>
           <p style={{ margin: "20px" }}>Would you consider <span style={{ color: "#fd5770" }}>sponsoring one kilometer</span> of my journey?</p>
           <a href="">
             <Image
@@ -54,7 +47,7 @@ const Description = ({ collectedAmount, totalDistanceKm, amountLastUpdated }: Pr
         </div>
         <p className="note">**All funds collected through this
           Leetchi campaign will be donated in full to the nonprofit association
-          France-Ukraine.
+          Bordeaux SPA .
           I take full personal responsibility for ensuring that the collected money is securely transferred and received by the association after the campaign ends.</p>
       </div>
     </div>
