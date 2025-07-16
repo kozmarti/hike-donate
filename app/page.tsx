@@ -17,14 +17,19 @@ import { BsArrowUpSquareFill } from "react-icons/bs";
 const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmountGauge'), {
   ssr: false,
   loading: () => 
-    <div className='gauge-container' style={{ height: "300px" }}>
-    <Skeleton
-    animation="wave"
-    height="300px"
-    width="300px"
-    style={{ marginBottom: 6 }}
-  />
-  </div>
+    // <div className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <>
+      <Skeleton
+        animation="wave"
+        variant="circular"
+        height="180px"
+        width="180px"
+      />
+      <Skeleton animation="wave" height={10} width="80%" />
+      <Skeleton animation="wave" height={10} width="70%" />
+      <Skeleton animation="wave" height={10} width="60%" />
+      </>
+    //</div>
 ,
 });
 
@@ -117,7 +122,6 @@ export default function Home() {
  
 
           <div className="container wrapper" id="statistics">  
-
             <PerformanceItemComponent title="totalDistance" quantity={stats ? stats.totalDistance / 1000 : undefined} />
             <PerformanceItemComponent title="timeElapsed" quantity={stats? stats.timeElapsed + 1 : undefined} />
             <PerformanceItemComponent title="totalElevationGain" quantity={stats?.totalElevationGain} />
@@ -125,9 +129,30 @@ export default function Home() {
             <PerformanceItemComponent title="maxAltitude" quantity={stats?.maxAltitude} />
             <PerformanceItemComponent title="minAltitude" quantity={stats?.minAltitude} />
           </div>
-          {!loading && stats && (
+          <div className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <CollectedAmountGauge
+            amountLastUpdated={amountLastUpdated}
+            collectedAmount={collectedAmount}
+            distance={stats ? stats.totalDistance / 1000 : 0}
+          />
+          </div>
+          
+      {/*!loading && stats && (
           <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats.totalDistance / 1000} />
           )}
+          {loading && !stats && (
+      <div className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Skeleton
+          animation="wave"
+          variant="circular"
+          height="180px"
+          width="180px"
+        />
+        <Skeleton animation="wave" height={10} width="80%" />
+        <Skeleton animation="wave" height={10} width="70%" />
+        <Skeleton animation="wave" height={10} width="60%" />
+      </div>
+          )*/}
           <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
           <ElevationChart
             altitude={stats?.altitudes ?? []}

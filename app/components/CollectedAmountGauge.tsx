@@ -26,9 +26,9 @@ const CollectedAmountGauge = ({ collectedAmount, distance, amountLastUpdated }: 
     return '€' + Math.round(value).toLocaleString();
   }
   return (
-    <div className='gauge-container relative'>
-      {/* Info icon in top-right corner */}
-      <div className="absolute top-5 right-5 group cursor-pointer">
+    //<div className='gauge-container relative'>
+<>
+<div className="absolute top-5 right-5 group cursor-pointer">
         <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
         <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
           Last updated from Leetchi: {amountLastUpdated}
@@ -72,8 +72,8 @@ const CollectedAmountGauge = ({ collectedAmount, distance, amountLastUpdated }: 
       <p> Learn more  <a href="#fundraising-description"><BsArrowDownSquareFill color="#fd5770" size={20} style={{ display: "inline" }} /></a>
       </p>
       </div>
-
-    </div>
+      </>
+   // </div>
   )
 }
 
