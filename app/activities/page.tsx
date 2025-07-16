@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { Activity } from "../entities/Activity";
 import { useActivities } from "../hooks/useActivities";
-import { map } from "leaflet";
+import { LatLngExpression, map } from "leaflet";
 import Link from 'next/link';
+import MiniMapComponent from "../components/MiniMapComponent";
 
 
 export default function Page() {
@@ -44,29 +45,30 @@ export default function Page() {
             <h2 key={index} className="font-bold mb-4 text-xl">Activity {index + 1}</h2>
             <hr />
             <p> <strong>Date: </strong> {new Date(activity.start_time).toLocaleDateString()}</p>
-            <p style={{ color: "black" }}><strong>CHECK Altitudes [starting - ending + gain] : </strong>
+
+            <p style={{ color: "black" }}><strong> 1.CHECK Altitudes [starting - ending + gain] : </strong>
               -{activity.altitudes[0] - activity.altitudes[activity.altitudes.length - 1] + activity.total_elevation_gain}m = {activity.total_elevation_loss} ?
-              {activity.altitudes[0] - activity.altitudes[activity.altitudes.length - 1] + activity.total_elevation_gain === - activity.total_elevation_loss ? " ✅" : " ❌"}
+              {Math.round(activity.altitudes[0] - activity.altitudes[activity.altitudes.length - 1] + activity.total_elevation_gain) === - Math.round(activity.total_elevation_loss) ? " ✅" : " ❌"}
             </p>
             {index > 0 && (
               <>
                 <p style={{ color: "black" }}>
-                  <strong>CHECK Aggregated distances [previous last = first] : </strong>
+                  <strong>2. CHECK Aggregated distances [previous last = first] : </strong>
                   {activity.distances_aggregated[0]} - {activities[index - 1].distances_aggregated[activities[index - 1].distances_aggregated.length - 1]} = {activity.distances_aggregated[0] - activities[index - 1].distances_aggregated[activities[index - 1].distances_aggregated.length - 1]} = 0 ?
                   {activity.distances_aggregated[0] - activities[index - 1].distances_aggregated[activities[index - 1].distances_aggregated.length - 1] === 0 ? " ✅" : " ❌"}
                 </p>
                 <p style={{ color: "black" }}>
-                  <strong>CHECK Altitudes [previous last = first] : </strong>
+                  <strong>3. CHECK Altitudes [previous last = first] : </strong>
                   {activity.altitudes[0]} - {activities[index - 1].altitudes[activities[index - 1].altitudes.length - 1]} = {activity.altitudes[0] - activities[index - 1].altitudes[activities[index - 1].altitudes.length - 1]} = 0 ?
                   {activity.altitudes[0] - activities[index - 1].altitudes[activities[index - 1].altitudes.length - 1] === 0 ? " ✅" : " ❌"}
                 </p>
               </>
             )}
-            <p style={{ color: "black" }}><strong>CHECK number of points : </strong>
-              {activity.coordinates.length} cooridnates = {activity.distances_aggregated.length} distances = {activity.altitudes.length} altitudes ?
+            <p style={{ color: "black" }}><strong>4. CHECK number of points : </strong>
+              {activity.coordinates.length} coordinates = {activity.distances_aggregated.length} distances = {activity.altitudes.length} altitudes ?
               {activity.coordinates.length === activity.distances_aggregated.length && activity.distances_aggregated.length === activity.altitudes.length ? " ✅" : " ❌"}
             </p>
-
+            
             <p ><strong>Photos: </strong>
               <div className="flex flex-row">
                 {activity.strava_photo_urls.map((url => (
@@ -79,7 +81,8 @@ export default function Page() {
             <p><strong>Total Elevation Gain: </strong>  {activity.total_elevation_gain}m</p>
             <p><strong>Total Elevation Losss: </strong> {activity.total_elevation_loss}m</p>
 
-            <p> <span style={{ color: "green" }}>[{activity.coordinates.length}] </span><strong>Coordinates: </strong>  [{activity.coordinates.map(coord => `(${coord[0]}, ${coord[1]})`).join(", ")}]</p>
+            <p> <span style={{ color: "green" }}>[{activity.coordinates.length}] </span><strong>Coordinates: </strong>  {/*[{activity.coordinates.map(coord => `(${coord[0]}, ${coord[1]})`).join(", ")}] */}</p>
+            <MiniMapComponent id={"map" + index} coordinates={activity.coordinates as LatLngExpression[]}/>
             <p><span style={{ color: "green" }}>[{activity.distances_aggregated.length}]</span> <strong>Distances Aggregated:</strong> [
               {activity.distances_aggregated.map((dist, index, arr) => {
                 const firstDistanceElement = 0;

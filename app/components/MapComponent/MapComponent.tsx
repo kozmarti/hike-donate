@@ -1,4 +1,7 @@
 "use client";
+import "leaflet/dist/leaflet.css";
+import "react-leaflet-fullscreen/styles.css";
+
 import { useState, useRef, useEffect } from "react";
 import {
   MapContainer,
@@ -11,14 +14,11 @@ import {
   useMapEvent
 } from "react-leaflet";
 import Image from "next/image";
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-import "leaflet/dist/leaflet.css";
-import { Icon, LatLngExpression } from "leaflet";
-import { FullscreenControl } from "react-leaflet-fullscreen";
-import "react-leaflet-fullscreen/styles.css";
+import { LatLngExpression } from "leaflet";
 import { createIconMarker } from "../IconMarkerComponent";
-//npm install --save leaflet react-leaflet
-interface CoordinateData {
+
+
+interface Props {
   coordinates?: LatLngExpression[];
   currentLocation?: LatLngExpression;
   centerCoordinates?: LatLngExpression;
@@ -48,16 +48,15 @@ const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void
   return null;
 };
 
-const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIconUrl, clickedLocation, startIconPinSize }: CoordinateData) => {
+const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIconUrl, clickedLocation, startIconPinSize }: Props) => {
   const zoomInitial = 6;
   const startIconPin = createIconMarker(pinIconUrl, startIconPinSize);
   const iconFinishPin = createIconMarker("./finish-point.png", [40, 40]);
   const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];
-  const purpleOptions = { color: "#EC506A", weight: 3 };
   const mapCenter: LatLngExpression =
     centerCoordinates ?? (coordinates?.[0] ?? [42.848023, -0.490336]);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const mapRef = useRef<any>(null); // ✅ Add mapRef
+  const mapRef = useRef<any>(null)
 
   const fakeFullscreen = () => {
     const el = document.getElementById("map-wrapper");
@@ -68,11 +67,9 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
 
     setTimeout(() => {
       mapRef.current?.invalidateSize();
-      console.log("recentered")
       mapRef.current?.flyTo(mapCenter, zoomInitial, {
         duration: 2.0
       });
-      console.log("recentered")
     }, 10);
   };
 
@@ -80,7 +77,6 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
     <>
       <div className="map-wrapper" id="map-wrapper">
         <MapContainer
-          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           className="full-height-map"
           id="map"
           center={mapCenter}
@@ -109,7 +105,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
           //url='https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default//GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg'
           />
           <Polyline
-            pathOptions={purpleOptions}
+            pathOptions={{ color: "#EC506A", weight: 3 }}
             positions={polyline}
           />
           {currentLocation && (
