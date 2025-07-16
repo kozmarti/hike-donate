@@ -26,9 +26,7 @@ const CollectedAmountGauge = ({ collectedAmount, distance, amountLastUpdated }: 
   return (
     //<div className='gauge-container relative'>
 <>
-<div className="absolute top-5 right-5 group cursor-pointer">
 
-      </div>
       <GaugeComponent
         arc={{
           nbSubArcs: 100,
@@ -69,18 +67,23 @@ const CollectedAmountGauge = ({ collectedAmount, distance, amountLastUpdated }: 
               <p className="distance-info"> <strong>{distance} km</strong> hiked, <strong>€ {Math.round(collectedAmount).toLocaleString()} </strong> raised — all covered, thank you! <FaHeart style={{ display: "inline", color: "#6BFFAE" }} />
               </p>
             )}
-            <p> Learn more  <a href="#fundraising-description"><BsArrowDownSquareFill color="#fd5770" size={20} style={{ display: "inline" }} /></a>
-            </p>
+
+            <div className="absolute top-5 right-5 group cursor-pointer">
+
             <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
             <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
               Last updated from Leetchi: {amountLastUpdated}
             </div>
+            </div>
+
           </>
         )}
         {distance == 0 && (
           <p>Starting soon ...</p>
 
         )}
+                    <p> Learn more  <a href="#fundraising-description"><BsArrowDownSquareFill color="#fd5770" size={20} style={{ display: "inline" }} /></a>
+                    </p>
       </div>
       </>
    // </div>
