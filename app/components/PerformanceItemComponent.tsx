@@ -5,45 +5,57 @@ import Image from 'next/image'
 interface PerformanceItemData {
   title: string;
   icon: string;
-  measure?: string;
+  measure: string;
+  placeholder: string;
 }
 
 export interface PerformanceItemProps {
   title: string;
   quantity?: number;
+  loading: boolean;
 }
 
-export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemProps) => {
+export const PerformanceItemComponent = ({ title, quantity, loading }: PerformanceItemProps) => {
   const dataMap: { [key: string]: PerformanceItemData } = {
     totalDistance: {
       title: "Distance",
       icon: "/distance.svg",
       measure: " km",
+      placeholder: "0",
     },
     totalElevationGain: {
         title: "Elevation Gain",
         icon: "/elevationGain.svg",
-        measure: " m"
+        measure: " m",
+        placeholder: "-",
     },
     totalElevationLoss: {
         title: "Elevation Loss",
         icon: "/elevationLoss.svg",
-        measure: " m"
+        measure: " m",
+        placeholder: "-",
+
     },
     minAltitude: {
         title: "Lowest Altitude",
         icon: "/minAltitude.svg",
         measure: " m",
+        placeholder: "-",
+
     },
     maxAltitude: {
         title: "Highest Altitude",
         icon: "/maxAltitude.svg",
         measure: " m",
+        placeholder: "-",
+
     },
     timeElapsed: {
         title: "Time Elapsed",
         icon: "/timeElapsed.svg",
-        measure: " days"
+        measure: " days",
+        placeholder: "0",
+
     }
 
     
@@ -62,13 +74,16 @@ export const PerformanceItemComponent = ({ title, quantity }: PerformanceItemPro
     {quantity && (
     <CountUp end={quantity} suffix={dataMap[title].measure} />
     )}
-    {!quantity && (
+    {!quantity && loading && (
     <Image
     src={"/loading.gif"}
     width={50}
     height={50}
     alt="Loading data..."
   />
+    )}
+        {!quantity && !loading && (
+    <span> {dataMap[title].placeholder} {dataMap[title].measure}</span>
     )}
     </div>
   );

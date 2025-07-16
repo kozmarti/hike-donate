@@ -78,7 +78,6 @@ export default function Home() {
 
   useEffect(() => {
     const target = document.getElementById("showScrollUpButton");
-    console.log("Target element:", target);
 
     const handleScroll = () => {
       if (!target) return;
@@ -87,10 +86,8 @@ export default function Home() {
 
       if (window.scrollY > targetPosition) {
         setShowButton(true);
-        console.log("showButton set to true");
       } else {
         setShowButton(false);
-        console.log("showButton set to false");
       }
     };
 
@@ -145,12 +142,12 @@ export default function Home() {
 
 
       <div className="container wrapper" id="statistics">
-        <PerformanceItemComponent title="totalDistance" quantity={stats ? stats.totalDistance / 1000 : undefined} />
-        <PerformanceItemComponent title="timeElapsed" quantity={stats ? stats.timeElapsed + 1 : undefined} />
-        <PerformanceItemComponent title="totalElevationGain" quantity={stats?.totalElevationGain} />
-        <PerformanceItemComponent title="totalElevationLoss" quantity={stats?.totalElevationLoss} />
-        <PerformanceItemComponent title="maxAltitude" quantity={stats?.maxAltitude} />
-        <PerformanceItemComponent title="minAltitude" quantity={stats?.minAltitude} />
+        <PerformanceItemComponent title="totalDistance" loading={loading} quantity={stats ? stats.totalDistance / 1000 : undefined} />
+        <PerformanceItemComponent title="timeElapsed" loading={loading} quantity={stats ? stats.timeElapsed + 1 : undefined} />
+        <PerformanceItemComponent title="totalElevationGain" loading={loading}  quantity={stats?.totalElevationGain} />
+        <PerformanceItemComponent title="totalElevationLoss" loading={loading}  quantity={stats?.totalElevationLoss} />
+        <PerformanceItemComponent title="maxAltitude" loading={loading}  quantity={stats?.maxAltitude} />
+        <PerformanceItemComponent title="minAltitude" loading={loading}  quantity={stats?.minAltitude} />
       </div>
 
       <div id="showScrollUpButton" className='gauge-container relative' style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -170,26 +167,23 @@ export default function Home() {
             <Skeleton animation="wave" height={10} width="60%" />
           </>
         )}
+        {!loading && !stats && (
+          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={0} />
+        )}
       </div>
 
 
-      <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
+      <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={!loading && !stats ? [43.3732318, -1.7740848] : stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
       <ElevationChart
         altitude={stats?.altitudes ?? []}
         distance={stats?.distance_aggregated ?? []}
         loading={loading}
       />
-
-      {!loading && !stats && (
-        <p>Failed to load stats</p>
-      )}
+          <Description />
 
       {!loading && stats && (
-        <>
-          <Description collectedAmount={collectedAmount} amountLastUpdated={amountLastUpdated} totalDistanceKm={Math.round(stats.totalDistance / 1000)} />
-
           <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)} />
-        </>)}
+        )}
       {showButton && (
         <a href="#statistics" className="scroll-down-button"><BsArrowUpSquareFill color="#fd5770" size={30} style={{ display: "inline" }} /></a>
       )

@@ -49,7 +49,7 @@ const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void
 };
 
 const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIconUrl, clickedLocation, startIconPinSize }: CoordinateData) => {
-  const [zoomInitial, setZoomInitial] = useState(6);
+  const zoomInitial = 6;
   const startIconPin = createIconMarker(pinIconUrl, startIconPinSize);
   const iconFinishPin = createIconMarker("./finish-point.png", [40, 40]);
   const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];

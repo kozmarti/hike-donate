@@ -13,8 +13,6 @@ interface Props {
 }
 
 const CollectedAmountGauge = ({ collectedAmount, distance, amountLastUpdated }: Props) => {
-  console.log("Collected Amount Gauge", collectedAmount, distance, amountLastUpdated);
-  console.log("max value", (collectedAmount >= distance) ? collectedAmount : distance);
   distance = Math.round(distance)
   const distanceKm = (value: number) => {
     if (value === collectedAmount) {
@@ -29,10 +27,7 @@ const CollectedAmountGauge = ({ collectedAmount, distance, amountLastUpdated }: 
     //<div className='gauge-container relative'>
 <>
 <div className="absolute top-5 right-5 group cursor-pointer">
-        <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
-        <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
-          Last updated from Leetchi: {amountLastUpdated}
-        </div>
+
       </div>
       <GaugeComponent
         arc={{
@@ -58,19 +53,34 @@ const CollectedAmountGauge = ({ collectedAmount, distance, amountLastUpdated }: 
           }
         }}
         value={collectedAmount}
-        maxValue={(collectedAmount >= distance) ? collectedAmount : distance}
+        maxValue={distance == 0 ? 100 : (collectedAmount >= distance) ? collectedAmount : distance}
       />
-<div style={{textAlign: "center"}}>
-      {distance > collectedAmount && (
-        <p className="distance-info"><strong>{collectedAmount} km</strong> already covered <FaHeart style={{ display: "inline", color: "#6BFFAE" }} />
-          , <strong>{distance - collectedAmount} km</strong> still waiting for sponsors.</p>
-      )}
-      {distance <= collectedAmount && (
-        <p className="distance-info"> <strong>{distance} km</strong> hiked, <strong>€ {Math.round(collectedAmount).toLocaleString()} </strong> raised — all covered, thank you! <FaHeart style={{ display: "inline", color: "#6BFFAE" }} />
-        </p>
-      )}
-      <p> Learn more  <a href="#fundraising-description"><BsArrowDownSquareFill color="#fd5770" size={20} style={{ display: "inline" }} /></a>
-      </p>
+
+
+      
+      <div style={{ textAlign: "center" }}>
+        {distance !== 0 && (
+          <>
+            {distance > collectedAmount && (
+              <p className="distance-info"><strong>{collectedAmount} km</strong> already covered <FaHeart style={{ display: "inline", color: "#6BFFAE" }} />
+                , <strong>{distance - collectedAmount} km</strong> still waiting for sponsors.</p>
+            )}
+            {distance <= collectedAmount && (
+              <p className="distance-info"> <strong>{distance} km</strong> hiked, <strong>€ {Math.round(collectedAmount).toLocaleString()} </strong> raised — all covered, thank you! <FaHeart style={{ display: "inline", color: "#6BFFAE" }} />
+              </p>
+            )}
+            <p> Learn more  <a href="#fundraising-description"><BsArrowDownSquareFill color="#fd5770" size={20} style={{ display: "inline" }} /></a>
+            </p>
+            <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
+            <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
+              Last updated from Leetchi: {amountLastUpdated}
+            </div>
+          </>
+        )}
+        {distance == 0 && (
+          <p>Starting soon ...</p>
+
+        )}
       </div>
       </>
    // </div>

@@ -1,14 +1,8 @@
 import React from 'react'
 import Image from 'next/image'
 
-interface Props {
-  collectedAmount: number;
-  amountLastUpdated: string;
-  totalDistanceKm: number;
 
-}
-
-const Description = ({ collectedAmount, totalDistanceKm, amountLastUpdated }: Props) => {
+const Description = () => {
   return (
     <div className='map-wrapper description-wrapper' id='fundraising-description'>
       <div className="description-container">
