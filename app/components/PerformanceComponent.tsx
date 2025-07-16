@@ -10,7 +10,7 @@ interface PerformanceData {
 
 const PerformanceComponent = ({ items }: PerformanceData) => {
   return items.map((item) => (
-    <PerformanceItemComponent title={item.title} quantity={item.quantity} />
+    <PerformanceItemComponent loading={item.loading} title={item.title} quantity={item.quantity} />
   ));
 };
 
