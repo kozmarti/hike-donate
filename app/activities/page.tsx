@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Activity } from "../entities/Activity";
 import { useActivities } from "../hooks/useActivities";
 import { map } from "leaflet";
+import Link from 'next/link';
+
 
 export default function Page() {
   const [activities, setActivities] = useState<Activity[] | null>(null);
@@ -26,6 +28,11 @@ export default function Page() {
   let previousActivity: Activity | null = null;
   return <>
     <div className="flex flex-col justify-center m-20">
+    <Link href="/add-activity">
+      <button className="px-4 py-2 text-white rounded">
+        + Add New
+      </button>
+    </Link>
       {activities?.map((activity, index) => {
         let firstColorToUse = lastColor;
 

@@ -10,12 +10,12 @@ form {
   margin: 0 auto;
 }
 
-p {
+.warning-form-text {
   color: #bf1650;
 }
 
 
-p::before {
+.warning-form-text::before {
   display: inline;
   content: "⚠ ";
 }

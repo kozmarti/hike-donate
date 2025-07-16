@@ -40,7 +40,6 @@ export const ActivityFormComponent = () => {
     const router = useRouter();
     const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
     const [lastActivityDate, setLastActivityDate] = useState<string | null>(null);
-    const [nextActivityDate, setNextActivityDate] = useState<string | null>(null);
 
 
  
@@ -144,6 +143,7 @@ export const ActivityFormComponent = () => {
             }
         };
         fetchLastActivity();
+
     }, []);
 
 
@@ -155,13 +155,13 @@ export const ActivityFormComponent = () => {
 
 
                 <label className="data-label">
-                    <p>Last activity date : {lastActivityDate}</p>
+                    <p className="warning-form-text">Last activity date : {lastActivityDate}</p>
                     Start Date and Time:
                     <input
                         required
                         type="datetime-local"
                         {...register("start_time")}
-                        value={lastActivityDate ? lastActivityDate : new Date().toISOString().slice(0, 16)} // Default to current date and time
+                        value={lastActivityDate ? lastActivityDate : new Date().toISOString().slice(0, 16)}
                     />
                 </label>
                 <label className="data-label">
@@ -202,7 +202,7 @@ export const ActivityFormComponent = () => {
                             console.log("coords", coordinates);
                         }}
                     />
-                    <p className="p-5">Please add at least 10 coordinate points for good looking data </p>
+                    <p className="p-5 warning-form-text">Please add at least 10 coordinate points for good looking data </p>
                     <div className="coords-container">
                         {coords.length > 0 && (
                             <fieldset className="bg-gray-200 p-2 m-2 rounded-md">
