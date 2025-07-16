@@ -376,8 +376,9 @@ a {
 }
 
 .scroll-down-button {
-  bottom: 10px;
-  right: 10px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
   text-decoration: none;
   z-index: 999;
 }

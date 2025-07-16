@@ -36,7 +36,7 @@ const Description = ({ collectedAmount, totalDistanceKm, amountLastUpdated }: Pr
         <p>Whether I hike 10 kilometers or 100, every euro you contribute will directly support this vital cause.</p>
         <div className='flexbox-vertical-conatiner'>
           <p style={{ margin: "20px" }}>Would you consider <span style={{ color: "#fd5770" }}>sponsoring one kilometer</span> of my journey?</p>
-          <a href="">
+          <a href="https://www.leetchi.com/fr/c/hike-donate-1755564" target="_blank">
             <Image
               src="/donate-link.svg"
               width="60"
