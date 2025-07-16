@@ -26,9 +26,9 @@ const SceletonLazyPhoto = ({ sceletonCount }: Props) => {
             justifyContent: 'end',
             width: '100%',
             padding: '20px',
-            backgroundColor: 'white',
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
             borderRadius: '4px',
-            marginBottom: '20px',
+            marginTop: '20px',
             boxShadow:
               '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
           }}
