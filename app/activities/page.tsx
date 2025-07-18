@@ -4,7 +4,6 @@ import { Activity } from "../entities/Activity";
 import { useActivities } from "../hooks/useActivities";
 import { LatLngExpression } from "leaflet";
 import Link from 'next/link';
-import MiniMapComponent from "../components/MiniMapComponent";
 
 
 export default function Page() {
@@ -82,7 +81,7 @@ export default function Page() {
             <p><strong>Total Elevation Losss: </strong> {activity.total_elevation_loss}m</p>
 
             <p> <span style={{ color: "green" }}>[{activity.coordinates.length}] </span><strong>Coordinates: </strong>  {/*[{activity.coordinates.map(coord => `(${coord[0]}, ${coord[1]})`).join(", ")}] */}</p>
-            <MiniMapComponent id={"map" + index} coordinates={activity.coordinates as LatLngExpression[]}/>
+            {/*<MiniMapComponent id={"map" + index} coordinates={activity.coordinates as LatLngExpression[]}/>*/}
             <p><span style={{ color: "green" }}>[{activity.distances_aggregated.length}]</span> <strong>Distances Aggregated:</strong> [
               {activity.distances_aggregated.map((dist, index, arr) => {
                 const firstDistanceElement = 0;
