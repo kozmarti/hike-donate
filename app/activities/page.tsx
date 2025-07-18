@@ -4,8 +4,11 @@ import { Activity } from "../entities/Activity";
 import { useActivities } from "../hooks/useActivities";
 import { LatLngExpression } from "leaflet";
 import Link from 'next/link';
-import MiniMapComponent from "../components/MiniMapComponent";
+import dynamic from 'next/dynamic';
 
+const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
+  ssr: false,
+});
 
 export default function Page() {
   const [activities, setActivities] = useState<Activity[] | null>(null);
