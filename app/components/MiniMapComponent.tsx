@@ -2,18 +2,13 @@ import React from 'react'
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-fullscreen/styles.css";
 
-import { useState, useRef, useEffect } from "react";
 import {
   MapContainer,
-  Marker,
   Polyline,
   ScaleControl,
   TileLayer,
   ZoomControl,
-  useMap,
-  useMapEvent
 } from "react-leaflet";
-import Image from "next/image";
 import { LatLngExpression } from "leaflet";
 
 interface Props {

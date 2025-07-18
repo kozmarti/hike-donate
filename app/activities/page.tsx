@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Activity } from "../entities/Activity";
 import { useActivities } from "../hooks/useActivities";
-import { LatLngExpression, map } from "leaflet";
+import { LatLngExpression } from "leaflet";
 import Link from 'next/link';
 import MiniMapComponent from "../components/MiniMapComponent";
 
