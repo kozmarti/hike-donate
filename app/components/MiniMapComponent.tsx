@@ -1,4 +1,5 @@
-import React from 'react'
+"use client";
+import React from 'react';
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-fullscreen/styles.css";
 
