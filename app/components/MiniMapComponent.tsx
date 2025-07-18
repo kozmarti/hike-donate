@@ -24,7 +24,7 @@ const MiniMapComponent = ({ id, coordinates }: Props) => {
 
   return (
     <>
-         <div className="map-wrapper" id="map-wrapper">
+         <div className="map-wrapper">
            <MapContainer
              className="full-height-map"
              id={id}
