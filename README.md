@@ -2,11 +2,6 @@
 
 **Hike & Donate** is a long-term trekking tracker that displays real-time hiking stats, visualizes routes on a map, connected to Strava to update data automatically. Built for adventurers who want to log and share their journey — even in remote locations — and for those who want to trek with a purpose.
 
----
-## 🚀 Deployment
-
-The live version of **Hike & Donate** is deployed and accessible at:  
-[https://hike-donate.vercel.app](https://hike-donate.vercel.app)
 
 ![image](https://github.com/user-attachments/assets/020df6bc-fe37-4c57-9723-2ae5141ad861)
 
