@@ -6,11 +6,11 @@ const inter = Fredoka({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Hike&Donate",
-  description: "Track my fundraising hike where every kilometer helps raise donations for Ukraine. Follow the journey, view progress, and support the cause.",
+  description: "Track my fundraising hike where every kilometer counts. Follow the journey, view progress, and support the cause.",
   icons: '/favicon.png',
   openGraph: {
     title: "Hike&Donate",
-    description: "Track my fundraising hike where every kilometer helps raise donations for Ukraine. Follow the journey, view progress, and support the cause.",
+    description: "Track my fundraising hike where every kilometer counts. Follow the journey, view progress, and support the cause.",
     images: [
       {
         url: '/preview-image.jpg',
