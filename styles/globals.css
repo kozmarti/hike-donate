@@ -302,6 +302,12 @@ padding-top: 2px;
 font-style: italic!important;
 }
 
+.photo-date::after {
+  content: "\00a0"; /* non-breaking space */
+  display: inline-block;
+  width: 0.5em;
+}
+
 .phot-upload-container {
   display: flex;
   justify-content: start;
