@@ -487,3 +487,11 @@ a {
   color: white;
   border-color: #ff6078;
 }
+
+.slick-slide .leaflet-control {
+  pointer-events: auto !important;
+}
+
+.slick-slide .leaflet-container {
+  touch-action: auto !important;
+}
