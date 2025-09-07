@@ -55,7 +55,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
         {activities.map((activity, index) => (
           <div
             key={index}
-            className="description-wrapper map-wrapper"
+            className="map-wrapper"
           >
             <div className="description-container flex flex-col items-center">
 
