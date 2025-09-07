@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import DailyStatsCarousel from "../components/DailyCarousel";
 import { useActivities } from "../hooks/useActivities";
+import "@/styles/dailystats.css";
 
 export default function Page() {
       const [loading, setLoading] = useState(true);

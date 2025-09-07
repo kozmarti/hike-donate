@@ -1,0 +1,6 @@
+@media (max-width: 640px) {
+    .leaflet-control-zoom,
+    .leaflet-control-layers {
+      display: none !important;
+    }
+  }
