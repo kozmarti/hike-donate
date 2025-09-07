@@ -102,8 +102,8 @@ export async function GET(
           $addFields: {
             totalElevationLoss: {
               $subtract: [
+                { $subtract: ["$lastAltitude", "$firstAltitude"] },
                 "$totalElevationGain",
-                { $subtract: ["$lastAltitude", "$firstAltitude"] }
               ]
             }
           }},
