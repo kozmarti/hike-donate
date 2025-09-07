@@ -50,7 +50,7 @@ const DownloadGpxButton = ({ polyline, filename = "track.gpx" }) => {
       className="custom-button"
       style={{
         fontFamily: fredoka.style.fontFamily,
-        marginTop: 10,
+        marginTop: 5,
 
       }}
     >

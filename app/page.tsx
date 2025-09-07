@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Fredoka } from 'next/font/google';
 import { useEffect, useState } from "react";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
-import { convertHikePhotos, PhotoEntry } from "./utils/calculation_functions_client";
+import { convertHikePhotos } from "./utils/calculation_functions_client";
 import { StatsResponse, useStats } from "@/app/hooks/useStats";
 import Skeleton from '@mui/material/Skeleton';
 import Footer from "./components/Footer";
