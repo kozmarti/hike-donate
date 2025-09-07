@@ -23,7 +23,7 @@ import DownloadGpxButton from "../DownloadGPXButton";
 interface Props {
   coordinates?: LatLngExpression[];
   currentLocation?: LatLngExpression;
-  centerCoordinates: LatLngExpression;
+  centerCoordinates?: LatLngExpression;
   clickedLocationAbled?: boolean;
   onMapClick?: (latlng: LatLngExpression) => void;
   clickedLocation?: LatLngExpression | null;
@@ -57,7 +57,8 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
   const startIconPin = createIconMarker(pinIconUrl, startIconPinSize);
   const iconFinishPin = createIconMarker("./finish-point.png", [40, 40]);
   const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];
-  const mapCenter: LatLngExpression = centerCoordinates;
+  const centerCoords: LatLngExpression = centerCoordinates ?? coordinates?.slice(-1)[0] as [number, number] ?? [42.848023, -0.490336];
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const mapRef = useRef<any>(null)
 
@@ -70,7 +71,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
 
     setTimeout(() => {
       mapRef.current?.invalidateSize();
-      mapRef.current?.flyTo(mapCenter, zoomInitial, {
+      mapRef.current?.flyTo(centerCoordinates, zoomInitial, {
         duration: 2.0
       });
     }, 10);
@@ -82,7 +83,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
         <MapContainer
           className="full-height-map"
           id="map"
-          center={mapCenter}
+          center={centerCoords}
           zoom={zoomInitial}
           zoomControl={false}
           minZoom={1}
