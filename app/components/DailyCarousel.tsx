@@ -3,10 +3,13 @@ import { Activity } from "@/app/entities/Activity";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import MiniMapComponent from "./MiniMapComponent";
 import { LatLngExpression } from "leaflet";
 import ElevationChart from "./ElevationChart";
+import dynamic from 'next/dynamic';
 
+const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
+  ssr: false,
+});
 
 interface Props {
   activities: Activity[];
