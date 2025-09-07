@@ -1,3 +1,4 @@
+"use client";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { Activity } from "@/app/entities/Activity";
 import Slider from "react-slick";
@@ -31,6 +32,15 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
     slidesToScroll: 1,
     adaptiveHeight: true, // fixes vertical stretching
     arrows: false,
+    responsive: [
+      {
+        breakpoint: 640, // mobile breakpoint
+        settings: {
+          arrows: false, // hide arrows on small screens
+          dots: true,
+        },
+      },
+    ],
   };
   const hikeDateConvert = (hikeDate: string) => new Date(hikeDate).toISOString().split('T')[0];
 
