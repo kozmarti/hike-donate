@@ -116,9 +116,10 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
                 quantity={activity.min_altitude}
               />
             </div>
-            
+            {/* MiniMap and Elevation Chart 
             <MiniMapComponent id={'map' + index.toString()} coordinates={activity.coordinates as LatLngExpression[]} />
-          <ElevationChart altitude={activity.altitudes ?? []} distance={activity.distances ?? []} loading={false} />
+          */}
+            <ElevationChart altitude={activity.altitudes ?? []} distance={activity.distances ?? []} loading={false} />
           </div>
           </div>
         ))}
