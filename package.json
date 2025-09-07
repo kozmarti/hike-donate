@@ -31,6 +31,7 @@
     "react-leaflet-fullscreen": "^4.1.1",
     "react-photo-album": "^3.1.0",
     "styled-components": "^6.1.13",
+    "togpx": "^0.5.4",
     "uploadthing": "^7.6.0"
   },
   "devDependencies": {

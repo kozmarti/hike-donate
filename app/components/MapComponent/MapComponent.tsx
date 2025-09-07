@@ -17,12 +17,13 @@ import {
 import Image from "next/image";
 import { LatLngExpression } from "leaflet";
 import { createIconMarker } from "../IconMarkerComponent";
+import DownloadGpxButton from "../DownloadGPXButton";
 
 
 interface Props {
   coordinates?: LatLngExpression[];
   currentLocation?: LatLngExpression;
-  centerCoordinates?: LatLngExpression;
+  centerCoordinates: LatLngExpression;
   clickedLocationAbled?: boolean;
   onMapClick?: (latlng: LatLngExpression) => void;
   clickedLocation?: LatLngExpression | null;
@@ -52,12 +53,11 @@ const ClickHandler = ({ onClick }: { onClick: (latlng: LatLngExpression) => void
 };
 
 const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clickedLocationAbled = false, onMapClick, pinIconUrl, clickedLocation, startIconPinSize }: Props) => {
-  const zoomInitial = 6;
+  const zoomInitial = 5;
   const startIconPin = createIconMarker(pinIconUrl, startIconPinSize);
   const iconFinishPin = createIconMarker("./finish-point.png", [40, 40]);
   const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];
-  const mapCenter: LatLngExpression =
-    centerCoordinates ?? (coordinates?.[0] ?? [42.848023, -0.490336]);
+  const mapCenter: LatLngExpression = centerCoordinates;
   const [isFullscreen, setIsFullscreen] = useState(false);
   const mapRef = useRef<any>(null)
 
@@ -159,6 +159,8 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
         </MapContainer>
 
       </div>
+      <DownloadGpxButton polyline={polyline} filename="hike-donate-track.gpx" />
+
     </>
   );
 }

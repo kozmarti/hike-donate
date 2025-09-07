@@ -173,7 +173,7 @@ export default function Home() {
       </div>
 
 
-      <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={!loading && !stats ? [43.3732318, -1.7740848] : stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={stats?.coordinates.slice(-1)[0] as [number, number]} />
+      <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={!loading && !stats ? [43.3732318, -1.7740848] : stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={!loading && !stats ? [43.3732318, -1.7740848] : stats?.coordinates.slice(-1)[0] as [number, number]} />
       <ElevationChart
         altitude={stats?.altitudes ?? []}
         distance={stats?.distance_aggregated ?? []}
