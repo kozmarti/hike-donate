@@ -24,7 +24,7 @@ const LazyPhoto = ({ src, date, ...props }: { src: string; date?: string }) => {
                 }}
                 onLoad={() => setLoaded(true)}
               />
-            <div style={{position: "relative", top: "-35px", right: "30px"}} className={`photo-date`}>{`${date} `}</div>
+            <div style={{position: "relative", top: "-35px", right: "30px", overflow: "visible"}} className={`photo-date`}>{date}</div>
           </>
         )}
       </div>
