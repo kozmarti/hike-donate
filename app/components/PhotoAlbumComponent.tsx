@@ -6,7 +6,6 @@ import { Fredoka } from 'next/font/google';
 import LazyPhoto from './LazyPhoto';
 import { useInView } from 'react-intersection-observer';
 import SceletonLazyPhoto from './SceletonLazyPhoto';
-import { Button } from '@mui/material';
 
 
 const fredoka = Fredoka({ subsets: ['latin'] });
@@ -155,16 +154,15 @@ export const PhotoAlbumComponent = ({photos: imageUrls}: PhotoAlbumProps) => {
       <div ref={bottomRef} style={{ height: 1 }} />
       {visibleCount < imageUrls.length && !isLoading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1, mb: 2 }}>
-        <Button
-          variant="contained"
+        <button
           onClick={loadMore}
           className='custom-button'
-          sx={{
+          style={{
             fontFamily: fredoka.style.fontFamily,
           }}
         >
-          Load More 
-        </Button>
+          Load more 
+        </button>
       </Box>
       )}
     </Box>
