@@ -108,7 +108,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
           url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
 
-<LayersControl position="bottomright">
+<LayersControl position="topright">
       {/* Esri Satellite */}
       <BaseLayer checked name="Esri World Imagery">
       <TileLayer
