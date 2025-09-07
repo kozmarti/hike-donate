@@ -4,6 +4,7 @@ import "react-leaflet-fullscreen/styles.css";
 
 import { useState, useRef, useEffect } from "react";
 import {
+  LayersControl,
   MapContainer,
   Marker,
   Polyline,
@@ -28,6 +29,8 @@ interface Props {
   pinIconUrl?: string;
   startIconPinSize?: number[];
 }
+const { BaseLayer } = LayersControl;
+
 
 const ResizeMap = () => {
   const map = useMap();
@@ -101,9 +104,31 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
           <TileLayer
             //attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
             // attribution='Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.'
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          //url='https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default//GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg'
+            //url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
+
+<LayersControl position="bottomright">
+      {/* Esri Satellite */}
+      <BaseLayer checked name="Esri World Imagery">
+      <TileLayer
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        // attribution="Tiles &copy; Esri &mdash; Source: Esri, USGS"
+      />
+    </BaseLayer>
+    {/* OpenStreetMap Default */}
+    <BaseLayer name="OpenStreetMap">
+      <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap" />
+    </BaseLayer>
+
+    {/* OpenTopoMap */}
+    <BaseLayer name="OpenTopoMap">
+      <TileLayer url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" attribution="&copy; OpenTopoMap" />
+    </BaseLayer>
+
+
+  </LayersControl>
+  
           <Polyline
             pathOptions={{ color: "#EC506A", weight: 3 }}
             positions={polyline}
@@ -120,7 +145,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
               alt={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
             /></div>
 
-          <ScaleControl position="bottomleft" />
+          <ScaleControl position="bottomleft" imperial={false} />
           {clickedLocationAbled && (
             <ClickHandler onClick={(latlng) => {
               onMapClick?.(latlng); // 👈 Call parent’s callback
