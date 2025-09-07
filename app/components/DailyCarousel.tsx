@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { LatLngExpression } from "leaflet";
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from "react";
 
 
 const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
@@ -20,6 +21,8 @@ interface Props {
   activities: Activity[];
   loading: boolean;
 }
+const hikeDateConvert = (hikeDate: string) => new Date(hikeDate).toISOString().split('T')[0];
+
 
 const DailyStatsCarousel = ({ activities, loading }: Props) => {
   const settings = {
@@ -46,8 +49,14 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
       },
     ],
   };
-  const hikeDateConvert = (hikeDate: string) => new Date(hikeDate).toISOString().split('T')[0];
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
   return (
     <div className="w-full mb-20">
       <Slider {...settings}>
@@ -93,8 +102,8 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
               />
             </div>
             
-            <MiniMapComponent id={'map' + index.toString()} coordinates={activity.coordinates as LatLngExpression[]} />
-          <ElevationChart altitude={activity.altitudes ?? []} distance={activity.distances ?? []} loading={loading} />
+            <MiniMapComponent  key={`map-${index}`} id={`map-${index}`} coordinates={activity.coordinates as LatLngExpression[]} />
+          <ElevationChart key={`chart-${index}`} altitude={activity.altitudes ?? []} distance={activity.distances ?? []} loading={loading} />
           </div>
           </div>
         ))}
