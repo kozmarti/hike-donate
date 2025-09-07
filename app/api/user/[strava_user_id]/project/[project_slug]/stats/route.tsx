@@ -43,7 +43,7 @@ export async function GET(
             _id: "stats",
             totalDistance: { $sum: "$total_distance" },
             totalElevationGain: { $sum: "$total_elevation_gain" },
-            totalElevationLoss: { $sum: "$total_elevation_loss" },
+            //totalElevationLoss: { $sum: "$total_elevation_loss" },
             minAltitude: { $min: "$min_altitude" },
             maxAltitude: { $max: "$max_altitude" },
             photosUrl: {
@@ -86,9 +86,27 @@ export async function GET(
                 in: { $concatArrays: ["$$value", "$$this"] },
               },
             },
-            photosUrl: { $reverseArray: "$photosUrl" }
-          },
+            photosUrl: { $reverseArray: "$photosUrl" },
+          }
         },
+        {
+          $addFields: {
+            firstAltitude: { $arrayElemAt: ["$altitudes", 0] },
+            lastAltitude: {
+              $arrayElemAt: ["$altitudes", { $subtract: [{ $size: "$altitudes" }, 1] }],
+            },
+            
+          }
+        },
+        {
+          $addFields: {
+            totalElevationLoss: {
+              $subtract: [
+                "$totalElevationGain",
+                { $subtract: ["$lastAltitude", "$firstAltitude"] }
+              ]
+            }
+          }},
         {
           $unset: [
             "coordinate_by_day",
@@ -97,6 +115,8 @@ export async function GET(
             "startHikeDate",
             "lastHikeDate",
             "_id",
+            "firstAltitude",
+            "lastAltitude",
           ],
         },
       ])
