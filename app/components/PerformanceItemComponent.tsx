@@ -12,10 +12,10 @@ interface PerformanceItemData {
 export interface PerformanceItemProps {
   title: string;
   quantity?: number;
-  loading: boolean;
+  loading?: boolean;
 }
 
-export const PerformanceItemComponent = ({ title, quantity, loading }: PerformanceItemProps) => {
+export const PerformanceItemComponent = ({ title, quantity, loading=false }: PerformanceItemProps) => {
   const dataMap: { [key: string]: PerformanceItemData } = {
     totalDistance: {
       title: "Distance",
@@ -56,7 +56,14 @@ export const PerformanceItemComponent = ({ title, quantity, loading }: Performan
         measure: " days",
         placeholder: "0",
 
-    }
+    },
+    movingTime: {
+      title: "Hike time",
+      icon: "/clock2.svg",
+      measure: " h",
+      placeholder: "0",
+
+  }
 
     
   };

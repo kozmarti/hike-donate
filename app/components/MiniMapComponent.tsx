@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import "react-leaflet-fullscreen/styles.css";
 
 import {
+  LayersControl,
   MapContainer,
   Polyline,
   ScaleControl,
@@ -11,20 +12,22 @@ import {
   ZoomControl,
 } from "react-leaflet";
 import { LatLngExpression } from "leaflet";
+import DownloadGpxButton from './DownloadGPXButton';
 
 interface Props {
     id: string;
     coordinates?: LatLngExpression[];
 
 }
+const { BaseLayer } = LayersControl;
 
 const MiniMapComponent = ({ id, coordinates }: Props) => {
     const polyline: LatLngExpression[] = coordinates ?? [[42.848023, -0.490336]];
-    const mapCenter: LatLngExpression = coordinates ? coordinates[0] : [42.848023, -0.490336] as LatLngExpression;
+    const mapCenter: LatLngExpression = coordinates ? coordinates[Math.floor(coordinates.length / 2)] : [42.848023, -0.490336] as LatLngExpression;
 
   return (
     <>
-         <div className="map-wrapper">
+         <div>
            <MapContainer
              className="full-height-map"
              id={id}
@@ -48,13 +51,35 @@ const MiniMapComponent = ({ id, coordinates }: Props) => {
                url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
              //url='https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default//GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg'
              />
+             <LayersControl position="topright">
+                   {/* Esri Satellite */}
+                   <BaseLayer checked name="Esri World Imagery">
+                   <TileLayer
+                     url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                     // attribution="Tiles &copy; Esri &mdash; Source: Esri, USGS"
+                   />
+                 </BaseLayer>
+                 {/* OpenStreetMap Default */}
+                 <BaseLayer name="OpenStreetMap">
+                   <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap" />
+                 </BaseLayer>
+             
+                 {/* OpenTopoMap */}
+                 <BaseLayer name="OpenTopoMap">
+                   <TileLayer url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" attribution="&copy; OpenTopoMap" />
+                 </BaseLayer>
+             
+             
+               </LayersControl>
              <Polyline
                pathOptions={{ color: "#EC506A", weight: 3 }}
                positions={polyline}
              />
    
-             <ScaleControl position="bottomleft" />
+             <ScaleControl position="bottomleft" imperial={false} />
            </MapContainer>
+           <DownloadGpxButton polyline={polyline} filename="hike-donate-track.gpx" />
+
    
          </div>
        </>

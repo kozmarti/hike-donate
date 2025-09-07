@@ -30,6 +30,8 @@
     "react-leaflet": "^4.2.1",
     "react-leaflet-fullscreen": "^4.1.1",
     "react-photo-album": "^3.1.0",
+    "react-slick": "^0.31.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.13",
     "togpx": "^0.5.4",
     "uploadthing": "^7.6.0"
@@ -40,6 +42,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-slick": "^0.23.13",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",

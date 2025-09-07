@@ -89,6 +89,12 @@ body {
     height: auto;
 
   }
+  .slick-dots {
+    position: absolute;
+    bottom: -50px!important;
+    right: 10px;
+    transform: translateY(-50%);
+  }
 }
 
 /* Large tablets and small laptops: between 769px and 1024px */
@@ -98,6 +104,12 @@ body {
     width: 760px;
     height: auto;
 
+  }
+  .slick-dots {
+    position: absolute;
+    bottom: -100px!important;
+    right: 10px;
+    transform: translateY(-50%);
   }
 }
 
@@ -109,6 +121,12 @@ body {
     height: auto;
 
   }
+  .slick-dots {
+    position: absolute;
+    bottom: -150px!important;
+    right: 10px;
+    transform: translateY(-50%);
+  }
 }
 
 /* Mobile phones: up to 480px */
@@ -118,6 +136,12 @@ body {
     width: 358px;
     height: auto;
   }
+  .slick-dots {
+    position: absolute;
+    bottom: -200px!important;
+    right: 10px;
+    transform: translateY(-50%);
+  }
 }
 /* Mobile phones: up to 480px */
 @media (max-width: 359px) {
@@ -126,6 +150,12 @@ body {
     width: 300px;
     height: auto;
 
+  }
+  .slick-dots {
+    position: absolute;
+    bottom: -200px!important;
+    right: 10px;
+    transform: translateY(-50%);
   }
 }
 
@@ -428,4 +458,32 @@ a {
 
 .custom-button:hover {
   background-color: #ff6078;
+}
+
+
+
+.slick-dots li {
+  width: auto;
+  margin: 0 4px;
+}
+
+.slick-dots li span.dot-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color:  rgba(255, 255, 255, 0.1);
+  color: black;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slick-dots li.slick-active span.dot-number {
+  background-color: #ff6078; /* Tailwind blue-500 */
+  color: white;
+  border-color: #ff6078;
 }
