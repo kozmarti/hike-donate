@@ -1,0 +1,53 @@
+import type { Metadata } from "next";
+import { Fredoka } from "next/font/google";
+import "@/styles/globals.css";
+import Image from "next/image";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const inter = Fredoka({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Hike&Donate",
+  description: "Track my fundraising hike where every kilometer counts. Follow the journey, view progress, and support the cause.",
+  icons: '/favicon.png',
+  openGraph: {
+    title: "Hike&Donate",
+    description: "Track my fundraising hike where every kilometer counts. Follow the journey, view progress, and support the cause.",
+    images: [
+      {
+        url: '/preview-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hike&Donate Fundraising Preview',
+      },
+    ],
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+            <main
+              className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${inter.className}`}
+            >
+              <Image
+                src="/logo.png"
+                alt="Hike&Donate Logo"
+                width={200}
+                height={200}
+                priority
+              />
+
+        {children}
+
+            </main>
+        </body>
+    </html>
+  );
+}
