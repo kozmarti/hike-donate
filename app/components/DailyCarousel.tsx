@@ -6,43 +6,19 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { LatLngExpression } from "leaflet";
 import dynamic from 'next/dynamic';
-import Skeleton from '@mui/material/Skeleton';
 
 
 const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
   ssr: false,
-  loading: () =>
-    <>
-      <Skeleton
-        animation="wave"
-        variant="circular"
-        height="180px"
-        width="180px"
-      />
-      <Skeleton animation="wave" height={10} width="80%" />
-      <Skeleton animation="wave" height={10} width="70%" />
-      <Skeleton animation="wave" height={10} width="60%" />
-    </>
-  ,
 });
 
 const ElevationChart = dynamic(() => import('@/app/components/ElevationChart'), {
   ssr: false,
-  loading: () => <div className="map-wrapper" style={{ margin: 10 }}>
-    <div className="full-height-map">
-      <Skeleton
-        animation="wave"
-        height="100%"
-        width="100%"
-        style={{ marginBottom: 6 }}
-      />
-    </div>
-  </div>,
 });
 
 interface Props {
   activities: Activity[];
-  loading?: boolean;
+  loading: boolean;
 }
 
 const DailyStatsCarousel = ({ activities, loading }: Props) => {
@@ -116,10 +92,9 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
                 quantity={activity.min_altitude}
               />
             </div>
-            {/* MiniMap and Elevation Chart 
+            
             <MiniMapComponent id={'map' + index.toString()} coordinates={activity.coordinates as LatLngExpression[]} />
-          */}
-            <ElevationChart altitude={activity.altitudes ?? []} distance={activity.distances ?? []} loading={false} />
+          <ElevationChart altitude={activity.altitudes ?? []} distance={activity.distances ?? []} loading={loading} />
           </div>
           </div>
         ))}
