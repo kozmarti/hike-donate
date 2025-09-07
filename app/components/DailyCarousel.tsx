@@ -25,8 +25,14 @@ const hikeDateConvert = (hikeDate: string) => new Date(hikeDate).toISOString().s
 
 
 const DailyStatsCarousel = ({ activities, loading }: Props) => {
+  const [mounted, setMounted] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
   const settings = {
-    customPaging: function(i: number) {
+    customPaging: function (i: number) {
       return (
         <span className="dot-number">{i + 1}</span>
       );
@@ -39,24 +45,10 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
     slidesToScroll: 1,
     adaptiveHeight: true, // fixes vertical stretching
     arrows: false,
-    responsive: [
-      {
-        breakpoint: 640, // mobile breakpoint
-        settings: {
-          arrows: false, // hide arrows on small screens
-          dots: true,
-        },
-      },
-    ],
+    beforeChange: (_: number, next: number) => setActiveSlide(next),
+
   };
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
   return (
     <div className="w-full mb-20">
       <Slider {...settings}>
@@ -67,44 +59,57 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
           >
             <div className="description-container flex flex-col items-center">
 
-            <h2 className="mb-4 font-bold">Day #{index + 1}, {hikeDateConvert(activity.start_time.toString())}</h2>
+              <h2 className="mb-4 font-bold">Day #{index + 1}, {hikeDateConvert(activity.start_time.toString())}</h2>
 
-            <div className="container wrapper">
-              <PerformanceItemComponent
-                title="totalDistance"
-                loading={loading}
-                quantity={(activity.total_distance / 1000)}
-              />
-              <PerformanceItemComponent
-                title="movingTime"
-                loading={loading}
-                quantity={(activity.moving_time / 60 /60)}
-              />
-              <PerformanceItemComponent
-                title="totalElevationGain"
-                loading={loading}
-                quantity={activity.total_elevation_gain}
-              />
-              <PerformanceItemComponent
-                title="totalElevationLoss"
-                loading={loading}
-                quantity={activity.total_elevation_loss}
-              />
-              <PerformanceItemComponent
-                title="maxAltitude"
-                loading={loading}
-                quantity={activity.max_altitude}
-              />
-              <PerformanceItemComponent
-                title="minAltitude"
-                loading={loading}
-                quantity={activity.min_altitude}
-              />
+              <div className="container wrapper">
+                <PerformanceItemComponent
+                  title="totalDistance"
+                  loading={loading}
+                  quantity={(activity.total_distance / 1000)}
+                />
+                <PerformanceItemComponent
+                  title="movingTime"
+                  loading={loading}
+                  quantity={(activity.moving_time / 60 / 60)}
+                />
+                <PerformanceItemComponent
+                  title="totalElevationGain"
+                  loading={loading}
+                  quantity={activity.total_elevation_gain}
+                />
+                <PerformanceItemComponent
+                  title="totalElevationLoss"
+                  loading={loading}
+                  quantity={activity.total_elevation_loss}
+                />
+                <PerformanceItemComponent
+                  title="maxAltitude"
+                  loading={loading}
+                  quantity={activity.max_altitude}
+                />
+                <PerformanceItemComponent
+                  title="minAltitude"
+                  loading={loading}
+                  quantity={activity.min_altitude}
+                />
+              </div>
+
+              {activeSlide === index && (
+                <>
+                  <MiniMapComponent
+                    key={`map-${index}`}
+                    id={`map-${index}`}
+                    coordinates={activity.coordinates as LatLngExpression[]}
+                  />
+                  <ElevationChart
+                    key={`chart-${index}`}
+                    altitude={activity.altitudes ?? []}
+                    distance={activity.distances ?? []}
+                    loading={loading}
+                  />
+                </>
+              )}
             </div>
-            
-            <MiniMapComponent  key={`map-${index}`} id={`map-${index}`} coordinates={activity.coordinates as LatLngExpression[]} />
-          <ElevationChart key={`chart-${index}`} altitude={activity.altitudes ?? []} distance={activity.distances ?? []} loading={loading} />
-          </div>
           </div>
         ))}
       </Slider>
