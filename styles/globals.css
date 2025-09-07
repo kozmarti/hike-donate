@@ -91,7 +91,7 @@ body {
   }
   .slick-dots {
     position: absolute;
-    bottom: -50px!important;
+    bottom: -100px!important;
     right: 10px;
     transform: translateY(-50%);
   }

@@ -12,7 +12,11 @@ import { useCollectedAmount } from "./hooks/useCollectedAmount";
 import Description from "./components/Description";
 import dynamic from "next/dynamic";
 import { BsArrowUpSquareFill } from "react-icons/bs";
+import Link from "next/link";
+import { IoStatsChartOutline } from "react-icons/io5";
 
+
+const fredoka = Fredoka({ subsets: ['latin'] });
 
 const CollectedAmountGauge = dynamic(() => import('@/app/components/CollectedAmountGauge'), {
   ssr: false,
@@ -179,6 +183,17 @@ export default function Home() {
         distance={stats?.distance_aggregated ?? []}
         loading={loading}
       />
+          <Link href="/daily-stats">
+      <button 
+      className="custom-button"
+      style={{
+        fontFamily: fredoka.style.fontFamily,
+        marginTop: 0,
+
+      }}>
+        <IoStatsChartOutline style={{display: "inline"}} /> View Daily Stats 
+      </button>
+    </Link>
           <Description />
 
       {!loading && stats && (

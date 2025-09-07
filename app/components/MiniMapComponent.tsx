@@ -32,7 +32,7 @@ const MiniMapComponent = ({ id, coordinates }: Props) => {
              className="full-height-map"
              id={id}
              center={mapCenter}
-             zoom={12}
+             zoom={10}
              zoomControl={false}
              minZoom={1}
              maxZoom={18}
