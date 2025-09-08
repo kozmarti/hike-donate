@@ -12,6 +12,7 @@ const fredoka = Fredoka({ subsets: ['latin'] });
 
 const DailyStatsCarousel = dynamic(() => import("../components/DailyCarousel"), {
   ssr: false,
+  loading: () => <p>Loading stats...</p>,
 });
 
 export default function Page() {

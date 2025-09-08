@@ -27,11 +27,7 @@ const hikeDateConvert = (hikeDate: string) => new Date(hikeDate).toISOString().s
 
 
 const DailyStatsCarousel = ({ activities, loading }: Props) => {
-  const [mounted, setMounted] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
-
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
 
   const settings = {
     customPaging: function (i: number) {
