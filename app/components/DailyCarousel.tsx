@@ -7,14 +7,35 @@ import dynamic from "next/dynamic";
 import { LatLngExpression } from "leaflet";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
+import Skeleton from '@mui/material/Skeleton';
 import "swiper/css";
 import "swiper/css/pagination";
 
 const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
   ssr: false,
+  loading: () => <div className="map-wrapper" style={{ margin: 10 }}>
+    <div className="full-height-map">
+      <Skeleton
+        animation="wave"
+        height="100%"
+        width="100%"
+        style={{ marginBottom: 6 }}
+      />
+    </div>
+  </div>,
 });
 const ElevationChart = dynamic(() => import("@/app/components/ElevationChart"), {
   ssr: false,
+  loading: () => <div className="map-wrapper" style={{ margin: 10 }}>
+  <div className="full-height-map">
+    <Skeleton
+      animation="wave"
+      height="100%"
+      width="100%"
+      style={{ marginBottom: 6 }}
+    />
+  </div>
+</div>,
 });
 
 interface Props {
