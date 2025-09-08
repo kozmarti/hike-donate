@@ -41,7 +41,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
     speed: 200,
     slidesToShow: 1,
     slidesToScroll: 1,
-    adaptiveHeight: true, // fixes vertical stretching
+    adaptiveHeight: false, // fixes vertical stretching
     arrows: false,
     beforeChange: (_: number, next: number) => setActiveSlide(next),
 
