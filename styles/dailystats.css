@@ -1,6 +1,0 @@
-@media (max-width: 640px) {
-    .minimap .leaflet-control-zoom,
-     .minimap .leaflet-control-layers {
-      display: none !important;
-    }
-  }
