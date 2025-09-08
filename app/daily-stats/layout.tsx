@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "@/styles/globals.css";
 import Image from "next/image";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const inter = Fredoka({ subsets: ["latin"] });
 
