@@ -41,9 +41,7 @@ export default function Page() {
           <button 
           className="custom-button"
           style={{
-            fontFamily: fredoka.style.fontFamily,
-            bottom: -1000,
-    
+            fontFamily: fredoka.style.fontFamily,    
           }}>
             <IoHomeOutline style={{display: "inline"}} /> Home
           </button>
