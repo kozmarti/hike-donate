@@ -2,11 +2,13 @@
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { Activity } from "@/app/entities/Activity";
 import Slider from "react-slick";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { LatLngExpression } from "leaflet";
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
+
 
 
 const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
@@ -50,7 +52,10 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
   };
 
   return (
-    <div className="w-full mb-20">
+    <>
+    <div className="w-full mb-40">
+
+
       <Slider {...settings}>
         {activities.map((activity, index) => (
           <div
@@ -113,7 +118,11 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
           </div>
         ))}
       </Slider>
+
+
     </div>
+
+    </>
   );
 };
 

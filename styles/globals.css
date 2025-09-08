@@ -92,8 +92,6 @@ body {
   .slick-dots {
     position: absolute;
     bottom: -100px!important;
-    right: 10px;
-    transform: translateY(-50%);
   }
 }
 
@@ -108,8 +106,6 @@ body {
   .slick-dots {
     position: absolute;
     bottom: -100px!important;
-    right: 10px;
-    transform: translateY(-50%);
   }
 }
 
@@ -124,8 +120,6 @@ body {
   .slick-dots {
     position: absolute;
     bottom: -150px!important;
-    right: 10px;
-    transform: translateY(-50%);
   }
 }
 
@@ -138,9 +132,7 @@ body {
   }
   .slick-dots {
     position: absolute;
-    bottom: -200px!important;
-    right: 10px;
-    transform: translateY(-50%);
+    bottom: -150px!important;
   }
 }
 /* Mobile phones: up to 480px */
@@ -153,9 +145,7 @@ body {
   }
   .slick-dots {
     position: absolute;
-    bottom: -200px!important;
-    right: 10px;
-    transform: translateY(-50%);
+    bottom: -150px!important;
   }
 }
 
@@ -460,11 +450,9 @@ a {
   background-color: #ff6078;
 }
 
-
-
 .slick-dots li {
   width: auto;
-  margin: 0 4px;
+  margin: 5px 5px !important;
 }
 
 .slick-dots li span.dot-number {
@@ -486,13 +474,5 @@ a {
   background-color: #ff6078; /* Tailwind blue-500 */
   color: white;
   border-color: #ff6078;
-}
-
-.slick-slide .leaflet-control {
-  pointer-events: auto !important;
-}
-
-.slick-slide .leaflet-container {
-  touch-action: auto !important;
 }
 

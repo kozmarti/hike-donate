@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
             <main
-              className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${inter.className}`}
+              className={`flex min-h-screen flex-col items-center justify-between p-2 global-background ${inter.className}`}
             >
               <Image
                 src="/logo.png"
