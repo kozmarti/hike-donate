@@ -29,7 +29,7 @@ const MiniMapComponent = ({ id, coordinates }: Props) => {
     <>
          <div>
            <MapContainer
-             className="full-height-map"
+             className="full-height-map minimap"
              id={id}
              center={mapCenter}
              zoom={10}
