@@ -47,7 +47,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
       >
         {activities.map((activity, index) => (
           <SwiperSlide key={index}>
-            <div className="description-container map-wrapper mb-40 flex flex-col items-center">
+            <div className="description-container mb-40 flex flex-col items-center">
               <h2 className="mb-4 font-bold">
                 Day #{index + 1},{" "}
                 {hikeDateConvert(activity.start_time.toString())}
