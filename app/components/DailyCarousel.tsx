@@ -98,7 +98,6 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
               {activeSlide === index && (
                 <>
                   <MiniMapComponent
-                    key={`map-${index}`}
                     id={`map-${index}`}
                     coordinates={activity.coordinates as LatLngExpression[]}
                   />
