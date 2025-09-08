@@ -5,8 +5,6 @@ import { PerformanceItemComponent } from "@/app/components/PerformanceItemCompon
 import { Activity } from "@/app/entities/Activity";
 import dynamic from "next/dynamic";
 import { LatLngExpression } from "leaflet";
-
-// Swiper imports
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
