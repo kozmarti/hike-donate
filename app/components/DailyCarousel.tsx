@@ -1,21 +1,21 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { Activity } from "@/app/entities/Activity";
-import Slider from "react-slick";
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import dynamic from "next/dynamic";
 import { LatLngExpression } from "leaflet";
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from "react";
 
-
+// Swiper imports
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 
 const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
   ssr: false,
 });
-
-const ElevationChart = dynamic(() => import('@/app/components/ElevationChart'), {
+const ElevationChart = dynamic(() => import("@/app/components/ElevationChart"), {
   ssr: false,
 });
 
@@ -23,55 +23,48 @@ interface Props {
   activities: Activity[];
   loading: boolean;
 }
-const hikeDateConvert = (hikeDate: string) => new Date(hikeDate).toISOString().split('T')[0];
 
+const hikeDateConvert = (hikeDate: string) =>
+  new Date(hikeDate).toISOString().split("T")[0];
 
 const DailyStatsCarousel = ({ activities, loading }: Props) => {
+  const [mounted, setMounted] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
 
-  const settings = {
-    customPaging: function (i: number) {
-      return (
-        <span className="dot-number">{i + 1}</span>
-      );
-    },
-    dots: true,
-    dotsClass: "slick-dots slick-thumb",
-    infinite: false,
-    speed: 200,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    adaptiveHeight: false, // fixes vertical stretching
-    arrows: false,
-    beforeChange: (_: number, next: number) => setActiveSlide(next),
-
-  };
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
   return (
-    <>
-    <div className="w-full mb-40">
-
-
-      <Slider {...settings}>
+    <div className="w-full mb-10">
+      <Swiper
+        modules={[Pagination]}
+        pagination={{
+          clickable: true,
+          renderBullet: (index, className) =>
+            `<button class="${className} dot-number">${index + 1}</button>`,
+        }}
+        spaceBetween={30}
+        slidesPerView={1}
+        onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
+      >
         {activities.map((activity, index) => (
-          <div
-            key={index}
-            className="map-wrapper"
-          >
-            <div className="description-container flex flex-col items-center">
-
-              <h2 className="mb-4 font-bold">Day #{index + 1}, {hikeDateConvert(activity.start_time.toString())}</h2>
+          <SwiperSlide key={index}>
+            <div className="description-container mb-40 flex flex-col items-center">
+              <h2 className="mb-4 font-bold">
+                Day #{index + 1},{" "}
+                {hikeDateConvert(activity.start_time.toString())}
+              </h2>
 
               <div className="container wrapper">
                 <PerformanceItemComponent
                   title="totalDistance"
                   loading={loading}
-                  quantity={(activity.total_distance / 1000)}
+                  quantity={activity.total_distance / 1000}
                 />
                 <PerformanceItemComponent
                   title="movingTime"
                   loading={loading}
-                  quantity={(activity.moving_time / 60 / 60)}
+                  quantity={activity.moving_time / 60 / 60}
                 />
                 <PerformanceItemComponent
                   title="totalElevationGain"
@@ -99,10 +92,11 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
                 <>
                   <MiniMapComponent
                     id={`map-${index}`}
-                    coordinates={activity.coordinates as LatLngExpression[]}
+                    coordinates={
+                      activity.coordinates as LatLngExpression[]
+                    }
                   />
                   <ElevationChart
-                    key={`chart-${index}`}
                     altitude={activity.altitudes ?? []}
                     distance={activity.distances ?? []}
                     loading={loading}
@@ -110,14 +104,10 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
                 </>
               )}
             </div>
-          </div>
+          </SwiperSlide>
         ))}
-      </Slider>
-
-
+      </Swiper>
     </div>
-
-    </>
   );
 };
 

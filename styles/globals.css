@@ -89,10 +89,6 @@ body {
     height: auto;
 
   }
-  .slick-dots {
-    position: absolute;
-    bottom: -100px!important;
-  }
 }
 
 /* Large tablets and small laptops: between 769px and 1024px */
@@ -102,10 +98,6 @@ body {
     width: 760px;
     height: auto;
 
-  }
-  .slick-dots {
-    position: absolute;
-    bottom: -100px!important;
   }
 }
 
@@ -117,10 +109,6 @@ body {
     height: auto;
 
   }
-  .slick-dots {
-    position: absolute;
-    bottom: -150px!important;
-  }
 }
 
 /* Mobile phones: up to 480px */
@@ -130,10 +118,6 @@ body {
     width: 358px;
     height: auto;
   }
-  .slick-dots {
-    position: absolute;
-    bottom: -150px!important;
-  }
 }
 /* Mobile phones: up to 480px */
 @media (max-width: 359px) {
@@ -142,10 +126,6 @@ body {
     width: 300px;
     height: auto;
 
-  }
-  .slick-dots {
-    position: absolute;
-    bottom: -150px!important;
   }
 }
 
@@ -450,29 +430,23 @@ a {
   background-color: #ff6078;
 }
 
-.slick-dots li {
-  width: auto;
-  margin: 5px 5px !important;
+
+.swiper-pagination-bullet {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 9999px !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: black !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  margin: 2px 5px !important;
+  opacity: 1 !important; /* override Swiper default fade */
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
 }
 
-.slick-dots li span.dot-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 9999px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color:  rgba(255, 255, 255, 0.1);
-  color: black;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.2s;
+.swiper-pagination-bullet-active {
+  background-color: #ff6078 !important;
+  color: white !important;
 }
-
-.slick-dots li.slick-active span.dot-number {
-  background-color: #ff6078; /* Tailwind blue-500 */
-  color: white;
-  border-color: #ff6078;
-}
-

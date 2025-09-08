@@ -31,9 +31,8 @@
     "react-leaflet": "^4.2.1",
     "react-leaflet-fullscreen": "^4.1.1",
     "react-photo-album": "^3.1.0",
-    "react-slick": "^0.31.0",
-    "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.13",
+    "swiper": "^11.2.10",
     "togpx": "^0.5.4",
     "uploadthing": "^7.6.0"
   },
