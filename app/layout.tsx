@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next"
 import "@/styles/globals.css";
 
 const inter = Fredoka({ subsets: ["latin"] });
@@ -29,7 +30,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>{children}
+      <Analytics />
+      </body>
     </html>
   );
 }
