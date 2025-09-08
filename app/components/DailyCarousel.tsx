@@ -38,7 +38,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
     dots: true,
     dotsClass: "slick-dots slick-thumb",
     infinite: false,
-    speed: 1500,
+    speed: 200,
     slidesToShow: 1,
     slidesToScroll: 1,
     adaptiveHeight: true, // fixes vertical stretching
