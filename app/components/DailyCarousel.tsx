@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { Activity } from "@/app/entities/Activity";
 import dynamic from "next/dynamic";
@@ -27,15 +27,15 @@ const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"),
 const ElevationChart = dynamic(() => import("@/app/components/ElevationChart"), {
   ssr: false,
   loading: () => <div className="map-wrapper" style={{ margin: 10 }}>
-  <div className="full-height-map">
-    <Skeleton
-      animation="wave"
-      height="100%"
-      width="100%"
-      style={{ marginBottom: 6 }}
-    />
-  </div>
-</div>,
+    <div className="full-height-map">
+      <Skeleton
+        animation="wave"
+        height="100%"
+        width="100%"
+        style={{ marginBottom: 6 }}
+      />
+    </div>
+  </div>,
 });
 
 interface Props {
@@ -49,6 +49,15 @@ const hikeDateConvert = (hikeDate: string) =>
 const DailyStatsCarousel = ({ activities, loading }: Props) => {
   const [mounted, setMounted] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
+  const swiperRef = useRef<any>(null);
+
+  const handleMapEnter = () => {
+    if (swiperRef.current) swiperRef.current.allowTouchMove = false;
+  };
+
+  const handleMapLeave = () => {
+    if (swiperRef.current) swiperRef.current.allowTouchMove = true;
+  };
 
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
@@ -65,6 +74,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
         spaceBetween={30}
         slidesPerView={1}
         onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
       >
         {activities.map((activity, index) => (
           <SwiperSlide key={index}>
@@ -109,12 +119,18 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
 
               {activeSlide === index && (
                 <>
-                  <MiniMapComponent
-                    id={`map-${index}`}
-                    coordinates={
-                      activity.coordinates as LatLngExpression[]
-                    }
-                  />
+                  <div
+                    onMouseEnter={handleMapEnter}
+                    onMouseLeave={handleMapLeave}
+                    onTouchStart={handleMapEnter}
+                    onTouchEnd={handleMapLeave}>
+                    <MiniMapComponent
+                      id={`map-${index}`}
+                      coordinates={
+                        activity.coordinates as LatLngExpression[]
+                      }
+                    />
+                  </div>
                   <ElevationChart
                     altitude={activity.altitudes ?? []}
                     distance={activity.distances ?? []}
