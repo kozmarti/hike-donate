@@ -175,8 +175,6 @@ export default function Home() {
           <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={0} />
         )}
       </div>
-
-
       <MapComponent coordinates={stats?.coordinates as [number, number][]} currentLocation={!loading && !stats ? [43.3732318, -1.7740848] : stats?.coordinates.slice(-1)[0] as [number, number]} centerCoordinates={!loading && !stats ? [43.3732318, -1.7740848] : stats?.coordinates.slice(-1)[0] as [number, number]} />
       <ElevationChart
         altitude={stats?.altitudes ?? []}
@@ -195,7 +193,6 @@ export default function Home() {
       </button>
     </Link>
           <Description />
-
       {!loading && stats && (
           <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)} />
         )}

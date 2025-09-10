@@ -127,7 +127,7 @@ export const extractData = (
     console.log("Extracting data");
   
     const streamsCleaned: Stream = _removeDuplicatesStreamData(streams_strava);
-    const simplifiedLatLng = simplifyLatLngPolyline(streamsCleaned.latlng, 310, 290);
+    const simplifiedLatLng = simplifyLatLngPolyline(streamsCleaned.latlng);
     const syncedStreams = syncStreamsToSimplifiedCoords(
       streamsCleaned.latlng,
       // @ts-ignore

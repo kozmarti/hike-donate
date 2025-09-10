@@ -13,9 +13,9 @@ const DailyStatsCarousel = dynamic(() => import("../components/DailyCarousel"), 
 <div
       style={{
         display: "flex",
-        flexWrap: "wrap",         // allow skeletons to go to next line
-        justifyContent: "center", // horizontal center
-        alignItems: "center",     // vertical center within the container
+        flexWrap: "wrap",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       {Array.from({ length: 47 }).map((_, index) => (

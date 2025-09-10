@@ -191,10 +191,10 @@ export function timeStringToSeconds(timeStr: string): number {
  */
 export function simplifyLatLngPolyline(
   coords: [number, number][],
-  maxPoints = 310,
-  minPoints = 290
+  maxPoints = 1100,
+  minPoints = 1000
 ): LatLngExpression[] {
-  if (!coords || coords.length <= 150) return coords;
+  if (!coords || coords.length <= maxPoints) return coords;
 
   const geojson: Feature<LineString> = {
     type: 'Feature',
