@@ -191,8 +191,8 @@ export function timeStringToSeconds(timeStr: string): number {
  */
 export function simplifyLatLngPolyline(
   coords: [number, number][],
-  maxPoints = 1100,
-  minPoints = 1000
+  maxPoints = 2100,
+  minPoints = 2000
 ): LatLngExpression[] {
   if (!coords || coords.length <= maxPoints) return coords;
 
