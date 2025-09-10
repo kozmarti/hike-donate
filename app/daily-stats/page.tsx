@@ -10,6 +10,24 @@ import { PerformanceItemComponent } from "../components/PerformanceItemComponent
 const DailyStatsCarousel = dynamic(() => import("../components/DailyCarousel"), {
   ssr: false,
   loading: () => <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+<div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",         // allow skeletons to go to next line
+        justifyContent: "center", // horizontal center
+        alignItems: "center",     // vertical center within the container
+      }}
+    >
+      {Array.from({ length: 47 }).map((_, index) => (
+        <Skeleton
+          key={index}
+          variant="circular"
+          height={28}
+          width={28}
+          style={{ margin: "1px 2px" }}
+        />
+      ))}
+    </div>
     <Skeleton variant="rectangular" height={30} width={200} style={{marginBottom: "1rem", marginTop: "0.5rem"}}/>
 
     <div className="container wrapper" id="statistics">
@@ -65,9 +83,7 @@ export default function Page() {
 
   return (
     <>
-
       <DailyStatsCarousel activities={activities} loading={loading} />
-
     </>
   )
 }

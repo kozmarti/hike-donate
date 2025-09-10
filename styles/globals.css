@@ -455,3 +455,18 @@ a {
 
 }
 
+.day-counter {
+  display: inline-block;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 9999px !important;
+  font-size: 0.875rem !important;
+  background-color: #ff6078 !important;
+  color: white !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  margin: 1px 2px !important;
+  opacity: 1 !important; /* override Swiper default fade */
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
+
