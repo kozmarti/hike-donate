@@ -430,6 +430,10 @@ a {
   background-color: #ff6078;
 }
 
+.swiper-pagination {
+  top: 10px !important; /* adjust as needed */
+  height: 100px;
+}
 
 .swiper-pagination-bullet {
   width: 28px !important;
@@ -448,8 +452,6 @@ a {
 .swiper-pagination-bullet-active {
   background-color: #ff6078 !important;
   color: white !important;
+
 }
 
-.swiper-wrapper {
-  margin-bottom: 40px; /* space for pagination */
-}
