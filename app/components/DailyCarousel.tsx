@@ -10,6 +10,12 @@ import { Pagination } from "swiper/modules";
 import Skeleton from '@mui/material/Skeleton';
 import "swiper/css";
 import "swiper/css/pagination";
+import DownloadGpxButton from "./DownloadGPXButton";
+import Link from "next/link";
+import { IoHomeOutline } from "react-icons/io5";
+import { Fredoka } from "next/font/google";
+
+const fredoka = Fredoka({ subsets: ['latin'] });
 
 const MiniMapComponent = dynamic(() => import("../components/MiniMapComponent"), {
   ssr: false,
@@ -63,7 +69,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
   if (!mounted) return null;
 
   return (
-    <div className="w-full mb-10">
+    <div className="w-full">
       <Swiper
         modules={[Pagination]}
         pagination={{
@@ -79,7 +85,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
         {activities.map((activity, index) => (
           <SwiperSlide key={index}>
             <div className="description-container mb-40 flex flex-col items-center">
-              <h2 className="mb-4 font-bold">
+              <h2 className="mb-4 text-xl">
                 Day #{index + 1},{" "}
                 {hikeDateConvert(activity.start_time.toString())}
               </h2>
@@ -130,7 +136,10 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
                         activity.coordinates as LatLngExpression[]
                       }
                     />
-                  </div>
+                                      </div>
+
+                    <DownloadGpxButton polyline={activity.coordinates} filename="hike-donate-track.gpx" />
+
                   <ElevationChart
                     altitude={activity.altitudes ?? []}
                     distance={activity.distances ?? []}
@@ -142,6 +151,17 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
           </SwiperSlide>
         ))}
       </Swiper>
+      <div className="flex items-center justify-center m-0 p-0"> 
+      <Link href="/" >
+        <button
+          className="custom-button"
+          style={{
+            fontFamily: fredoka.style.fontFamily,
+          }}>
+          <IoHomeOutline style={{ display: "inline" }} /> Home
+        </button>
+      </Link>
+      </div>
     </div>
   );
 };

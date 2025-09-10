@@ -3,24 +3,23 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useActivities } from "../hooks/useActivities";
-import Link from "next/link";
-import { IoHomeOutline } from "react-icons/io5";
-import { Fredoka } from "next/font/google";
 import Skeleton from '@mui/material/Skeleton';
+import { PerformanceItemComponent } from "../components/PerformanceItemComponent";
 
-const fredoka = Fredoka({ subsets: ['latin'] });
 
 const DailyStatsCarousel = dynamic(() => import("../components/DailyCarousel"), {
   ssr: false,
   loading: () => <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-    <Skeleton height={20} width="40%" style={{ textAlign: "center" }} />
-    <Skeleton variant="rounded" width={300} height={80} style={{ margin: 10, borderRadius: "20px" }} />
-    <Skeleton variant="rounded" width={300} height={80} style={{ margin: 10, borderRadius: "20px" }} />
-    <Skeleton variant="rounded" width={300} height={80} style={{ margin: 10, borderRadius: "20px" }} />
-    <Skeleton variant="rounded" width={300} height={80} style={{ margin: 10, borderRadius: "20px" }} />
-    <Skeleton variant="rounded" width={300} height={80} style={{ margin: 10, borderRadius: "20px" }} />
-    <Skeleton variant="rounded" width={300} height={80} style={{ margin: 10, borderRadius: "20px" }} />
-    <div className="map-wrapper" style={{ margin: 10 }}>
+    <Skeleton variant="rectangular" height={30} width={200} style={{marginBottom: "1rem", marginTop: "0.5rem"}}/>
+
+    <div className="container wrapper" id="statistics">
+      <PerformanceItemComponent title="totalDistance" loading={true} />
+      <PerformanceItemComponent title="movingTime" loading={true} />
+      <PerformanceItemComponent title="totalElevationGain" loading={true} />
+      <PerformanceItemComponent title="totalElevationLoss" loading={true} />
+      <PerformanceItemComponent title="maxAltitude" loading={true} />
+      <PerformanceItemComponent title="minAltitude" loading={true} />
+    </div>    <div className="map-wrapper" style={{ margin: 10 }}>
       <div className="full-height-map">
         <Skeleton
           animation="wave"
@@ -66,16 +65,9 @@ export default function Page() {
 
   return (
     <>
+
       <DailyStatsCarousel activities={activities} loading={loading} />
-      <Link href="/" >
-        <button
-          className="custom-button"
-          style={{
-            fontFamily: fredoka.style.fontFamily,
-          }}>
-          <IoHomeOutline style={{ display: "inline" }} /> Home
-        </button>
-      </Link>
+
     </>
   )
 }

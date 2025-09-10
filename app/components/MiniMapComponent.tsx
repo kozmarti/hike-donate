@@ -78,7 +78,6 @@ const MiniMapComponent = ({ id, coordinates }: Props) => {
    
              <ScaleControl position="bottomleft" imperial={false} />
            </MapContainer>
-           <DownloadGpxButton polyline={polyline} filename="hike-donate-track.gpx" />
 
    
          </div>
