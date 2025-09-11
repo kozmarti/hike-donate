@@ -241,7 +241,6 @@ body {
 
 .leaflet-control-layers, .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
   background-color: rgba(255, 255, 255, 0.6);
-  font-weight: 500;
 
 }
 .leaflet-control-layers{
@@ -250,14 +249,12 @@ text-align: start;
 
 .leaflet-control-layers-toggle {
   background-color: 'transparent'!important;
-  font-weight: 500;
   width: 30px!important;
   height: 30px!important;
 }
 
 .leaflet-touch .leaflet-bar a {
   background-color: rgba(255, 255, 255, 0.6);
-  font-weight: 500;
 }
 
 .leaflet-control-layers-list, .leaflet-control-layers-selector {
@@ -292,12 +289,8 @@ text-align: start;
 
 .leaflet-control-scale-line {
   background-color: rgba(255, 255, 255, 0.6)!important;
-  font-weight: 500;
   text-shadow: none!important;
 }
-
-
-
 
 .fullscreen-sim {
   position: fixed !important;
