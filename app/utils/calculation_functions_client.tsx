@@ -211,19 +211,28 @@ export function simplifyLatLngPolyline(
   let tolerance = 0.00001;
   let simplified = geojson;
   let simplifiedCoords = geojson.geometry.coordinates;
+  console.log(`Starting simplification with ${coords.length} points.`);
+  console.log("Original coordinates:", coords);
+  console.log("Initial GeoJSON:", geojson);
+  console.log("Initial coordinates in GeoJSON:", simplifiedCoords);
 
   while (simplifiedCoords.length > maxPoints && tolerance < 0.001) {
     const temp = simplify(geojson, { tolerance, highQuality: true });
     const tempCoords = temp.geometry.coordinates;
+    console.log(`Tolerance: ${tolerance}, Points after simplification: ${tempCoords.length}`);
+    console.log("Simplified GeoJSON:", temp);
+    console.log("Simplified coordinates in GeoJSON:", tempCoords);
 
     if (tempCoords.length >= minPoints) {
       simplified = temp;
       simplifiedCoords = tempCoords;
     } else {
+      console.log(`Skipping tolerance ${tolerance} as it reduces points below minPoints (${minPoints}).`);
       break;
     }
 
     tolerance *= 1.2;
+    console.log(`Increasing tolerance to ${tolerance}`);
   }
   console.log(`Simplified coordinates from ${coords.length} to ${simplifiedCoords.length} with tolerance ${tolerance}`);
   console.log("Simplified coordinates:", simplifiedCoords);
