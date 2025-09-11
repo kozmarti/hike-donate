@@ -12,8 +12,11 @@
     ZoomControl,
   } from "react-leaflet";
   import { LatLngExpression } from "leaflet";
-  import DownloadGpxButton from './DownloadGPXButton';
 import FitBounds from './FitBound';
+
+import { Fredoka } from "next/font/google";
+
+const fredoka = Fredoka({ subsets: ['latin'] });
 
   interface Props {
       id: string;
@@ -30,7 +33,7 @@ import FitBounds from './FitBound';
       <>
           <div>
             <MapContainer
-              className="full-height-map minimap"
+              className={`${fredoka.className} full-height-map minimap`}
               id={id}
               center={mapCenter}
               zoom={10}
@@ -44,7 +47,7 @@ import FitBounds from './FitBound';
               scrollWheelZoom={false}   
     
             >
-                        <ZoomControl position="topright" zoomInText="+" zoomOutText="-" />
+              <ZoomControl position="topright" zoomInText="+" zoomOutText="-" />
 
               <TileLayer
                 //attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
@@ -52,7 +55,7 @@ import FitBounds from './FitBound';
                 url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               //url='https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default//GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg'
               />
-              <LayersControl position="topright">
+              <LayersControl position="topright" >
                     {/* Esri Satellite */}
                     <BaseLayer checked name="Esri World Imagery">
                     <TileLayer

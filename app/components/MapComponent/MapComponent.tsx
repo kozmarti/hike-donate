@@ -18,6 +18,9 @@ import Image from "next/image";
 import { LatLngExpression } from "leaflet";
 import { createIconMarker } from "../IconMarkerComponent";
 import DownloadGpxButton from "../DownloadGPXButton";
+import { Fredoka } from "next/font/google";
+
+const fredoka = Fredoka({ subsets: ['latin'] });
 
 
 interface Props {
@@ -81,7 +84,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
     <>
       <div className="map-wrapper" id="map-wrapper">
         <MapContainer
-          className="full-height-map"
+          className={`${fredoka.className} full-height-map`}
           id="map"
           center={centerCoords}
           zoom={zoomInitial}
