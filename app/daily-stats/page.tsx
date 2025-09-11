@@ -16,6 +16,7 @@ const DailyStatsCarousel = dynamic(() => import("../components/DailyCarousel"), 
         flexWrap: "wrap",
         justifyContent: "center",
         alignItems: "center",
+        maxWidth: "500px",
       }}
     >
       {Array.from({ length: 47 }).map((_, index) => (

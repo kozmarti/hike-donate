@@ -433,7 +433,10 @@ a {
 .swiper-pagination {
   top: 10px !important; /* adjust as needed */
   height: 100px;
+  max-width: 500px;
+  justify-self: anchor-center;
 }
+
 
 .swiper-pagination-bullet {
   width: 28px !important;
