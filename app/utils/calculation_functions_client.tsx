@@ -223,7 +223,7 @@ export function simplifyLatLngPolyline(
     console.log("Simplified GeoJSON:", temp);
     console.log("Simplified coordinates in GeoJSON:", tempCoords);
 
-    if (tempCoords.length >= minPoints) {
+    if (tempCoords.length >= minPoints || tolerance == 0.00001) {
       simplified = temp;
       simplifiedCoords = tempCoords;
     } else {
