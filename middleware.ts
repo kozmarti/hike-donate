@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "./lib/auth";
 
 const ALLOWED_HOSTS : string[] = [
     // @ts-ignore
@@ -8,7 +7,7 @@ const ALLOWED_HOSTS : string[] = [
 export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
-   
+   {/**  
     if (pathname.startsWith("/add-activity") || pathname.startsWith("/activities")) {
         const session = request.cookies.get("session")?.value;
 
@@ -23,13 +22,14 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url)); // Redirect to login on failure
         }
     }
+        */}
     
     if (pathname.startsWith("/api")) {
         const origin = request.headers.get("origin") || request.headers.get("referer");
         if (!origin || !ALLOWED_HOSTS.some((host) => origin.startsWith(host))) {
           return NextResponse.json({ error: "Unauthorized origin" }, { status: 403 });
         }
-      }
+      }  
 
     return NextResponse.next();
 }
