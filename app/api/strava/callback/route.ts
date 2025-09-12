@@ -1,17 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/mongodb";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { code, email } = req.query;
-  if (!code || !email) return res.status(400).send("Missing code or email");
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const code = url.searchParams.get("code");
+  const email = url.searchParams.get("email");
+
+  if (!code || !email) return new Response("Missing code or email", { status: 400 });
 
   const client = await clientPromise;
   const db = client.db("hike");
   const usersCollection = db.collection("users");
 
-  const user = await usersCollection.findOne({ email: email.toString() });
+  const user = await usersCollection.findOne({ email });
   if (!user || !user.stravaClientId || !user.stravaClientSecret) {
-    return res.status(400).send("User missing Strava credentials");
+    return new Response("User missing Strava credentials", { status: 400 });
   }
 
   // Exchange code for tokens
@@ -29,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const data = await tokenRes.json();
 
   await usersCollection.updateOne(
-    { email: email.toString() },
+    { email },
     {
       $set: {
         stravaUserId: data.athlete.id,
@@ -38,5 +40,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   );
 
-  res.redirect("/dashboard");
+  return Response.redirect("/dashboard", 302);
 }

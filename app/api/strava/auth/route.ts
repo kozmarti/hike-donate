@@ -1,21 +1,21 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "@/lib/mongodb";
 
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { email } = req.query;
-  if (!email) return res.status(400).send("Missing email");
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const email = url.searchParams.get("email");
+  if (!email) return new Response("Missing email", { status: 400 });
 
   const client = await clientPromise;
   const db = client.db("hike");
   const usersCollection = db.collection("users");
 
-  const user = await usersCollection.findOne({ email: email.toString() });
+  const user = await usersCollection.findOne({ email });
   if (!user || !user.stravaClientId || !user.stravaClientSecret) {
-    return res.status(400).send("User missing Strava credentials");
+    return new Response("User missing Strava credentials", { status: 400 });
   }
 
   const redirectUri = process.env.STRAVA_REDIRECT_URI;
-  const url = `https://www.strava.com/oauth/authorize?client_id=${user.stravaClientId}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=auto&scope=activity:read_all`;
-  res.redirect(url);
+  const stravaUrl = `https://www.strava.com/oauth/authorize?client_id=${user.stravaClientId}&response_type=code&redirect_uri=${redirectUri}&approval_prompt=auto&scope=activity:read_all`;
+
+  return Response.redirect(stravaUrl, 302);
 }
