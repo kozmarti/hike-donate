@@ -86,7 +86,7 @@ export async function POST(req: Request) {
   attachments: [
     {
       filename: "hike-and-donate.png",
-      path: "./public/hike-and-donate.png",
+      path: "/hike-and-donate.png",
       cid: "hike-and-donate",
     },
   ],
