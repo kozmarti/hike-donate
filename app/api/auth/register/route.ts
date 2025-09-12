@@ -2,6 +2,7 @@ import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import path from "path";
 
 export async function POST(req: Request) {
   try {
@@ -86,7 +87,7 @@ export async function POST(req: Request) {
   attachments: [
     {
       filename: "hike-and-donate.png",
-      path: "/hike-and-donate.png",
+      path: path.join(process.cwd(), "public", "hike-and-donate.png"),
       cid: "hike-and-donate",
     },
   ],
