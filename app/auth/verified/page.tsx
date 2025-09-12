@@ -1,10 +1,10 @@
-"use client";
+interface VerifiedPageProps {
+    searchParams: { status?: string };
+  }
 
-import { useSearchParams } from "next/navigation";
+export default function VerifiedPage({ searchParams }: VerifiedPageProps) {
+    const status = searchParams.status;
 
-export default function VerifiedPage() {
-    const searchParams = useSearchParams();
-    const status = searchParams?.get("status");
 
     let title = "";
     let message = "";
