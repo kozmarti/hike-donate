@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import clientPromise from "@/lib/mongodb";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
