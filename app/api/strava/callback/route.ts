@@ -59,5 +59,5 @@ export async function GET(req: Request) {
     }
   );
 
-  return Response.redirect("/dashboard", 302);
+  return NextResponse.redirect(new URL("/dashboard", process.env.NEXT_PUBLIC_API_URL));
 }
