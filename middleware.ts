@@ -7,22 +7,18 @@ const ALLOWED_HOSTS : string[] = [
 export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
-   {/**  
-    if (pathname.startsWith("/add-activity") || pathname.startsWith("/activities")) {
-        const session = request.cookies.get("session")?.value;
+   
+    if (pathname.startsWith("/add-activity") || pathname.startsWith("/dashboard") || pathname.startsWith("/activities")) {
+        const token = request.cookies.get("token")?.value;
 
-        if (!session) {
-            return NextResponse.redirect(new URL("/login", request.url));
+        if (!token) {
+            return NextResponse.redirect(new URL("/welcome", request.url));
         }
 
-        try {
-            await decrypt(session);
-        } catch (error) {
-            console.error("Session decryption failed:", error);
-            return NextResponse.redirect(new URL("/login", request.url)); // Redirect to login on failure
-        }
+        return NextResponse.next();
+
     }
-        */}
+    
     
     if (pathname.startsWith("/api")) {
         const origin = request.headers.get("origin") || request.headers.get("referer");
@@ -36,5 +32,5 @@ export async function middleware(request: NextRequest) {
 
 
 export const config = {
-    matcher: ["/add-activity","/activities", "/api/user/:path*", "/api/streams/:path*"],
+    matcher: ["/add-activity","/activities", "/api/user/:path*", "/api/streams/:path*", "/dashboard/:path*"],
 };
