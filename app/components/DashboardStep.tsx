@@ -95,7 +95,7 @@ export default function DashboardStep({ user }: Props) {
     (step) => !state.steps?.[step.key as keyof typeof defaultSteps]
   );
 
-  let StepComponent: React.FC<{ onComplete: () => void }>;
+  let StepComponent: React.FC;
   switch (firstIncompleteStep?.key) {
     case "connectStrava":
       StepComponent = () => <StravaConnect email={state.email} />;
