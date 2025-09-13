@@ -3,8 +3,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import LogoutButton from "../components/LogoutButton";
+import clientPromise from "@/lib/mongodb";
+import CompleteProfile from "../components/CompleteProfile";
+import Dashboard, { User } from "../components/Dashboard";
 
-export default function DashboardPage() {
+
+export default async function DashboardPage() {
   const token = cookies().get("token")?.value;
 
   if (!token) redirect("/welcome"); // Not logged in
@@ -16,17 +20,31 @@ export default function DashboardPage() {
     redirect("/welcome"); // Invalid token
   }
 
-  return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <div className="p-8 rounded-lg shadow-md max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold mb-4 text-green-600">
-          Welcome, {payload.email}!
-        </h1>
-        <p className="mb-6 text-gray-600">
-          This is your protected dashboard.
-        </p>
-        <LogoutButton />
-      </div>
-    </div>
-  );
+  const client = await clientPromise;
+  const db = (await client).db("hike");
+    const user = await db
+    .collection<User>("users")
+    .findOne({ email: payload.email });
+
+  if (!user) {
+    // Optional: redirect or show error if user not found
+    return <p>User not found</p>;
+  }
+
+  const currentUser: User = {
+    email: user.email,
+    name: user.name,
+    steps: user.steps || {
+      connectStrava: false,
+      createFundraiser: false,
+      setGoals: false,
+      hikeTrackShare: false,
+    },
+  };
+
+  if (!user.name) {
+    return <CompleteProfile email={payload.email} />;
+  }
+
+  return <Dashboard user={currentUser} />;
 }
