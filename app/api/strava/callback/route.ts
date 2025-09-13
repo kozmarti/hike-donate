@@ -1,10 +1,25 @@
 import clientPromise from "@/lib/mongodb";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import jwt from "jsonwebtoken";
+
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
-  const email = url.searchParams.get("email");
 
+
+  const token = cookies().get("token")?.value;
+
+  if (!token) redirect("/welcome"); // Not logged in
+
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.JWT_SECRET!) as { email: string };
+  } catch {
+    redirect("/welcome"); // Invalid token
+  }
+  const email = payload.email;
   if (!code || !email) return new Response("Missing code or email", { status: 400 });
 
   const client = await clientPromise;
