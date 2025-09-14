@@ -13,23 +13,14 @@ interface Props {
 
 const CreateFundraiser = ({ email, step, completeStep }: Props) => {
   const [fundraiserUrl, setFundraiserUrl] = useState("");
-  const [description, setDescription] = useState("");
+  const [fundraiserDescription, setFundraiserDescription] = useState("");
+  const [saved, setSaved] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
-/*
-  const validateFundraiserUrl = async (url: string) => {
-    const res = await fetch("/api/validate-fundraiser", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url }),
-    });
-    const data = await res.json();
-    return data.valid;
-  };
-  */
 
   const handleSaveFundraiser = async () => {
     setErrorMessage("");
@@ -39,20 +30,12 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
       setErrorMessage("Fundraiser URL is required.");
       return;
     }
-
     if (!isValidLeetchiUrl(fundraiserUrl)) {
         setErrorMessage("Please enter a valid Leetchi URL.");
         return;
       }
-      
-    /*
-    if (!await validateFundraiserUrl(fundraiserUrl)) {
-        setErrorMessage("❌ This Leetchi URL could not be reached. Please check the link.");
-        return;
-      }
-      */
-    if (!description) {
-      setErrorMessage("Please provide a description for your fundraiser.");
+    if (!fundraiserDescription) {
+      setErrorMessage("Fundraiser description is required.");
       return;
     }
 
@@ -64,17 +47,17 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
         body: JSON.stringify({
           email,
           fundraiserUrl,
-          fundraiserDescription: description,
+          fundraiserDescription,
         }),
       });
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to save fundraiser info");
+        throw new Error(data.error || "Failed to save fundraiser");
       }
 
-      setSuccessMessage("✅ Fundraiser info saved successfully!");
-      await completeStep(step);
+      setSaved(true);
+      setSuccessMessage("✅ Fundraiser saved successfully!");
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     } finally {
@@ -82,14 +65,24 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
     }
   };
 
+  const handleCompleteStep = async () => {
+    try {
+      await completeStep(step);
+      setSuccessMessage("✅ Step completed! Refreshing...");
+      window.location.reload();
+    } catch (err: any) {
+      setErrorMessage(`❌ ${err.message}`);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
-      <h2 className="text flex items-center gap-2">
+      <h2 className="text flex items-center">
         {stepConfig?.icon} {stepConfig?.label}
       </h2>
 
-      <p className="text-sm text-gray-600">
-        Create a fundraising project on{" "}
+      <p>
+        To start fundraising, create your campaign on{" "}
         <a
           href="https://www.leetchi.com/"
           target="_blank"
@@ -98,55 +91,61 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
         >
           Leetchi
         </a>{" "}
-        to collect donations. After creating it, provide the URL below so we can link your fundraising campaign.
+        and paste your project link below. Collected amounts will update
+        automatically in this app a few times per day.
       </p>
 
-      <label className="flex items-center gap-2 font-medium">
+      <label htmlFor="fundraiser-url" className="text flex items-center">
         Fundraiser URL
-        <span className="relative group">
+        <span className="relative group ml-2">
           <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
-          <div className="absolute top-6 left-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-48 italic">
-          Paste your Leetchi fundraiser URL here. Donations will be automatically synced several times a day, so you always see the latest amount collected.          </div>
+          <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-52 italic">
+            Example: https://www.leetchi.com/fr/c/hike-donate-1755564
+          </div>
         </span>
       </label>
       <input
+        id="fundraiser-url"
         type="url"
-        placeholder="https://www.leetchi.com/fr/c/your-fundraiser"
+        placeholder="Paste your Leetchi fundraiser link"
         value={fundraiserUrl}
         onChange={(e) => setFundraiserUrl(e.target.value)}
         className="border p-2 rounded w-full"
-        disabled={saving}
+        disabled={saved || saving}
       />
 
-      <label className="flex items-center gap-2 font-medium">
-        Fundraiser Description
-        <span className="relative group">
-          <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
-          <div className="absolute top-6 left-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-48 italic">
-          Write a short description of your fundraiser. This helps donors understand your project and what they’re supporting.            </div>
-                  </span>
-      </label>
+      <label htmlFor="fundraiser-description">Fundraiser Description</label>
       <textarea
-        placeholder="Describe your fundraising project..."
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="border p-2 rounded w-full resize-none"
-        rows={4}
-        disabled={saving}
+        id="fundraiser-description"
+        placeholder="Write a short description of your fundraising project"
+        value={fundraiserDescription}
+        onChange={(e) => setFundraiserDescription(e.target.value)}
+        className="border p-2 rounded w-full"
+        disabled={saved || saving}
       />
 
       <button
         onClick={handleSaveFundraiser}
         className="custom-button"
-        disabled={saving || !fundraiserUrl || !description}
+        disabled={saving || saved}
       >
-        {saving ? "Saving..." : "Save Fundraiser & Continue"}
+        {saved ? "Fundraiser Saved ✅" : "Save Fundraiser"}
       </button>
 
-      {successMessage && <p className="text-green-600 mt-1">{successMessage}</p>}
-      {errorMessage && <p className="text-red-600 mt-1">{errorMessage}</p>}
+      {saved && (
+        <button onClick={handleCompleteStep} className="custom-button">
+          Complete Setup & Next Step
+        </button>
+      )}
+
+      {successMessage && <p className="text-green-600">{successMessage}</p>}
+      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
     </div>
   );
 };
 
 export default CreateFundraiser;
+
+
+
+

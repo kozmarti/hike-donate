@@ -2,6 +2,7 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { decrypt } from "@/app/utils/encrypt-data";
+import { getUserEmailFromCookie } from "@/app/utils/getUserEmail";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -9,22 +10,11 @@ export async function GET(req: Request) {
 
   // Get JWT from cookie manually (use request.headers)
   const cookieHeader = req.headers.get("cookie") || "";
-  const token = cookieHeader
-    .split(";")
-    .find((c) => c.trim().startsWith("token="))
-    ?.split("=")[1];
-
-  if (!token) {
-    return NextResponse.redirect(new URL("/welcome", process.env.NEXT_PUBLIC_API_URL));
+  const email = getUserEmailFromCookie(cookieHeader);
+  if (!email) {
+      return NextResponse.redirect(new URL("/welcome", process.env.NEXT_PUBLIC_API_URL));
   }
 
-  let payload;
-  try {
-    payload = jwt.verify(token, process.env.JWT_SECRET!) as { email: string };
-  } catch {
-    return NextResponse.redirect(new URL("/welcome", process.env.NEXT_PUBLIC_API_URL));
-  }
-  const email = payload.email;
   if (!code || !email) return new Response("Missing code or email", { status: 400 });
 
   const client = await clientPromise;

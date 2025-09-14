@@ -5,6 +5,8 @@ import StravaConnect from "./StravaConnect";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 import SetGoals from "./SetGoals";
 import CreateFundraiser from "./CreateFundraiser";
+import HikeTrackShare from "./HikeTrackShare";
+import AllStepsComplete from "./AllStepsComplete";
 
 
 export interface User {
@@ -17,18 +19,6 @@ interface Props {
   user: User;
 }
 
-
-
-const HikeTrackShare = ({ onComplete }: { onComplete: () => void }) => (
-  <div>
-    <h2>Hike, track, and share!</h2>
-    <button onClick={onComplete}>Complete ✅</button>
-  </div>
-);
-
-const AllStepsComplete = () => <h2>🎉 All steps completed!</h2>;
-
-// --- Progress bar helper ---
 const ProgressBar = ({ progress }: { progress: number }) => (
   <div className="mb-4">
     <div className="h-3 progress-bar-uncompleted rounded-xl">
@@ -85,10 +75,10 @@ export default function DashboardStep({ user }: Props) {
       StepComponent = () => <SetGoals email={state.email} step="setGoals" completeStep={completeStep} />;
       break;
     case "hikeTrackShare":
-      StepComponent = () => <HikeTrackShare onComplete={() => completeStep("hikeTrackShare")} />;
+      StepComponent = () => <HikeTrackShare email={state.email} step="hikeTrackShare" completeStep={completeStep} />;
       break;
     default:
-      StepComponent = AllStepsComplete;
+      StepComponent = () => <AllStepsComplete/>;
   }
 
   const progress =

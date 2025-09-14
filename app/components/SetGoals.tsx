@@ -13,11 +13,12 @@ interface Props {
 const SetGoals = ({ email, step, completeStep }: Props) => {
   const [projectName, setProjectName] = useState("");
   const [goalMeasure, setGoalMeasure] = useState<"km" | "m" | "hours" | "">("");
+  const [saved, setSaved] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
-  // get icon and label from stepsConfig
   const stepConfig = stepsConfig.find((s) => s.key === step);
 
   const handleSaveGoals = async () => {
@@ -34,7 +35,6 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
     }
 
     const sanitizedProjectName = projectName.toLowerCase().replace(/\s+/g, "");
-
     setSaving(true);
     try {
       const res = await fetch("/api/profile", {
@@ -52,8 +52,8 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         throw new Error(data.error || "Failed to save project goals");
       }
 
+      setSaved(true);
       setSuccessMessage("✅ Project goals saved successfully!");
-      await completeStep(step);
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     } finally {
@@ -61,24 +61,35 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
     }
   };
 
+  const handleCompleteStep = async () => {
+    try {
+      await completeStep(step);
+      setSuccessMessage("✅ Step completed! Refreshing...");
+      window.location.reload();
+    } catch (err: any) {
+      setErrorMessage(`❌ ${err.message}`);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
-<h2 className="text flex items-center">
-  {stepConfig?.icon} {stepConfig?.label}
+      <h2 className="text flex items-center">
+        {stepConfig?.icon} {stepConfig?.label}
+      </h2>
 
-</h2>
-<label htmlFor="project-name" className="text flex items-center">Project Name
-<span className="relative group ml-2">
-  <HiInformationCircle className="w-5 h-5 text-[#74816c]" /> <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">     
-  Pick a project name to tag your Strava activities. The app will sync data only when you rename the activity in Strava, giving you full control over timing and privacy.
-  </div>
-  </span>
-
-</label>
+      <label htmlFor="project-name" className="text flex items-center">
+        Project Name
+        <span className="relative group ml-2">
+          <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
+          <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
+            Pick a project name to tag your Strava activities. Sync happens only
+            when you rename an activity in Strava — you decide the timing.
+          </div>
+        </span>
+      </label>
       <input
-        name="project-name"
         type="text"
-        placeholder="Project Name (lowercase, no spaces)"
+        placeholder="Project name (lowercase, no spaces)"
         value={projectName}
         onChange={(e) => setProjectName(e.target.value)}
         className="border p-2 rounded w-full"
@@ -87,48 +98,38 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
       <p>How should your fundraising goal be measured?</p>
       <div className="flex flex-col gap-2">
-        <label>
-          <input
-            type="radio"
-            value="km"
-            checked={goalMeasure === "km"}
-            onChange={() => setGoalMeasure("km")}
-            disabled={saving}
-          />{" "}
-          EUR = distance (km)
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="m"
-            checked={goalMeasure === "m"}
-            onChange={() => setGoalMeasure("m")}
-            disabled={saving}
-          />{" "}
-          EUR = elevation (m)
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="hours"
-            checked={goalMeasure === "hours"}
-            onChange={() => setGoalMeasure("hours")}
-            disabled={saving}
-          />{" "}
-          EUR = hiking time (hours)
-        </label>
+        {["km", "m", "hours"].map((value) => (
+          <label key={value}>
+            <input
+              type="radio"
+              value={value}
+              checked={goalMeasure === value}
+              onChange={() => setGoalMeasure(value as "km" | "m" | "hours")}
+              disabled={saving}
+            />{" "}
+            {value === "km" && "EUR = distance (km)"}
+            {value === "m" && "EUR = elevation (m)"}
+            {value === "hours" && "EUR = hiking time (hours)"}
+          </label>
+        ))}
       </div>
 
       <button
         onClick={handleSaveGoals}
         className="custom-button"
-        disabled={saving || !projectName || !goalMeasure}
+        disabled={saving || saved}
       >
-        {saving ? "Saving..." : "Save Goals & Continue"}
+        {saved ? "Goals Saved ✅" : "Save Goals"}
       </button>
 
-      {successMessage && <p className="text-green-600 mt-1">{successMessage}</p>}
-      {errorMessage && <p className="text-red-600 mt-1">{errorMessage}</p>}
+      {saved && (
+        <button onClick={handleCompleteStep} className="custom-button">
+          Complete Setup & Next Step
+        </button>
+      )}
+
+      {successMessage && <p className="text-green-600">{successMessage}</p>}
+      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
     </div>
   );
 };
