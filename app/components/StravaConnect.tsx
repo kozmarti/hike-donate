@@ -167,6 +167,35 @@ const StravaConnect = ({ email }: Props) => {
           You can revoke this subscription at any time.
         </p>
       )}
+      {saved && authorized && subscribed && (
+  <button
+    onClick={async () => {
+      setErrorMessage("");
+      setSuccessMessage("");
+
+      try {
+        const res = await fetch("/api/profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, setupComplete: true }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "Failed to complete setup");
+        }
+
+        setSuccessMessage("✅ Setup complete! Redirecting...");
+        // Refresh the page
+        window.location.reload();
+      } catch (err: any) {
+        setErrorMessage(`❌ ${err.message}`);
+      }
+    }}
+    className="custom-button" >
+    Complete Setup & Next Step
+  </button>
+)}
     </div>
   );
 };
