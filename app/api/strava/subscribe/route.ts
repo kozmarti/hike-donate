@@ -20,6 +20,11 @@ export async function POST(req: Request) {
 
     const formData = new URLSearchParams();
     console.log("Preparing subscription with client ID:", user.stravaClientId);
+    console.log("Using callback URL:", `${process.env.NEXT_PUBLIC_API_URL}/api/webhook`);
+    console.log("Using verify token:", process.env.VERIFY_STRAVA_TOKEN);
+    console.log("Decrypting client secret");
+    console.log("Decrypted client secret:", decrypt(user.stravaClientSecret).slice(0, 4) + "****");
+    
     formData.append("client_id", user.stravaClientId);
     formData.append("client_secret", decrypt(user.stravaClientSecret));
     formData.append("callback_url", `${process.env.NEXT_PUBLIC_API_URL}/api/webhook`);
