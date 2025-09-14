@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { StepKey } from "../entities/StepCOnfig";
 
 interface Props {
   email: string;
+  step: StepKey;
+  completeStep: (step: StepKey) => Promise<void>;
+
 }
 
-const StravaConnect = ({ email }: Props) => {
+const StravaConnect = ({ email, step, completeStep }: Props) => {
   const searchParams = useSearchParams();
   const [stravaClientId, setClientId] = useState("");
   const [stravaClientSecret, setClientSecret] = useState("");
@@ -103,28 +107,18 @@ const StravaConnect = ({ email }: Props) => {
     }
   };
 
-  const handleCompleteSetup = async () => {
+  const handleCompleteStep = async () => {
     setErrorMessage("");
     setSuccessMessage("");
-
+  
     try {
-      const res = await fetch("/api/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, setupComplete: true }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to complete setup");
-      }
-
-      setSuccessMessage("✅ Setup complete! Redirecting...");
+      await completeStep(step);
+      setSuccessMessage("✅ Step completed! Refreshing...");
       window.location.reload();
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
@@ -192,7 +186,7 @@ const StravaConnect = ({ email }: Props) => {
       )}
       {saved && authorized && subscribed && (
   <button
-    onClick={handleCompleteSetup}
+    onClick={handleCompleteStep}
     className="custom-button" >
     Complete Setup & Next Step
   </button>

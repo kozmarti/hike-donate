@@ -2,59 +2,30 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { stepsConfig, StepKey } from "../entities/StepCOnfig";
+
 
 export interface User {
   email: string;
   name: string;
-  steps?: {
-    connectStrava?: boolean;
-    createFundraiser?: boolean;
-    setGoals?: boolean;
-    hikeTrackShare?: boolean;
-  };
+  steps?: Record<StepKey, boolean>;
 }
 
 interface Props {
   user: User;
 }
 
-const stepsConfig = [
-  { key: "connectStrava", label: "Connect your Strava account", icon: "🔗" },
-  { key: "createFundraiser", label: "Create Fundraiser", icon: "💰" },
-  { key: "setGoals", label: "Set Goals for your project", icon: "🎯" },
-  { key: "hikeTrackShare", label: "Hike & Track & Share", icon: "🥾" },
-];
-
 export default function Dashboard({ user }: Props) {
   // Ensure steps always exist with defaults
-  const defaultSteps = {
-    connectStrava: false,
-    createFundraiser: false,
-    setGoals: false,
-    hikeTrackShare: false,
-    ...user.steps, // overwrite with DB values if they exist
-  };
+  const defaultSteps: Record<StepKey, boolean> = stepsConfig.reduce((acc, step) => {
+    acc[step.key] = user.steps?.[step.key] || false;
+    return acc;
+  }, {} as Record<StepKey, boolean>);
 
   const [state, setState] = useState<User>({
     ...user,
     steps: defaultSteps,
   });
-
-  const completeStep = async (step: string) => {
-    const res = await fetch("/api/step", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: state.email, step }),
-    });
-    const updated = await res.json();
-    setState({
-      ...updated,
-      steps: {
-        ...defaultSteps,
-        ...updated.steps,
-      },
-    });
-  };
 
   const progress =
     (Object.values(state.steps ?? {}).filter(Boolean).length /
@@ -76,6 +47,7 @@ export default function Dashboard({ user }: Props) {
         <p className="text-sm mt-1">{progress.toFixed(0)}% complete</p>
       </div>
       <div className="space-y-4 flex flex-col items-center justify-center">
+
         {stepsConfig.map((step) => (
     <div className={`step min-w-80 ${
               state.steps?.[step.key as keyof typeof defaultSteps]
@@ -83,7 +55,6 @@ export default function Dashboard({ user }: Props) {
                 : "bg-white"
             }`}
             key={step.key}
-            onClick={() => completeStep(step.key)}
           >
             <span className="icon">{step.icon}</span>
             <span className="text">{step.label}</span>

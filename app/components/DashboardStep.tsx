@@ -2,28 +2,18 @@
 
 import { useState } from "react";
 import StravaConnect from "./StravaConnect";
+import { stepsConfig, StepKey } from "../entities/StepCOnfig";
+
 
 export interface User {
   email: string;
   name: string;
-  steps?: {
-    connectStrava?: boolean;
-    createFundraiser?: boolean;
-    setGoals?: boolean;
-    hikeTrackShare?: boolean;
-  };
+  steps?: Record<StepKey, boolean>;
 }
 
 interface Props {
   user: User;
 }
-
-const stepsConfig = [
-  { key: "connectStrava", label: "Connect Strava", icon: "🔗" },
-  { key: "createFundraiser", label: "Create Fundraiser", icon: "💰" },
-  { key: "setGoals", label: "Set Goals", icon: "🎯" },
-  { key: "hikeTrackShare", label: "Hike & Track & Share", icon: "🥾" },
-];
 
 const CreateFundraiser = ({ onComplete }: { onComplete: () => void }) => (
   <div>
@@ -62,33 +52,31 @@ const ProgressBar = ({ progress }: { progress: number }) => (
 );
 
 export default function DashboardStep({ user }: Props) {
-  const defaultSteps = {
-    connectStrava: false,
-    createFundraiser: false,
-    setGoals: false,
-    hikeTrackShare: false,
-    ...(user.steps || {}),
-  };
+  const defaultSteps: Record<StepKey, boolean> = stepsConfig.reduce((acc, step) => {
+    acc[step.key] = user.steps?.[step.key] || false;
+    return acc;
+  }, {} as Record<StepKey, boolean>);
 
   const [state, setState] = useState<User>({
     ...user,
     steps: defaultSteps,
   });
 
-  const completeStep = async (step: string) => {
+
+  const completeStep = async (step: StepKey) => {
     const res = await fetch("/api/step", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: state.email, step }),
-      });
-      const updated = await res.json();
-      setState({
-        ...updated,
-        steps: {
-          ...defaultSteps,
-          ...updated.steps,
-        },
-      });
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: state.email, step }),
+    });
+    const updated = await res.json();
+    setState({
+      ...updated,
+      steps: {
+        ...defaultSteps,
+        ...updated.steps,
+      },
+    });
   };
 
   const firstIncompleteStep = stepsConfig.find(
@@ -98,7 +86,7 @@ export default function DashboardStep({ user }: Props) {
   let StepComponent: React.FC;
   switch (firstIncompleteStep?.key) {
     case "connectStrava":
-      StepComponent = () => <StravaConnect email={state.email} />;
+      StepComponent = () => <StravaConnect email={state.email} step="connectStrava" completeStep={completeStep}/>;
       break;
     case "createFundraiser":
       StepComponent = () => <CreateFundraiser onComplete={() => completeStep("createFundraiser")} />;
@@ -122,7 +110,7 @@ export default function DashboardStep({ user }: Props) {
       <h1 className="mb-4">Hello {state.name} – Start Hiking with Purpose!</h1>
       <ProgressBar progress={progress} />
       <div className="map-wrapper flex flex-col items-center justify-center p-4 mt-8">
-      {<StepComponent />}</div>
+      <StepComponent /></div>
     </div>
   );
 }
