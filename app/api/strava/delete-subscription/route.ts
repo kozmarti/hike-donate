@@ -18,7 +18,7 @@ export async function DELETE(req: Request) {
             return new Response(JSON.stringify({ error: "Strava credentials not set" }), { status: 400 });
         }
 
-        const stravaUrl = `https://www.strava.com/api/v3/push_subscriptions/${subscriptionId}?client_id=${user.stravaClientId}&client_secret=${decrypt(user.stravaClientSecret)}`;
+        const stravaUrl = `https://www.strava.com/api/v3/push_subscriptions/___?client_id=${user.stravaClientId}&client_secret=${decrypt(user.stravaClientSecret)}`;
         const response = await fetch(stravaUrl, {
             method: "DELETE",
         });
