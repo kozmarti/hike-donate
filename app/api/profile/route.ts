@@ -4,7 +4,7 @@ import clientPromise from "@/lib/mongodb";
 
 export async function POST(req: Request) {
   try {
-    const { email, name, stravaClientId, stravaClientSecret } = await req.json();
+    const { email, name, stravaClientId, stravaClientSecret, projectName, goalMeasure, fundraiserUrl, fundraiserDescription } = await req.json();
     if (!email) {
       return new Response(JSON.stringify({ error: "Email is required" }), { status: 400 });
     }
@@ -12,10 +12,13 @@ export async function POST(req: Request) {
     const client = await clientPromise;
     const db = client.db("hike");
 
-    // Build the update object dynamically
     const updateFields: any = {};
     if (name) updateFields.name = name;
     if (stravaClientId) updateFields.stravaClientId = stravaClientId;
+    if (projectName) updateFields.projectName = projectName;
+    if (goalMeasure) updateFields.goalMeasure = goalMeasure;
+    if (fundraiserUrl) updateFields.fundraiserUrl = fundraiserUrl;
+    if (fundraiserDescription) updateFields.fundraiserDescription = fundraiserDescription;
     if (stravaClientSecret) updateFields.stravaClientSecret = encrypt(stravaClientSecret); // 🔐 encrypt before saving
 
     if (Object.keys(updateFields).length === 0) {
