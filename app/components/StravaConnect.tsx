@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { StepKey } from "../entities/StepConfig";
+import { StepKey, stepsConfig } from "../entities/StepConfig";
 
 interface Props {
   email: string;
@@ -22,6 +22,8 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const [authorized, setAuthorized] = useState(false);
+  const stepConfig = stepsConfig.find((s) => s.key === step);
+  
 
   useEffect(() => {
     const status = searchParams?.get("status");
@@ -122,8 +124,9 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
-      <h2 className="text">Connect your Strava account</h2>
-      <p>
+      <h2 className="text">
+        {stepConfig?.icon} {stepConfig?.label}
+      </h2>      <p>
         Get a <strong>Client ID</strong> and <strong>Client Secret</strong> from{" "}
         <a
           href="https://www.strava.com/settings/api"

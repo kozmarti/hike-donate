@@ -3,6 +3,10 @@
 import { useState } from "react";
 import StravaConnect from "./StravaConnect";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
+import SetGoals from "./SetGoals";
+import CreateFundraiser from "./CreateFundraiser";
+import HikeTrackShare from "./HikeTrackShare";
+import AllStepsComplete from "./AllStepsComplete";
 
 
 export interface User {
@@ -15,30 +19,6 @@ interface Props {
   user: User;
 }
 
-const CreateFundraiser = ({ onComplete }: { onComplete: () => void }) => (
-  <div>
-    <h2>Create your fundraiser</h2>
-    <button onClick={onComplete}>Complete ✅</button>
-  </div>
-);
-
-const SetGoals = ({ onComplete }: { onComplete: () => void }) => (
-  <div>
-    <h2>Set your goals</h2>
-    <button onClick={onComplete}>Complete ✅</button>
-  </div>
-);
-
-const HikeTrackShare = ({ onComplete }: { onComplete: () => void }) => (
-  <div>
-    <h2>Hike, track, and share!</h2>
-    <button onClick={onComplete}>Complete ✅</button>
-  </div>
-);
-
-const AllStepsComplete = () => <h2>🎉 All steps completed!</h2>;
-
-// --- Progress bar helper ---
 const ProgressBar = ({ progress }: { progress: number }) => (
   <div className="mb-4">
     <div className="h-3 progress-bar-uncompleted rounded-xl">
@@ -89,16 +69,16 @@ export default function DashboardStep({ user }: Props) {
       StepComponent = () => <StravaConnect email={state.email} step="connectStrava" completeStep={completeStep}/>;
       break;
     case "createFundraiser":
-      StepComponent = () => <CreateFundraiser onComplete={() => completeStep("createFundraiser")} />;
+      StepComponent = () => <CreateFundraiser email={state.email} step="createFundraiser" completeStep={completeStep} />;
       break;
     case "setGoals":
-      StepComponent = () => <SetGoals onComplete={() => completeStep("setGoals")} />;
+      StepComponent = () => <SetGoals email={state.email} step="setGoals" completeStep={completeStep} />;
       break;
     case "hikeTrackShare":
-      StepComponent = () => <HikeTrackShare onComplete={() => completeStep("hikeTrackShare")} />;
+      StepComponent = () => <HikeTrackShare email={state.email} step="hikeTrackShare" completeStep={completeStep} />;
       break;
     default:
-      StepComponent = AllStepsComplete;
+      StepComponent = () => <AllStepsComplete/>;
   }
 
   const progress =

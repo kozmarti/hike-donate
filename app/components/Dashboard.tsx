@@ -16,7 +16,6 @@ interface Props {
 }
 
 export default function Dashboard({ user }: Props) {
-  // Ensure steps always exist with defaults
   const defaultSteps: Record<StepKey, boolean> = stepsConfig.reduce((acc, step) => {
     acc[step.key] = user.steps?.[step.key] || false;
     return acc;
@@ -61,8 +60,8 @@ export default function Dashboard({ user }: Props) {
             {state.steps?.[step.key as keyof typeof defaultSteps] ? <span>✅</span> : <span>⏳</span>}
           </div>
         ))}
-                  <Link href="/dashboard/step">
-
+        
+        <Link href="/dashboard/step">
         <button className="custom-button m-5"> Start SetUp</button>
         </Link>
       </div>
