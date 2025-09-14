@@ -4,6 +4,7 @@ import clientPromise from "@/lib/mongodb";
 import { decrypt } from "@/app/utils/encrypt-data";
 
 export async function POST(req: Request) {
+  console.log("Received subscription request");
   try {
     const { email } = await req.json();
     if (!email) return NextResponse.json({ error: "Missing email" }, { status: 400 });
@@ -18,6 +19,7 @@ export async function POST(req: Request) {
     }
 
     const formData = new URLSearchParams();
+    console.log("Preparing subscription with client ID:", user.stravaClientId);
     formData.append("client_id", user.stravaClientId);
     formData.append("client_secret", decrypt(user.stravaClientSecret));
     formData.append("callback_url", `${process.env.NEXT_PUBLIC_API_URL}/api/webhook`);
@@ -31,6 +33,7 @@ export async function POST(req: Request) {
     });
 
     const data = await response.json();
+    console.log("Strava subscription response:", data);
 
     if (!response.ok) {
       return NextResponse.json({ error: data }, { status: response.status });

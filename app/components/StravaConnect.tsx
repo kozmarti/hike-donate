@@ -103,6 +103,29 @@ const StravaConnect = ({ email }: Props) => {
     }
   };
 
+  const handleCompleteSetup = async () => {
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      const res = await fetch("/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, setupComplete: true }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to complete setup");
+      }
+
+      setSuccessMessage("✅ Setup complete! Redirecting...");
+      window.location.reload();
+    } catch (err: any) {
+      setErrorMessage(`❌ ${err.message}`);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
       <h2 className="text">Connect your Strava account</h2>
@@ -145,7 +168,7 @@ const StravaConnect = ({ email }: Props) => {
         onClick={handleAuthorize}
         className="custom-button"
         style={{ backgroundColor: "#74816c" }}
-        disabled={!saved}
+        disabled={!saved || authorized}
       >
   {authorized ? "Authorized ✅" : "Authorize Connection"}
   </button>
@@ -169,29 +192,7 @@ const StravaConnect = ({ email }: Props) => {
       )}
       {saved && authorized && subscribed && (
   <button
-    onClick={async () => {
-      setErrorMessage("");
-      setSuccessMessage("");
-
-      try {
-        const res = await fetch("/api/profile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, setupComplete: true }),
-        });
-
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.error || "Failed to complete setup");
-        }
-
-        setSuccessMessage("✅ Setup complete! Redirecting...");
-        // Refresh the page
-        window.location.reload();
-      } catch (err: any) {
-        setErrorMessage(`❌ ${err.message}`);
-      }
-    }}
+    onClick={handleCompleteSetup}
     className="custom-button" >
     Complete Setup & Next Step
   </button>
