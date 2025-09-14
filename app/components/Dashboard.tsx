@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { stepsConfig, StepKey } from "../entities/StepCOnfig";
+import { stepsConfig, StepKey } from "../entities/StepConfig";
 
 
 export interface User {

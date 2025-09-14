@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import StravaConnect from "./StravaConnect";
-import { stepsConfig, StepKey } from "../entities/StepCOnfig";
+import { stepsConfig, StepKey } from "../entities/StepConfig";
 
 
 export interface User {

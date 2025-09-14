@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { StepKey } from "../entities/StepCOnfig";
+import { StepKey } from "../entities/StepConfig";
 
 interface Props {
   email: string;
