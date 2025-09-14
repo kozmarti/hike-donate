@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   email: string;
 }
 
 const StravaConnect = ({ email }: Props) => {
+  const searchParams = useSearchParams();
   const [stravaClientId, setClientId] = useState("");
   const [stravaClientSecret, setClientSecret] = useState("");
   const [saved, setSaved] = useState(false);
@@ -14,6 +16,20 @@ const StravaConnect = ({ email }: Props) => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const [authorized, setAuthorized] = useState(false);
+
+  useEffect(() => {
+    const status = searchParams?.get("status");
+    if (status === "authorized") {
+      setSaved(true);
+      setAuthorized(true);
+    } else if (status === "subscribed") {
+      setSaved(true);
+      setAuthorized(true);
+      setSubscribed(true);
+    }
+  }, [searchParams]);
 
   const handleSave = async () => {
     setErrorMessage("");
@@ -50,12 +66,10 @@ const StravaConnect = ({ email }: Props) => {
   const handleAuthorize = () => {
     setErrorMessage("");
     setSuccessMessage("");
-
     if (!saved) {
       setErrorMessage("Please save your credentials first.");
       return;
     }
-
     window.location.href = `/api/strava/auth?email=${encodeURIComponent(email)}`;
   };
 
@@ -65,6 +79,10 @@ const StravaConnect = ({ email }: Props) => {
 
     if (!saved) {
       setErrorMessage("Please save your credentials first.");
+      return;
+    }
+    if (!authorized) {
+      setErrorMessage("Please authorize Strava connection first.");
       return;
     }
 
@@ -107,32 +125,36 @@ const StravaConnect = ({ email }: Props) => {
         value={stravaClientId}
         onChange={(e) => setClientId(e.target.value)}
         className="border p-2 rounded w-full"
+        disabled={saved}
       />
 
       <input
-        type="text"
+        type="password"
         placeholder="Strava Client Secret"
         value={stravaClientSecret}
         onChange={(e) => setClientSecret(e.target.value)}
         className="border p-2 rounded w-full"
+        disabled={saved}
       />
 
-      <button onClick={handleSave} className="custom-button">
-        Save Credentials
+      <button onClick={handleSave} className="custom-button" disabled={saved}>
+      {saved ? "Credentials Saved ✅" : "Save Credentials"}
       </button>
 
       <button
         onClick={handleAuthorize}
         className="custom-button"
         style={{ backgroundColor: "#74816c" }}
+        disabled={!saved}
       >
-        Authorize Connection
-      </button>
+  {authorized ? "Authorized ✅" : "Authorize Connection"}
+  </button>
 
       <button
         onClick={handleSubscribeWebhook}
         className="custom-button"
         style={{ backgroundColor: "#11B7A1" }}
+        disabled={!authorized || subscribed}
       >
         {subscribed ? "Webhook Subscribed ✅" : "Subscribe to Webhook"}
       </button>

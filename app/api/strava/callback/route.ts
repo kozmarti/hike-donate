@@ -1,6 +1,7 @@
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { decrypt } from "@/app/utils/encrypt-data";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -34,21 +35,39 @@ export async function GET(req: Request) {
   if (!user || !user.stravaClientId || !user.stravaClientSecret) {
     return new Response("User missing Strava credentials", { status: 400 });
   }
-
+  
   // Exchange code for tokens
   const tokenRes = await fetch("https://www.strava.com/oauth/token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       client_id: user.stravaClientId,
-      client_secret: user.stravaClientSecret,
+      client_secret: decrypt(user.stravaClientSecret),
       code,
       grant_type: "authorization_code",
     }),
   });
 
   const data = await tokenRes.json();
-
+    /* Response example:
+    { 
+      "token_type": "Bearer",
+      "expires_at": 1562908002,
+      "expires_in": 21600,
+      "refresh_token": "REFRESHTOKEN",
+      "access_token": "ACCESSTOKEN",
+      "athlete": {
+                  "id": 123456,
+                  "username": "MeowTheCat",
+                  "resource_state": 2,
+                  "firstname": "Meow",
+                  "lastname": "TheCat",
+                  "city": "",
+                  "state": "",
+                  "country": null,
+                  ...
+        }
+    } */
   await usersCollection.updateOne(
     { email },
     {
@@ -59,5 +78,9 @@ export async function GET(req: Request) {
     }
   );
 
-  return NextResponse.redirect(new URL("/dashboard", process.env.NEXT_PUBLIC_API_URL));
-}
+  return NextResponse.redirect(
+    new URL(
+      `/dashboard/step?status=authorized&email=${encodeURIComponent(email)}`,
+      process.env.NEXT_PUBLIC_API_URL
+    )
+  );}

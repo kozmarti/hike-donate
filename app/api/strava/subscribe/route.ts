@@ -1,7 +1,7 @@
 // app/api/strava/subscribe/route.ts (App Router)
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import crypto from "crypto";
+import { decrypt } from "@/app/utils/encrypt-data";
 
 export async function POST(req: Request) {
   try {
@@ -17,17 +17,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User missing Strava credentials" }, { status: 400 });
     }
 
-    const verifyToken = crypto.randomBytes(16).toString("hex");
-    await usersCollection.updateOne(
-      { email },
-      { $set: { stravaVerifyToken: verifyToken } }
-    );
-
     const formData = new URLSearchParams();
     formData.append("client_id", user.stravaClientId);
-    formData.append("client_secret", user.stravaClientSecret);
+    formData.append("client_secret", decrypt(user.stravaClientSecret));
     formData.append("callback_url", `${process.env.NEXT_PUBLIC_API_URL}/api/webhook`);
-    formData.append("verify_token", verifyToken);
+    // @ts-ignore
+    formData.append("verify_token", process.env.VERIFY_STRAVA_TOKEN);
 
     const response = await fetch("https://www.strava.com/api/v3/push_subscriptions", {
       method: "POST",

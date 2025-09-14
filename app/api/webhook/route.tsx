@@ -78,14 +78,14 @@ export async function GET(request: Request) {
 
   console.log(request.url);
   const { searchParams } = new URL(request.url);
-  const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+  const VERIFY_STRAVA_TOKEN = process.env.VERIFY_STRAVA_TOKEN;
 
   let mode = searchParams.get("hub.mode");
   let token = searchParams.get("hub.verify_token");
   let challenge = searchParams.get("hub.challenge");
 
   if (mode && token) {
-    if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    if (mode === "subscribe" && token === VERIFY_STRAVA_TOKEN) {
       // Responds with the challenge token from the request
       console.log("WEBHOOK_VERIFIED");
       console.log({ "hub.challenge": challenge });
