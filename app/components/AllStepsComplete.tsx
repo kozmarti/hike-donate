@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import MarkIncompleteButton from "./MarkIncompleteButton";
 import Skeleton from '@mui/material/Skeleton';
 import SkeletonAllStepComplete from "./SkeletonAllStepComplete";
+import Link from "next/link";
 
 interface UserSummary {
     email: string;
@@ -77,8 +78,8 @@ export default function AllStepsComplete() {
     }, [user]);
 
     if (loading) return (
-        <SkeletonAllStepComplete/>
-      );
+        <SkeletonAllStepComplete />
+    );
     if (!user) return <p>User not found</p>;
 
 
@@ -117,134 +118,146 @@ export default function AllStepsComplete() {
     };
 
     return (
-        <>  
+        <>
 
-        <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
-            <h2 className="text">Project Setup Summary</h2>
+            <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
+                <h2 className="text">Project Setup Summary</h2>
 
-            <div>
-                <h3 className="font-semibold flex justify-between items-center w-full">
-                    <span>🔗 Strava Account</span>
-                    <MarkIncompleteButton step="connectStrava" />
-                </h3>
-                <p>
-                    {subscriptionData?.isActive
-                        ? "Subscription Active ✅"
-                        : checkingSub
-                            ? "Checking..."
-                            : "No Active Subscription ❌"}
-                </p>
-                <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
-                <p>Client ID: {user.stravaClientId || "Not saved"}</p>
-                <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
-
-                {subscriptionData?.isActive && (
-                    <button className="custom-button mt-2 bg-red-600 hover:bg-red-700 text-white"
-                        onClick={() => handleDelete(subscriptionData.raw[0].id)}>
-                        Delete Subscription
-                    </button>
-                )}
-
-                {subscriptionData && !subscriptionData.isActive && (
-                    <p className="text-gray-600 mt-1 text-sm">
-                        No active subscription found for this Strava account.
+                <div>
+                    <h3 className="font-semibold flex justify-between items-center w-full">
+                        <span>🔗 Strava Account</span>
+                        <MarkIncompleteButton step="connectStrava" />
+                    </h3>
+                    <p>
+                        {subscriptionData?.isActive
+                            ? "Subscription Active ✅"
+                            : checkingSub
+                                ? "Checking..."
+                                : "No Active Subscription ❌"}
                     </p>
-                )}
-                {error && <p className="text-red-600 mt-1">{error}</p>}
-            </div>
+                    <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
+                    <p>Client ID: {user.stravaClientId || "Not saved"}</p>
+                    <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
 
-
-            <hr style={{ borderColor: "#74816c" }} />
-            <div>
-                <h3 className="font-semibold flex justify-between items-center w-full">
-                    <span>🎯 Project Goals</span>
-                    <MarkIncompleteButton step="setGoals" />
-                </h3>
-                <p>Project Name: {user.projectName || "Not set"}</p>
-                <p>
-                    Goal Measure:{" "}
-                    {user.goalMeasure === "km"
-                        ? "EUR = distance (km)"
-                        : user.goalMeasure === "m"
-                            ? "EUR = total elevation (m)"
-                            : user.goalMeasure === "hours"
-                                ? "EUR = hiking time (hours)"
-                                : "Not set"}
-                </p>
-
-            </div>
-            <hr style={{ borderColor: "#74816c" }} />
-            <div>
-                <h3 className="font-semibold flex justify-between items-center w-full">
-                    <span>💰 Fundraiser</span>
-                    <MarkIncompleteButton step="createFundraiser" />
-                </h3>
-                <p>
-                    Leetchi Page:{" "}
-                    {user.fundraiserUrl ? (
-                        <a
-                            href={user.fundraiserUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 underline"
-                        >
-                            {user.fundraiserUrl}
-                        </a>
-                    ) : (
-                        "Not set"
+                    {subscriptionData?.isActive && (
+                        <button className="custom-button mt-2 bg-red-600 hover:bg-red-700 text-white"
+                            onClick={() => handleDelete(subscriptionData.raw[0].id)}>
+                            Delete Subscription
+                        </button>
                     )}
-                </p>
-                <p>Description: {user.fundraiserDescription || "Not set"}</p>
 
-            </div>
-            <hr style={{ borderColor: "#74816c" }} />
-
-            <div>
-                <h3 className="font-semibold flex justify-between items-center w-full">
-                    <span>🥾 Hike & Track & Share</span>
-                    <MarkIncompleteButton step="hikeTrackShare" />
-                </h3>
-                
-                <p>
-                    Track your hike and share your progress to boost donations! </p>
-                    <div className="flex flex-row space-x-4 items-center">
-
-                    <p className={`mt-1 font-medium ${isVisible ? "" : "text-red-600"}`}>
-                        {isVisible ? "👀 Project is visible ✅" : "🙈 Project is hidden ❌"}
-                    </p>
-
-                    <button
-                        type="button"
-                        className="custom-button mt-2"
-                        onClick={toggleVisibility}
-                        disabled={loading}
-                    >
-                        {loading
-                            ? "Processing..."
-                            : isVisible
-                                ? "🙈 Make Site Invisible"
-                                : "👀 Activate Visibility"}
-                    </button>
+                    {subscriptionData && !subscriptionData.isActive && (
+                        <p className="text-gray-600 mt-1 text-sm">
+                            No active subscription found for this Strava account.
+                        </p>
+                    )}
+                    {error && <p className="text-red-600 mt-1">{error}</p>}
                 </div>
 
-                {isVisible && (
-  <a
-    href="/dashboard/step"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="custom-button mt-2 no-underline inline-block"
-  >
-    🌍 Visit Public Project Site
-  </a>
-)}
+
+                <hr style={{ borderColor: "#74816c" }} />
+                <div>
+                    <h3 className="font-semibold flex justify-between items-center w-full">
+                        <span>🎯 Project Goals</span>
+                        <MarkIncompleteButton step="setGoals" />
+                    </h3>
+                    <p>Project Name: {user.projectName || "Not set"}</p>
+                    <p>
+                        Goal Measure:{" "}
+                        {user.goalMeasure === "km"
+                            ? "EUR = distance (km)"
+                            : user.goalMeasure === "m"
+                                ? "EUR = total elevation (m)"
+                                : user.goalMeasure === "hours"
+                                    ? "EUR = hiking time (hours)"
+                                    : "Not set"}
+                    </p>
+
+                </div>
+                <hr style={{ borderColor: "#74816c" }} />
+                <div>
+                    <h3 className="font-semibold flex justify-between items-center w-full">
+                        <span>💰 Fundraiser</span>
+                        <MarkIncompleteButton step="createFundraiser" />
+                    </h3>
+                    <p>
+                        Leetchi Page:{" "}
+                        {user.fundraiserUrl ? (
+                            <a
+                                href={user.fundraiserUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline"
+                            >
+                                {user.fundraiserUrl}
+                            </a>
+                        ) : (
+                            "Not set"
+                        )}
+                    </p>
+                    <p>Description: {user.fundraiserDescription || "Not set"}</p>
+
                 </div>
                 <hr style={{ borderColor: "#74816c" }} />
 
-                <button type="button" className="custom-button mt-2">
-  🥾 Preview Your Hike Project Site
-</button>
+                <div>
+                    <h3 className="font-semibold flex justify-between items-center w-full">
+                        <span>🥾 Hike & Track & Share</span>
+                        <MarkIncompleteButton step="hikeTrackShare" />
+                    </h3>
+
+                    <p>
+                        Track your hike and share your progress to boost donations! </p>
+
+
+
+                    <div className="flex items-center space-x-4 mt-2">
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={isVisible}
+                                onChange={toggleVisibility}
+                                className="sr-only"
+                                disabled={loading}
+                            />
+                            {/* Toggle background */}
+                            <div
+                                className={`w-14 h-8 rounded-full transition-colors duration-300`}
+                                style={{ backgroundColor: isVisible ? "#69FDA9" : "#ff6078" }}
+                            ></div>
+                            {/* Toggle knob */}
+                            <span
+                                className={`absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300`}
+                                style={{ transform: isVisible ? "translateX(24px)" : "translateX(0)" }}
+                            ></span>
+                        </label>
+                        <span className="font-medium">
+                            {isVisible ? "Project Public 🌍" : "Project Hidden 🙈"}
+                        </span>
+                    </div>
+                </div>
+                <hr style={{ borderColor: "#74816c" }} />
+
+                <div>
+                    {isVisible ? (
+                        <Link   target="_blank"
+                        href={`/project/${user.stravaUserId}/${user.projectName}`} passHref>
+
+                        <button type="button" className="custom-button mt-2 w-full text-center">
+
+                            🌍 Visit Public Project Site
+                        </button>
+                        </Link>
+                    ) : (
+                        <Link href="/dashboard/project-preview">
+                        <button type="button" className="custom-button mt-2 w-full text-center">
+                            🥾 Preview Your Hike Project Site
+                        </button>
+                        </Link>
+                    )}
+                </div>
 
             </div>
-            </>
+        </>
     );
 }

@@ -1,6 +1,5 @@
-// app/dashboard/step/page.tsx
 import { redirect } from "next/navigation";
-import clientPromise from "@/lib/mongodb"; // your MongoDB connection
+import clientPromise from "@/lib/mongodb";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import DashboardStep, { User } from "@/app/components/DashboardStep";

@@ -1,17 +1,19 @@
 "use client";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const userId = process.env.NEXT_PUBLIC_STRAVA_USER_ID;
-const projectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME;
+const defaultUserId = process.env.NEXT_PUBLIC_STRAVA_USER_ID;
+const defaultProjectName = process.env.NEXT_PUBLIC_STRAVA_PROJECT_NAME;
 
 export default async function fetchFromApi<T>(endpoint: string,
   options?: {
     method?: "GET" | "POST" | "PUT" | "DELETE";
     body?: unknown;
+    stravaUserId?: string;
+    projectName?: string;
   }
 ): Promise<T> {
-  const { method = "GET", body } = options || {};
-  const res = await fetch(`${apiUrl}/api/user/${userId}/project/${projectName}/${endpoint}`, {
+  const { method = "GET", body, stravaUserId = defaultUserId, projectName = defaultProjectName } = options || {};
+  const res = await fetch(`${apiUrl}/api/user/${stravaUserId}/project/${projectName}/${endpoint}`, {
     method: method,
     body: body ? JSON.stringify(body) : undefined,
   });

@@ -23,10 +23,10 @@ export interface StatsResponse {
   delta_altitudes: number[];
 };
 
-export async function useStats(  stravaUserId?: string,
+export async function useStatistics(  stravaUserId?: string,
   projectName?: string
 ): Promise<StatsResponse> {
-  return fetchFromApi<StatsResponse>("stats", {
+  return fetchFromApi<StatsResponse>("statistics", {
     stravaUserId,
     projectName,
   });
