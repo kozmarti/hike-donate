@@ -38,6 +38,7 @@ export default function MarkIncompleteButton({ step }: Props) {
         onClick={handleUncomplete}
         className="custom-button"
         disabled={loading}
+        style={{ borderRadius: "10px" }}
       >
          <FiEdit className="w-5 h-5" />
         

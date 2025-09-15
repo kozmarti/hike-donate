@@ -35,8 +35,8 @@ export async function POST(req: Request) {
     value: token,
     httpOnly: true,
     path: "/",
-    maxAge: 60 * 60 * 24,
-    sameSite: "lax",
+    maxAge: 60 * 60,
+    sameSite: "strict",
     secure: true,
   });
 

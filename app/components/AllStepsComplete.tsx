@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import MarkIncompleteButton from "./MarkIncompleteButton";
+import Skeleton from '@mui/material/Skeleton';
+import SkeletonAllStepComplete from "./SkeletonAllStepComplete";
 
 interface UserSummary {
     email: string;
@@ -13,6 +14,7 @@ interface UserSummary {
     goalMeasure?: "km" | "m" | "hours";
     fundraiserUrl?: string;
     fundraiserDescription?: string;
+    isActive?: boolean | null;
 }
 
 export default function AllStepsComplete() {
@@ -21,6 +23,7 @@ export default function AllStepsComplete() {
     const [checkingSub, setCheckingSub] = useState(false);
     const [subscriptionData, setSubscriptionData] = useState<any>(null);
     const [error, setError] = useState("");
+    const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -38,6 +41,12 @@ export default function AllStepsComplete() {
     }, []);
 
     useEffect(() => {
+        if (user) {
+            setIsVisible(user.isActive ?? false); // default to false if null
+        }
+    }, [user]);
+
+    useEffect(() => {
         const handleCheckSubscription = async () => {
             if (!user?.stravaClientId) return; // wait until user is loaded
             setCheckingSub(true);
@@ -47,6 +56,7 @@ export default function AllStepsComplete() {
             try {
                 const res = await fetch("/api/strava/check-subscription");
                 const data = await res.json();
+                console.log("Subscription data:", data);
 
                 if (!res.ok) {
                     setError(data.error || "Failed to check subscription");
@@ -66,8 +76,12 @@ export default function AllStepsComplete() {
         handleCheckSubscription();
     }, [user]);
 
-    if (loading) return <p>Loading summary...</p>;
+    if (loading) return (
+        <SkeletonAllStepComplete/>
+      );
     if (!user) return <p>User not found</p>;
+
+
 
     const handleDelete = async (id: number) => {
         try {
@@ -84,7 +98,27 @@ export default function AllStepsComplete() {
         }
     };
 
+    const toggleVisibility = async () => {
+        try {
+            const res = await fetch("/api/profile/set-visibility", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ isActive: !isVisible }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Failed to update visibility");
+
+            setIsVisible(!isVisible);
+        } catch (err: any) {
+            console.error(err);
+            alert(err.message);
+        }
+    };
+
     return (
+        <>  
+
         <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
             <h2 className="text">Project Setup Summary</h2>
 
@@ -103,7 +137,7 @@ export default function AllStepsComplete() {
                 <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
                 <p>Client ID: {user.stravaClientId || "Not saved"}</p>
                 <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
-                
+
                 {subscriptionData?.isActive && (
                     <button className="custom-button mt-2 bg-red-600 hover:bg-red-700 text-white"
                         onClick={() => handleDelete(subscriptionData.raw[0].id)}>
@@ -167,18 +201,50 @@ export default function AllStepsComplete() {
 
             <div>
                 <h3 className="font-semibold flex justify-between items-center w-full">
-                    <span>🥾  "Hike & Track & Share"</span>
+                    <span>🥾 Hike & Track & Share</span>
                     <MarkIncompleteButton step="hikeTrackShare" />
                 </h3>
+                
                 <p>
-                    Track your hike and share your progress to boost donations!
-                </p>
-                <Link href="/dashboard/step">
-                    <button className="custom-button mt-2">         Visit Project Site
+                    Track your hike and share your progress to boost donations! </p>
+                    <div className="flex flex-row space-x-4 items-center">
+
+                    <p className={`mt-1 font-medium ${isVisible ? "" : "text-red-600"}`}>
+                        {isVisible ? "👀 Project is visible ✅" : "🙈 Project is hidden ❌"}
+                    </p>
+
+                    <button
+                        type="button"
+                        className="custom-button mt-2"
+                        onClick={toggleVisibility}
+                        disabled={loading}
+                    >
+                        {loading
+                            ? "Processing..."
+                            : isVisible
+                                ? "🙈 Make Site Invisible"
+                                : "👀 Activate Visibility"}
                     </button>
-                </Link>
+                </div>
+
+                {isVisible && (
+  <a
+    href="/dashboard/step"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="custom-button mt-2 no-underline inline-block"
+  >
+    🌍 Visit Public Project Site
+  </a>
+)}
+                </div>
+                <hr style={{ borderColor: "#74816c" }} />
+
+                <button type="button" className="custom-button mt-2">
+  🥾 Preview Your Hike Project Site
+</button>
 
             </div>
-        </div>
+            </>
     );
 }

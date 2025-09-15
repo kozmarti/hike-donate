@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
+
+import { useRouter } from "next/navigation";
 
 
 export interface User {
@@ -16,6 +18,8 @@ interface Props {
 }
 
 export default function Dashboard({ user }: Props) {
+  const router = useRouter();
+
   const defaultSteps: Record<StepKey, boolean> = stepsConfig.reduce((acc, step) => {
     acc[step.key] = user.steps?.[step.key] || false;
     return acc;
@@ -30,6 +34,12 @@ export default function Dashboard({ user }: Props) {
     (Object.values(state.steps ?? {}).filter(Boolean).length /
       stepsConfig.length) *
     100;
+  
+  useEffect(() => {
+    if (progress === 100) {
+      router.push("/dashboard/step");
+    }
+  }, [progress]);
 
 
   return (
@@ -44,8 +54,8 @@ export default function Dashboard({ user }: Props) {
             style={{ width: `${progress}%` }}
           />
         </div>
-        <p className="text-sm mt-1">{progress.toFixed(0)}% complete</p>
-      </div>
+        <p className="text-sm mt-1">{progress*4/100} / 4 complete</p>
+        </div>
       <div className="space-y-4 flex flex-col items-center justify-center">
 
         {stepsConfig.map((step) => (
@@ -62,9 +72,7 @@ export default function Dashboard({ user }: Props) {
         <button className="custom-button m-5"> 
         {progress === 0
       ? "🚀 Start Setup"
-      : progress < 1
-      ? "⏩ Continue Setup"
-      : "🎉 View Summary"}
+      : "⏩ Continue Setup"}
      </button>
         </Link>
       </div>

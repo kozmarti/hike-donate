@@ -27,7 +27,7 @@ const ProgressBar = ({ progress }: { progress: number }) => (
         style={{ width: `${progress}%` }}
       />
     </div>
-    <p className="text-sm mt-1">{progress.toFixed(0)}% complete</p>
+    <p className="text-sm mt-1">{progress*4/100} / 4 complete</p>
   </div>
 );
 

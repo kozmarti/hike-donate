@@ -38,6 +38,5 @@ export default async function DashboardStepPage() {
     },
   };
 
-  // 4. Render the DashboardStep component
   return <DashboardStep user={currentUser} />;
 }
