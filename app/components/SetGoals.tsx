@@ -108,7 +108,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
               disabled={saving}
             />{" "}
             {value === "km" && "EUR = distance (km)"}
-            {value === "m" && "EUR = elevation (m)"}
+            {value === "m" && "EUR = total elevation (m)"}
             {value === "hours" && "EUR = hiking time (hours)"}
           </label>
         ))}

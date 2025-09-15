@@ -31,6 +31,7 @@ export default function Dashboard({ user }: Props) {
       stepsConfig.length) *
     100;
 
+
   return (
     <div className="steps-container">
       <h1 >
@@ -48,11 +49,7 @@ export default function Dashboard({ user }: Props) {
       <div className="space-y-4 flex flex-col items-center justify-center">
 
         {stepsConfig.map((step) => (
-    <div className={`step min-w-80 ${
-              state.steps?.[step.key as keyof typeof defaultSteps]
-                ? "bg-green-200 text-green-900"
-                : "bg-white"
-            }`}
+    <div className="step min-w-80"
             key={step.key}
           >
             <span className="icon">{step.icon}</span>
@@ -62,7 +59,13 @@ export default function Dashboard({ user }: Props) {
         ))}
         
         <Link href="/dashboard/step">
-        <button className="custom-button m-5"> Start SetUp</button>
+        <button className="custom-button m-5"> 
+        {progress === 0
+      ? "🚀 Start Setup"
+      : progress < 1
+      ? "⏩ Continue Setup"
+      : "🎉 View Summary"}
+     </button>
         </Link>
       </div>
     </div>

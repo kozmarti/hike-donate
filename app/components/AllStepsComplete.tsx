@@ -39,61 +39,48 @@ export default function AllStepsComplete() {
 
     useEffect(() => {
         const handleCheckSubscription = async () => {
-          if (!user?.stravaClientId) return; // wait until user is loaded
-          setCheckingSub(true);
-          setError("");
-          setSubscriptionData(null);
-      
-          try {
-            const res = await fetch("/api/strava/check-subscription");
-            const data = await res.json();
-      
-            if (!res.ok) {
-              setError(data.error || "Failed to check subscription");
-            } else {
-              const isActive = data.some(
-                (sub: any) => sub.application_id.toString() === user.stravaClientId
-              );
-              setSubscriptionData({ raw: data, isActive });
+            if (!user?.stravaClientId) return; // wait until user is loaded
+            setCheckingSub(true);
+            setError("");
+            setSubscriptionData(null);
+
+            try {
+                const res = await fetch("/api/strava/check-subscription");
+                const data = await res.json();
+
+                if (!res.ok) {
+                    setError(data.error || "Failed to check subscription");
+                } else {
+                    const isActive = data.some(
+                        (sub: any) => sub.application_id.toString() === user.stravaClientId
+                    );
+                    setSubscriptionData({ raw: data, isActive });
+                }
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setCheckingSub(false);
             }
-          } catch (err: any) {
-            setError(err.message);
-          } finally {
-            setCheckingSub(false);
-          }
         };
-      
+
         handleCheckSubscription();
-      }, [user]);
+    }, [user]);
 
     if (loading) return <p>Loading summary...</p>;
     if (!user) return <p>User not found</p>;
 
-    const handleCheckSubscription = async () => {
-        if (!user) return;
-        setCheckingSub(true);
-        setError("");
-        setSubscriptionData(null);
-
+    const handleDelete = async (id: number) => {
         try {
-            const res = await fetch("/api/strava/check-subscription");
+            const res = await fetch(`/api/strava/delete-subscription?id=${id}`, {
+                method: "DELETE",
+            });
             const data = await res.json();
 
-            if (!res.ok) {
-                setError(data.error || "Failed to check subscription");
-            } else {
-                // Find if any subscription matches the user's Strava client ID
-                const isActive = data.some(
-                    (sub: any) => sub.application_id.toString() === user.stravaClientId
-                );
+            if (!res.ok) throw new Error(data.error || "Failed to delete");
 
-
-                setSubscriptionData({ raw: data, isActive });
-            }
+            alert("Subscription deleted successfully ✅");
         } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setCheckingSub(false);
+            alert(`❌ ${err.message}`);
         }
     };
 
@@ -103,28 +90,26 @@ export default function AllStepsComplete() {
 
             <div>
                 <h3 className="font-semibold flex justify-between items-center w-full">
-                   <span>🔗 Strava Account</span> 
+                    <span>🔗 Strava Account</span>
                     <MarkIncompleteButton step="connectStrava" />
                 </h3>
-                <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
-                <p>Client ID: {user.stravaClientId || "Not saved"}</p>
-                <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
-                <p
-                >
-{subscriptionData?.raw.map((sub: any) => (
-        <li key={sub.id} className="mb-1">
-          <div>ID: {sub.id}</div>
-          <div>App ID: {sub.application_id}</div>
-          <div>Callback: {sub.callback_url}</div>
-          <div>Created: {sub.created_at}</div>
-        </li>
-      ))}
+                <p>
                     {subscriptionData?.isActive
                         ? "Subscription Active ✅"
                         : checkingSub
                             ? "Checking..."
                             : "No Active Subscription ❌"}
                 </p>
+                <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
+                <p>Client ID: {user.stravaClientId || "Not saved"}</p>
+                <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
+                
+                {subscriptionData?.isActive && (
+                    <button className="custom-button mt-2 bg-red-600 hover:bg-red-700 text-white"
+                        onClick={() => handleDelete(subscriptionData.raw[0].id)}>
+                        Delete Subscription
+                    </button>
+                )}
 
                 {subscriptionData && !subscriptionData.isActive && (
                     <p className="text-gray-600 mt-1 text-sm">
@@ -138,7 +123,7 @@ export default function AllStepsComplete() {
             <hr style={{ borderColor: "#74816c" }} />
             <div>
                 <h3 className="font-semibold flex justify-between items-center w-full">
-                   <span>🎯 Project Goals</span> 
+                    <span>🎯 Project Goals</span>
                     <MarkIncompleteButton step="setGoals" />
                 </h3>
                 <p>Project Name: {user.projectName || "Not set"}</p>
@@ -147,7 +132,7 @@ export default function AllStepsComplete() {
                     {user.goalMeasure === "km"
                         ? "EUR = distance (km)"
                         : user.goalMeasure === "m"
-                            ? "EUR = elevation (m)"
+                            ? "EUR = total elevation (m)"
                             : user.goalMeasure === "hours"
                                 ? "EUR = hiking time (hours)"
                                 : "Not set"}
@@ -157,7 +142,7 @@ export default function AllStepsComplete() {
             <hr style={{ borderColor: "#74816c" }} />
             <div>
                 <h3 className="font-semibold flex justify-between items-center w-full">
-                   <span>💰 Fundraiser</span> 
+                    <span>💰 Fundraiser</span>
                     <MarkIncompleteButton step="createFundraiser" />
                 </h3>
                 <p>
@@ -182,16 +167,16 @@ export default function AllStepsComplete() {
 
             <div>
                 <h3 className="font-semibold flex justify-between items-center w-full">
-                   <span>🥾  "Hike & Track & Share"</span> 
+                    <span>🥾  "Hike & Track & Share"</span>
                     <MarkIncompleteButton step="hikeTrackShare" />
                 </h3>
                 <p>
                     Track your hike and share your progress to boost donations!
-                    </p>
-                    <Link href="/dashboard/step">
-                        <button className="custom-button">         Visit Project Site
-                        </button>
-                    </Link>
+                </p>
+                <Link href="/dashboard/step">
+                    <button className="custom-button mt-2">         Visit Project Site
+                    </button>
+                </Link>
 
             </div>
         </div>

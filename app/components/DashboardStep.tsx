@@ -89,7 +89,7 @@ export default function DashboardStep({ user }: Props) {
     <div className="p-4">
       <h1 className="mb-4">Hello {state.name} – Start Hiking with Purpose!</h1>
       <ProgressBar progress={progress} />
-      <div className="map-wrapper flex flex-col items-center justify-center p-4 mt-8">
+      <div className="map-wrapper flex flex-col items-center justify-center p-2 mt-8">
       <StepComponent /></div>
     </div>
   );
