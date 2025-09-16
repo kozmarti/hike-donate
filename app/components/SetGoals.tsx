@@ -17,6 +17,9 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const [errorNameMessage, setErrorNameMessage] = useState("");
+  const [successNameMessage, setSuccessNameMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
@@ -71,6 +74,41 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
     }
   };
 
+  const handleProjectNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    const sanitizedProjectName = name.toLowerCase().replace(/\s+/g, "");
+
+    setProjectName(name); 
+  
+    if (!name) {
+      setErrorMessage("");
+      return;
+    }
+  
+    try {
+      const res = await fetch(`/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}`);
+
+  
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to check project name");
+      }
+  
+      const data = await res.json();
+      if (data.exists) {
+        setErrorNameMessage("❌ Project name already taken");
+        setSuccessNameMessage("")
+      } else {
+        setSuccessNameMessage("✅ Project name can be used");
+        setErrorNameMessage("")
+      }
+    } catch (err: any) {
+      setErrorNameMessage(`❌ ${err.message}`);
+      setSuccessNameMessage("")
+
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
       <h2 className="text flex items-center">
@@ -91,11 +129,12 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         type="text"
         placeholder="Project name (lowercase, no spaces)"
         value={projectName}
-        onChange={(e) => setProjectName(e.target.value)}
+        onChange={handleProjectNameChange}
         className="border p-2 rounded w-full"
         disabled={saving}
       />
-
+      {successNameMessage && <p className="text-green-600">{successNameMessage}</p>}
+      {errorNameMessage && <p className="text-red-600">{errorNameMessage}</p>}
       <p>How should your fundraising goal be measured?</p>
       <div className="flex flex-col gap-2">
         {["km", "m", "hours"].map((value) => (
