@@ -131,7 +131,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         value={projectName}
         onChange={handleProjectNameChange}
         className="border p-2 rounded w-full"
-        disabled={saving}
+        disabled={saving || saved}
       />
       {successNameMessage && <p className="text-green-600">{successNameMessage}</p>}
       {errorNameMessage && <p className="text-red-600">{errorNameMessage}</p>}
@@ -144,7 +144,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
               value={value}
               checked={goalMeasure === value}
               onChange={() => setGoalMeasure(value as "km" | "m" | "hours")}
-              disabled={saving}
+              disabled={saving || saved}
             />{" "}
             {value === "km" && "EUR = distance (km)"}
             {value === "m" && "EUR = total elevation (m)"}

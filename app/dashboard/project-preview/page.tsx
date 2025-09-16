@@ -12,9 +12,9 @@ interface User {
     stravaClientId: string;
     stravaClientSecret: string;
     projectName: string;
-    goalMeasure?: "km" | "m" | "hours";
-    fundraiserUrl?: string;
-    fundraiserDescription?: string;
+    goalMeasure: "km" | "m" | "hours";
+    fundraiserUrl: string;
+    fundraiserDescription: string;
     isActive?: boolean | null;
     steps: Step
 }
@@ -43,8 +43,6 @@ export default async function HomePage() {
     const user = await db
     .collection<User>("users")
     .findOne({ email: payload.email });
-    console.log("**************************")
-    console.log("User fetched from DB:", user);
 
   if (!user) {
     redirect("/welcome"); 
@@ -56,5 +54,7 @@ export default async function HomePage() {
   }
   
 
-  return <HikeDashboard stravaUserId={user.stravaUserId} projectName={user.projectName}/>;
+  return <HikeDashboard stravaUserId={user.stravaUserId} projectName={user.projectName}
+  goalMeasure={user.goalMeasure} fundraiserDescription={user.fundraiserDescription} 
+  fundraiserUrl={user.fundraiserUrl}/>;
 }

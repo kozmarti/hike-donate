@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Fredoka } from "next/font/google";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -13,13 +12,17 @@ import { PerformanceItemComponent } from "@/app/components/PerformanceItemCompon
 import { StatsResponse } from "@/app/hooks/useStats";
 import { useCollectedAmount } from "@/app/hooks/useCollectedAmount";
 import { convertHikePhotos } from "@/app/utils/calculation_functions_client";
-import Description from "@/app/components/Description";
 import Footer from "@/app/components/Footer";
 import { useStatistics } from "../hooks/useStatistics";
+import ProjectDescription from "./ProjectDescription";
 
 interface UserProps {
     stravaUserId: string;
     projectName: string;
+    fundraiserUrl: string;
+    fundraiserDescription: string;
+    goalMeasure: string;
+
 }
 const fredoka = Fredoka({ subsets: ["latin"] });
 
@@ -68,7 +71,7 @@ const PhotoAlbumComponent = dynamic(
   { ssr: false }
 );
 
-export default function HikeDashboard( {stravaUserId, projectName }: UserProps ) {
+export default function HikeDashboard( {stravaUserId, projectName, fundraiserDescription, fundraiserUrl, goalMeasure }: UserProps ) {
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [collectedAmount, setCollectedAmount] = useState<number>(0);
   const [amountLastUpdated, setAmountLastUpdated] = useState<string>("");
@@ -93,8 +96,6 @@ export default function HikeDashboard( {stravaUserId, projectName }: UserProps )
   // Data fetching
   useEffect(() => {
     const fetchStats = async () => {
-        console.log("**************************");
-        console.log("Fetching stats for user:", stravaUserId, "and project:", projectName);
       try {
         const [data, collectedAmountData] = await Promise.all(
             [useStatistics(stravaUserId, projectName), useCollectedAmount()]);
@@ -176,7 +177,7 @@ export default function HikeDashboard( {stravaUserId, projectName }: UserProps )
         </button>
       </Link>
 
-      <Description />
+        <ProjectDescription fundraiserUrl={fundraiserUrl} fundraiserDescription={fundraiserDescription} goalMeasure={goalMeasure}/>
 
       {/* Photos */}
       {!loading && stats && <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)} />}
