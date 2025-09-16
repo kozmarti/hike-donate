@@ -4,6 +4,8 @@ import { useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 import { HiInformationCircle } from "react-icons/hi";
 import { isValidLeetchiUrl } from "../utils/validation_helper";
+import 'react-quill/dist/quill.snow.css';
+import RichTextWithEmoji from "./RichTextWithEmoji";
 
 interface Props {
   email: string;
@@ -19,6 +21,8 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [valueText, setValueText] = useState('');
+
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
 
@@ -31,9 +35,9 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
       return;
     }
     if (!isValidLeetchiUrl(fundraiserUrl)) {
-        setErrorMessage("Please enter a valid Leetchi URL.");
-        return;
-      }
+      setErrorMessage("Please enter a valid Leetchi URL.");
+      return;
+    }
     if (!fundraiserDescription) {
       setErrorMessage("Fundraiser description is required.");
       return;
@@ -75,6 +79,7 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
     }
   };
 
+
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
       <h2 className="text flex items-center">
@@ -115,16 +120,11 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
       />
 
       <label htmlFor="fundraiser-description">Fundraiser Description</label>
-      <textarea
-        id="fundraiser-description"
-        placeholder="Write a short description of your fundraising project"
+      <RichTextWithEmoji
         value={fundraiserDescription}
-        onChange={(e) => setFundraiserDescription(e.target.value)}
-        className="border p-2 rounded w-full"
+        onChange={setFundraiserDescription}
         disabled={saved || saving}
-      />
-
-      <button
+      />      <button
         onClick={handleSaveFundraiser}
         className="custom-button"
         disabled={saving || saved}

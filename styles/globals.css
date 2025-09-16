@@ -505,3 +505,18 @@ a {
   opacity: .5;
 }
 
+ul {
+  list-style: disc;
+  margin-left: 1.5rem; /* add indentation */
+}
+
+ol {
+  list-style: decimal;
+  margin-left: 1.5rem;
+}
+
+menu {
+  list-style: disc;
+  margin-left: 1.5rem;
+}
+

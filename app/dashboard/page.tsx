@@ -2,7 +2,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
-import LogoutButton from "../components/LogoutButton";
 import clientPromise from "@/lib/mongodb";
 import CompleteProfile from "../components/CompleteProfile";
 import Dashboard, { User } from "../components/Dashboard";

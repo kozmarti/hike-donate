@@ -2,9 +2,20 @@
 
 import { useEffect, useState } from "react";
 import MarkIncompleteButton from "./MarkIncompleteButton";
-import Skeleton from '@mui/material/Skeleton';
 import SkeletonAllStepComplete from "./SkeletonAllStepComplete";
 import Link from "next/link";
+import {
+    FacebookIcon,
+    FacebookShareButton,
+    LinkedinIcon,
+    LinkedinShareButton,
+    TwitterShareButton,
+    WhatsappIcon,
+    WhatsappShareButton,
+    XIcon
+} from "react-share";
+import DOMPurify from 'dompurify';
+
 
 interface UserSummary {
     email: string;
@@ -117,6 +128,9 @@ export default function AllStepsComplete() {
         }
     };
 
+    const shareUrl = `${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`
+    const shareTitle = "Hike&Donate"
+
     return (
         <>
 
@@ -180,6 +194,9 @@ export default function AllStepsComplete() {
                         <span>💰 Fundraiser</span>
                         <MarkIncompleteButton step="createFundraiser" />
                     </h3>
+                    <p>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px" }} 
+                    dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : ""  }} /></p>
+
                     <p>
                         Leetchi Page:{" "}
                         {user.fundraiserUrl ? (
@@ -195,8 +212,6 @@ export default function AllStepsComplete() {
                             "Not set"
                         )}
                     </p>
-                    <p>Description: {user.fundraiserDescription || "Not set"}</p>
-
                 </div>
                 <hr style={{ borderColor: "#74816c" }} />
 
@@ -239,22 +254,53 @@ export default function AllStepsComplete() {
                 <hr style={{ borderColor: "#74816c" }} />
 
                 <div>
-                    {isVisible ? (
-                        <Link   target="_blank"
-                        href={`/project/${user.stravaUserId}/${user.projectName}`} passHref>
-
-                        <button type="button" className="custom-button mt-2 w-full text-center">
-
-                            🌍 Visit Public Project Site
-                        </button>
-                        </Link>
-                    ) : (
-                        <Link href="/dashboard/project-preview">
-                        <button type="button" className="custom-button mt-2 w-full text-center">
-                            🥾 Preview Your Hike Project Site
-                        </button>
-                        </Link>
-                    )}
+                {isVisible ? (
+  <div className="flex flex-col items-center">
+    <Link target="_blank" href={`/project/${user.stravaUserId}/${user.projectName}`} passHref>
+      <button type="button" className="custom-button mt-2 w-full text-center">
+        🌍 Visit Public Project Site
+      </button>
+    </Link>
+    <p className="mt-1 text-center">
+      🎉 Your project is live! Share it with friends and family.
+    </p>
+    <div className="flex items-center gap-2 mt-2">
+        <FacebookShareButton
+          url={shareUrl}
+          >
+          <FacebookIcon size={32} round />
+        </FacebookShareButton>
+        <TwitterShareButton
+          url={shareUrl}
+          title={shareTitle}
+        >
+          <XIcon size={32} round />
+        </TwitterShareButton>
+        <WhatsappShareButton
+          url={shareUrl}
+          title={shareTitle}
+          separator=":: "
+        >
+          <WhatsappIcon size={32} round />
+        </WhatsappShareButton>
+        <LinkedinShareButton
+          url={shareUrl}        >
+          <LinkedinIcon size={32} round />
+        </LinkedinShareButton>
+        </div>
+  </div>
+) : (
+  <div className="flex flex-col items-center">
+    <Link href="/dashboard/project-preview">
+      <button type="button" className="custom-button mt-2 w-full text-center">
+        🥾 Preview Your Hike Project Site
+      </button>
+    </Link>
+    <p className="mt-1 text-center">
+    👀 Your project is currently private and only you can see it. Make it public whenever you're ready.
+    </p>
+  </div>
+)}
                 </div>
 
             </div>
