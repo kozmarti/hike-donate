@@ -17,6 +17,7 @@ import { useStatistics } from "../hooks/useStatistics";
 import ProjectDescription from "./ProjectDescription";
 
 interface UserProps {
+    name: string;
     stravaUserId: string;
     projectName: string;
     fundraiserUrl: string;
@@ -71,7 +72,7 @@ const PhotoAlbumComponent = dynamic(
   { ssr: false }
 );
 
-export default function HikeDashboard( {stravaUserId, projectName, fundraiserDescription, fundraiserUrl, goalMeasure }: UserProps ) {
+export default function HikeDashboard( {name, stravaUserId, projectName, fundraiserDescription, fundraiserUrl, goalMeasure }: UserProps ) {
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [collectedAmount, setCollectedAmount] = useState<number>(0);
   const [amountLastUpdated, setAmountLastUpdated] = useState<string>("");
@@ -126,9 +127,10 @@ export default function HikeDashboard( {stravaUserId, projectName, fundraiserDes
   }, []);
 
   return (
-    <main
+    <div
       className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${fredoka.className}`}
     >
+      <p>{name}'s Fundraising Hike</p>
       {/* Performance metrics */}
       <div className="container wrapper" id="statistics">
         <PerformanceItemComponent title="totalDistance" loading={loading} quantity={stats ? stats.totalDistance / 1000 : undefined} />
@@ -190,6 +192,6 @@ export default function HikeDashboard( {stravaUserId, projectName, fundraiserDes
       )}
 
       <Footer />
-    </main>
+    </div>
   );
 }

@@ -29,8 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+
             <main
               className={`flex min-h-screen flex-col items-center p-2 global-background ${inter.className}`}
             >
@@ -40,12 +39,13 @@ export default function RootLayout({
                 width={200}
                 height={200}
                 priority
+                style={{zIndex: "1000"}}
+
               />
 
         {children}
 
             </main>
-        </body>
-    </html>
+
   );
 }

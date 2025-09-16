@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import clientPromise from "@/lib/mongodb";
 import { StepKey } from "@/app/entities/StepConfig";
 import { areAllStepsComplete } from "@/app/utils/user_helper";
+import ProjectPreviewLayout from "@/app/components/ProjectPreviewLayout";
 
 interface User {
     email: string;
@@ -17,6 +18,7 @@ interface User {
     fundraiserDescription: string;
     isActive?: boolean | null;
     steps: Step
+    name: string
 }
 
 interface Step  {
@@ -54,7 +56,11 @@ export default async function HomePage() {
   }
   
 
-  return <HikeDashboard stravaUserId={user.stravaUserId} projectName={user.projectName}
+  return (
+
+  <HikeDashboard stravaUserId={user.stravaUserId} projectName={user.projectName}
   goalMeasure={user.goalMeasure} fundraiserDescription={user.fundraiserDescription} 
-  fundraiserUrl={user.fundraiserUrl}/>;
+  fundraiserUrl={user.fundraiserUrl} name={user.name}/>
+
+);
 }

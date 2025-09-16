@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "@/styles/globals.css";
-import Image from "next/image";
+import ProjectPreviewLayout from "@/app/components/ProjectPreviewLayout";
 
 const inter = Fredoka({ subsets: ["latin"] });
 
@@ -29,22 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-
-            <main
-              className={`flex min-h-screen flex-col items-center p-2 global-background ${inter.className}`}
-            >
-              <Image
-                src="/logo.png"
-                alt="Hike&Donate Logo"
-                width={200}
-                height={200}
-                priority
-                style={{zIndex: "1000"}}
-              />
-
+    <ProjectPreviewLayout>
+      <main
+        className={`flex min-h-screen flex-col items-center p-2 global-background ${inter.className}`}
+      >
         {children}
-
-            </main>
-
+      </main>
+    </ProjectPreviewLayout>
   );
 }

@@ -68,7 +68,6 @@ export default function AllStepsComplete() {
             try {
                 const res = await fetch("/api/strava/check-subscription");
                 const data = await res.json();
-                console.log("Subscription data:", data);
 
                 if (!res.ok) {
                     setError(data.error || "Failed to check subscription");
@@ -194,8 +193,8 @@ export default function AllStepsComplete() {
                         <span>💰 Fundraiser</span>
                         <MarkIncompleteButton step="createFundraiser" />
                     </h3>
-                    <p>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px" }} 
-                    dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : ""  }} /></p>
+                    <div>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px" }} 
+                    dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : ""  }} /></div>
 
                     <p>
                         Leetchi Page:{" "}
