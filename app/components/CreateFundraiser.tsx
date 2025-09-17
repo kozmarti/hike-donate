@@ -6,6 +6,7 @@ import { HiInformationCircle } from "react-icons/hi";
 import { isValidLeetchiUrl } from "../utils/validation_helper";
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
+import CheckURLButton from "./CheckURLButton";
 
 const RichTextWithEmoji = dynamic(() => import("./RichTextWithEmoji"), {
   ssr: false, // 🚀 disables server-side rendering for this component
@@ -26,6 +27,9 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [valueText, setValueText] = useState('');
+  const [disabled, setDisabled] = useState(false);
+  const [validURL, setValideURL] = useState(false);
+
 
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
@@ -121,18 +125,23 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
         value={fundraiserUrl}
         onChange={(e) => setFundraiserUrl(e.target.value)}
         className="border p-2 rounded w-full"
-        disabled={saved || saving}
+        disabled={saved || saving || disabled}
       />
+      <CheckURLButton url={fundraiserUrl} valid={validURL} setValid={setValideURL}/>
 
       <label htmlFor="fundraiser-description">Fundraiser Description</label>
       <RichTextWithEmoji
         value={fundraiserDescription}
-        onChange={setFundraiserDescription}
-        disabled={saved || saving}
-      />      <button
+        onChange={(e) => {
+          setFundraiserDescription(e);
+          console.log(e); // enable whenever user types
+        }}
+        disabled={saved || saving|| !validURL}
+      />      
+      <button
         onClick={handleSaveFundraiser}
         className="custom-button"
-        disabled={saving || saved}
+        disabled={saving || saved || !validURL || fundraiserDescription.replace(/<[^>]*>/g, "").trim() === ""}
       >
         {saved ? "Fundraiser Saved ✅" : "Save Fundraiser"}
       </button>

@@ -15,16 +15,16 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
   const [projectName, setProjectName] = useState("");
   const [goalMeasure, setGoalMeasure] = useState<GoalMeasureKey | "">("");
   const [saved, setSaved] = useState(false);
-
   const [nameValid, setNameValid] = useState(true);
 
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
   const [errorNameMessage, setErrorNameMessage] = useState("");
   const [successNameMessage, setSuccessNameMessage] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const [disabled, setDisabled] = useState(true);
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
 
@@ -43,7 +43,6 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
     const sanitizedProjectName = projectName.toLowerCase().replace(/\s+/g, "");
     setSaving(true);
-    console.log("$$$$$$$$SAVING")
     try {
       const res = await fetch("/api/profile", {
         method: "POST",
@@ -108,6 +107,9 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         setNameValid(true)
         setSuccessNameMessage("✅ Project name can be used");
         setErrorNameMessage("")
+        if (goalMeasure) {
+          setDisabled(false)
+        }
       }
     } catch (err: any) {
       setNameValid(false)
@@ -155,7 +157,13 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
                 type="radio"
                 value={key}
                 checked={goalMeasure === key}
-                onChange={() => setGoalMeasure(key as GoalMeasureKey)}
+                onChange={() => {
+                  setGoalMeasure(key as GoalMeasureKey);
+                
+                  if (nameValid) {
+                    setDisabled(false);
+                  }
+                }}                
                 disabled={saving || saved}
               />{" "}
               {description} {icon} 
@@ -167,7 +175,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
       <button
         onClick={handleSaveGoals}
         className="custom-button"
-        disabled={saving || saved || !nameValid}
+        disabled={saving || saved || !nameValid  || disabled}
       >
         {saved ? "Goals Saved ✅" : "Save Goals"}
       </button>

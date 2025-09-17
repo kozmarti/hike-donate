@@ -16,6 +16,7 @@ import {
 } from "react-share";
 import DOMPurify from 'dompurify';
 import { getGoalMeasure, GoalMeasureKey } from "../entities/GoalMeasureConfig";
+import useRaisedAmount from "../hooks/useRaisedAmount";
 
 
 interface UserSummary {
@@ -37,6 +38,9 @@ export default function AllStepsComplete() {
     const [subscriptionData, setSubscriptionData] = useState<any>(null);
     const [error, setError] = useState("");
     const [isVisible, setIsVisible] = useState(false);
+    const [amount, setAmount] = useState(0);
+    const { data: raisedData, loading: amountLoading, error: amountError } = useRaisedAmount(user?.fundraiserUrl || "");
+
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -197,8 +201,11 @@ export default function AllStepsComplete() {
                     <div>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} 
                     dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : ""  }} /></div>
 
+                <p>Amount Raised: {amountLoading ? "Loading..." : `€${raisedData?.amount ?? 0}`}</p>
+                {amountError && <p className="text-red-600">{amountError}</p>}
+
                     <p>
-                        Fundraiser Page:{" "}
+                        Your Fundraiser Page:{" "}
                         {user.fundraiserUrl ? (
                             <a
                                 href={user.fundraiserUrl}

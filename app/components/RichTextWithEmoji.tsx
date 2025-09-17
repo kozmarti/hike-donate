@@ -36,7 +36,8 @@ export default function RichTextWithEmoji({
       const range = editor.getSelection(true);
       editor.insertText(range.index, emojiData.emoji);
       editor.setSelection(range.index + emojiData.emoji.length);
-      onChange(editor.root.innerHTML); // update parent state
+      onChange(editor.root.innerHTML);
+      console.log(editor.root.innerHTML)
     }
   };
 
