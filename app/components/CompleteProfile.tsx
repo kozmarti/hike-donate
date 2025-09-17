@@ -28,9 +28,13 @@ export default function CompleteProfile({ email }: Props) {
         onSubmit={handleSubmit}
         className="flex flex-col gap-4"
       >
-        <h1 className="text">Welcome! What should we call you?</h1>
+        <h1 className="text">
+          Welcome! What should we call you?
+          </h1>
+          <p>💡 Choose wisely, you won't be able to change it later.</p>
+
         <input
-          className="w-full border rounded-lg p-2 mb-4"
+          className="w-full border rounded-lg p-2 mb-4 input-custom"
           placeholder="Enter your name"
           value={name}
           onChange={(e) => setName(e.target.value)}

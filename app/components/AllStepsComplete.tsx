@@ -15,6 +15,7 @@ import {
     XIcon
 } from "react-share";
 import DOMPurify from 'dompurify';
+import { getGoalMeasure, GoalMeasureKey } from "../entities/GoalMeasureConfig";
 
 
 interface UserSummary {
@@ -23,7 +24,7 @@ interface UserSummary {
     stravaClientId?: string;
     stravaClientSecret?: string;
     projectName?: string;
-    goalMeasure?: "km" | "m" | "hours";
+    goalMeasure?: GoalMeasureKey;
     fundraiserUrl?: string;
     fundraiserDescription?: string;
     isActive?: boolean | null;
@@ -134,13 +135,18 @@ export default function AllStepsComplete() {
         <>
 
             <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
-                <h2 className="text">Project Setup Summary</h2>
-
+                {/* Top white overlay before first HR */}
+                <div style={{zIndex: -1}} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none rounded-t-xl">
+                </div>
+                <h2 className="text" >Project Setup Summary</h2>
+                <hr style={{ borderColor: "#74816c" }} />
+    
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
                         <span>🔗 Strava Account</span>
                         <MarkIncompleteButton step="connectStrava" />
                     </h3>
+                    
                     <p>
                         {subscriptionData?.isActive
                             ? "Subscription Active ✅"
@@ -148,6 +154,7 @@ export default function AllStepsComplete() {
                                 ? "Checking..."
                                 : "No Active Subscription ❌"}
                     </p>
+
                     <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
                     <p>Client ID: {user.stravaClientId || "Not saved"}</p>
                     <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
@@ -177,13 +184,7 @@ export default function AllStepsComplete() {
                     <p>Project Name: {user.projectName || "Not set"}</p>
                     <p>
                         Goal Measure:{" "}
-                        {user.goalMeasure === "km"
-                            ? "EUR = distance (km)"
-                            : user.goalMeasure === "m"
-                                ? "EUR = total elevation (m)"
-                                : user.goalMeasure === "hours"
-                                    ? "EUR = hiking time (hours)"
-                                    : "Not set"}
+                        {user.goalMeasure ? getGoalMeasure(user.goalMeasure).description : "Not set"}
                     </p>
 
                 </div>
@@ -193,11 +194,11 @@ export default function AllStepsComplete() {
                         <span>💰 Fundraiser</span>
                         <MarkIncompleteButton step="createFundraiser" />
                     </h3>
-                    <div>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px" }} 
+                    <div>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} 
                     dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : ""  }} /></div>
 
                     <p>
-                        Leetchi Page:{" "}
+                        Fundraiser Page:{" "}
                         {user.fundraiserUrl ? (
                             <a
                                 href={user.fundraiserUrl}
@@ -261,7 +262,7 @@ export default function AllStepsComplete() {
       </button>
     </Link>
     <p className="mt-1 text-center">
-      🎉 Your project is live! Share it with friends and family.
+      🎉 Your project is live!
     </p>
     <div className="flex items-center gap-2 mt-2">
         <FacebookShareButton
@@ -292,15 +293,18 @@ export default function AllStepsComplete() {
   <div className="flex flex-col items-center">
     <Link href="/dashboard/project-preview">
       <button type="button" className="custom-button mt-2 w-full text-center">
-        🥾 Preview Your Hike Project Site
+        🥾 Preview Project Site
       </button>
     </Link>
-    <p className="mt-1 text-center">
-    👀 Your project is currently private and only you can see it. Make it public whenever you're ready.
+    <p className="mt-1 text-center mb-4">
+    👀 Your project is currently private.
+    <br />
+    Make it public whenever ready.
     </p>
   </div>
 )}
                 </div>
+                <div style={{zIndex: -1}} className="absolute bottom-0 left-0 w-full h-40 bg-white opacity-60 pointer-events-none rounded-b-xl"></div>
 
             </div>
         </>

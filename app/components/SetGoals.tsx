@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 import { HiInformationCircle } from "react-icons/hi";
+import { GoalMeasureKey, getGoalMeasure, goalMeasureConfig, goalMeasureKeys } from "../entities/GoalMeasureConfig";
 
 interface Props {
   email: string;
@@ -12,8 +13,11 @@ interface Props {
 
 const SetGoals = ({ email, step, completeStep }: Props) => {
   const [projectName, setProjectName] = useState("");
-  const [goalMeasure, setGoalMeasure] = useState<"km" | "m" | "hours" | "">("");
+  const [goalMeasure, setGoalMeasure] = useState<GoalMeasureKey | "">("");
   const [saved, setSaved] = useState(false);
+
+  const [nameValid, setNameValid] = useState(true);
+
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -39,6 +43,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
     const sanitizedProjectName = projectName.toLowerCase().replace(/\s+/g, "");
     setSaving(true);
+    console.log("$$$$$$$$SAVING")
     try {
       const res = await fetch("/api/profile", {
         method: "POST",
@@ -52,7 +57,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to save project goals");
+        throw new Error(data.error || "❌ Failed to save project goals");
       }
 
       setSaved(true);
@@ -78,31 +83,34 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
     const name = e.target.value;
     const sanitizedProjectName = name.toLowerCase().replace(/\s+/g, "");
 
-    setProjectName(name); 
-  
+    setProjectName(name);
+
     if (!name) {
       setErrorMessage("");
       return;
     }
-  
+
     try {
       const res = await fetch(`/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}`);
 
-  
+
       if (!res.ok) {
         const errorText = await res.text();
         throw new Error(errorText || "Failed to check project name");
       }
-  
+
       const data = await res.json();
       if (data.exists) {
+        setNameValid(false)
         setErrorNameMessage("❌ Project name already taken");
         setSuccessNameMessage("")
       } else {
+        setNameValid(true)
         setSuccessNameMessage("✅ Project name can be used");
         setErrorNameMessage("")
       }
     } catch (err: any) {
+      setNameValid(false)
       setErrorNameMessage(`❌ ${err.message}`);
       setSuccessNameMessage("")
 
@@ -114,6 +122,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
       <h2 className="text flex items-center">
         {stepConfig?.icon} {stepConfig?.label}
       </h2>
+      <hr style={{ borderColor: "#74816c" }} />
 
       <label htmlFor="project-name" className="text flex items-center">
         Project Name
@@ -130,33 +139,35 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         placeholder="Project name (lowercase, no spaces)"
         value={projectName}
         onChange={handleProjectNameChange}
-        className="border p-2 rounded w-full"
+        className="border p-2 rounded w-full input-custom"
         disabled={saving || saved}
       />
       {successNameMessage && <p className="text-green-600">{successNameMessage}</p>}
       {errorNameMessage && <p className="text-red-600">{errorNameMessage}</p>}
       <p>How should your fundraising goal be measured?</p>
       <div className="flex flex-col gap-2">
-        {["km", "m", "hours"].map((value) => (
-          <label key={value}>
-            <input
-              type="radio"
-              value={value}
-              checked={goalMeasure === value}
-              onChange={() => setGoalMeasure(value as "km" | "m" | "hours")}
-              disabled={saving || saved}
-            />{" "}
-            {value === "km" && "EUR = distance (km)"}
-            {value === "m" && "EUR = total elevation (m)"}
-            {value === "hours" && "EUR = hiking time (hours)"}
-          </label>
-        ))}
+        {goalMeasureKeys.map((key) => {
+          const { description, icon } = getGoalMeasure(key);
+
+          return (
+            <label key={key}>
+              <input
+                type="radio"
+                value={key}
+                checked={goalMeasure === key}
+                onChange={() => setGoalMeasure(key as GoalMeasureKey)}
+                disabled={saving || saved}
+              />{" "}
+              {description} {icon} 
+            </label>
+          );
+        })}
       </div>
 
       <button
         onClick={handleSaveGoals}
         className="custom-button"
-        disabled={saving || saved}
+        disabled={saving || saved || !nameValid}
       >
         {saved ? "Goals Saved ✅" : "Save Goals"}
       </button>

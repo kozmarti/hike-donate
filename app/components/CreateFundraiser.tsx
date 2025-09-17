@@ -5,7 +5,11 @@ import { stepsConfig, StepKey } from "../entities/StepConfig";
 import { HiInformationCircle } from "react-icons/hi";
 import { isValidLeetchiUrl } from "../utils/validation_helper";
 import 'react-quill/dist/quill.snow.css';
-import RichTextWithEmoji from "./RichTextWithEmoji";
+import dynamic from "next/dynamic";
+
+const RichTextWithEmoji = dynamic(() => import("./RichTextWithEmoji"), {
+  ssr: false, // 🚀 disables server-side rendering for this component
+});
 
 interface Props {
   email: string;
@@ -85,6 +89,7 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
       <h2 className="text flex items-center">
         {stepConfig?.icon} {stepConfig?.label}
       </h2>
+      <hr style={{ borderColor: "#74816c" }} />
 
       <p>
         To start fundraising, create your campaign on{" "}

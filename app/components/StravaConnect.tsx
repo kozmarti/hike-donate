@@ -126,7 +126,10 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
       <h2 className="text">
         {stepConfig?.icon} {stepConfig?.label}
-      </h2>      <p>
+      </h2>      
+      <hr style={{ borderColor: "#74816c" }} />
+
+      <p>
         Get a <strong>Client ID</strong> and <strong>Client Secret</strong> from{" "}
         <a
           href="https://www.strava.com/settings/api"

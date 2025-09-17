@@ -1,14 +1,16 @@
 import React from 'react'
 import Image from 'next/image'
 import DOMPurify from 'dompurify';
+import { getGoalMeasure, GoalMeasureKey } from '../entities/GoalMeasureConfig';
 
 interface Props {
   fundraiserDescription: string
-  goalMeasure: string
-    fundraiserUrl: string
+  goalMeasure: GoalMeasureKey
+  fundraiserUrl: string
 }
 
 const ProjectDescription = ({fundraiserDescription, goalMeasure, fundraiserUrl}: Props) => {
+  const goalMeasureOfUser = getGoalMeasure(goalMeasure)
   return (
     <div className='map-wrapper description-wrapper' id='fundraising-description'>
       <div className="description-container">
@@ -25,10 +27,10 @@ const ProjectDescription = ({fundraiserDescription, goalMeasure, fundraiserUrl}:
           />
           <strong>Turning {goalMeasure} into Solidarity </strong></h1>
           <p>I am embarking on an exciting journey with a simple mission:
-          for each {goalMeasure} I hike, I aim to raise €1.</p>
+          for each {goalMeasureOfUser.singular_detail}, I aim to raise €1.</p>
         <p style={{textAlign: "start", paddingLeft: "20px"}} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(fundraiserDescription)}}/>
         <div className='flexbox-vertical-conatiner'>
-          <p style={{ margin: "20px" }}>Would you consider <span style={{ color: "#fd5770" }}>sponsoring one {goalMeasure}</span> of my journey?</p>
+          <p style={{ margin: "20px" }}>Would you consider <span style={{ color: "#fd5770" }}>sponsoring one {goalMeasureOfUser.singular}</span> of my journey?</p>
           <a href={fundraiserUrl} target="_blank">
             <Image
               src="/donate-link.svg"

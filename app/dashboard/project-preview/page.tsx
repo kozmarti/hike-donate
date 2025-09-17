@@ -6,6 +6,7 @@ import clientPromise from "@/lib/mongodb";
 import { StepKey } from "@/app/entities/StepConfig";
 import { areAllStepsComplete } from "@/app/utils/user_helper";
 import ProjectPreviewLayout from "@/app/components/ProjectPreviewLayout";
+import { GoalMeasureKey } from "@/app/entities/GoalMeasureConfig";
 
 interface User {
     email: string;
@@ -13,7 +14,7 @@ interface User {
     stravaClientId: string;
     stravaClientSecret: string;
     projectName: string;
-    goalMeasure: "km" | "m" | "hours";
+    goalMeasure: GoalMeasureKey;
     fundraiserUrl: string;
     fundraiserDescription: string;
     isActive?: boolean | null;

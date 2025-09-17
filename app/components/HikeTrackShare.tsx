@@ -39,10 +39,13 @@ const HikeTrackShare = ({ email, step, completeStep }: Props) => {
       <h2 className="text flex items-center">
         {stepConfig?.icon} {stepConfig?.label}
       </h2>
+      <hr style={{ borderColor: "#74816c" }} />
+
 
       <p>
-      You're all set! Start your trek, record activities in Strava, and rename them with your project name to sync your progress.      </p>
-
+      🎉 You're all set! Start your trek, record activities in Strava, and rename them with your project name to sync your progress.  
+      You can preview your project site, and when you're ready, make it public to share with friends and family.
+      </p>
       <button
         onClick={handleCompleteStep}
         className="custom-button"

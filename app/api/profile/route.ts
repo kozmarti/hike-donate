@@ -12,7 +12,20 @@ export async function POST(req: Request) {
 
     const client = await clientPromise;
     const db = client.db("hike");
+    
+    // Check if projectName is already taken by another user
+    if (projectName) {
+      const existing = await db
+        .collection("users")
+        .findOne({ projectName, email: { $ne: email } });
 
+      if (existing) {
+        return new Response(
+          JSON.stringify({ error: "❌ Project name already exists. Please choose another." }),
+          { status: 400 }
+        );
+      }
+    }
     const updateFields: any = {};
     if (name) updateFields.name = name;
     if (stravaClientId) updateFields.stravaClientId = stravaClientId;
@@ -20,8 +33,7 @@ export async function POST(req: Request) {
     if (goalMeasure) updateFields.goalMeasure = goalMeasure;
     if (fundraiserUrl) updateFields.fundraiserUrl = fundraiserUrl;
     if (fundraiserDescription) updateFields.fundraiserDescription = fundraiserDescription;
-    if (stravaClientSecret) updateFields.stravaClientSecret = encrypt(stravaClientSecret); // 🔐 encrypt before saving
-
+    if (stravaClientSecret) updateFields.stravaClientSecret = encrypt(stravaClientSecret);
     if (Object.keys(updateFields).length === 0) {
       return new Response(JSON.stringify({ error: "Nothing to update" }), { status: 400 });
     }

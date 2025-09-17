@@ -15,6 +15,7 @@ import { convertHikePhotos } from "@/app/utils/calculation_functions_client";
 import Footer from "@/app/components/Footer";
 import { useStatistics } from "../hooks/useStatistics";
 import ProjectDescription from "./ProjectDescription";
+import { GoalMeasureKey } from "../entities/GoalMeasureConfig";
 
 interface UserProps {
     name: string;
@@ -22,7 +23,7 @@ interface UserProps {
     projectName: string;
     fundraiserUrl: string;
     fundraiserDescription: string;
-    goalMeasure: string;
+    goalMeasure: GoalMeasureKey;
 
 }
 const fredoka = Fredoka({ subsets: ["latin"] });
@@ -130,7 +131,7 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
     <div
       className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${fredoka.className}`}
     >
-      <p>{name}'s Fundraising Hike</p>
+      <h1 className="p-5">{name}'s Fundraiser Hike</h1>
       {/* Performance metrics */}
       <div className="container wrapper" id="statistics">
         <PerformanceItemComponent title="totalDistance" loading={loading} quantity={stats ? stats.totalDistance / 1000 : undefined} />

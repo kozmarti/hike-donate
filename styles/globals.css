@@ -507,7 +507,7 @@ a {
 
 ul {
   list-style: disc;
-  margin-left: 1.5rem; /* add indentation */
+  margin-left: 1.5rem;
 }
 
 ol {
@@ -520,3 +520,9 @@ menu {
   margin-left: 1.5rem;
 }
 
+
+.input-custom:focus {
+  outline: none;
+  border-color: #74816c;
+  box-shadow: 0 0 0 2px #74816c;
+}

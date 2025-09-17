@@ -61,7 +61,7 @@ export default function AuthPage() {
         <input
           type="email"
           placeholder="Email"
-          className="border p-2 rounded"
+          className="border p-2 rounded input-custom"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -70,7 +70,7 @@ export default function AuthPage() {
         <input
           type="password"
           placeholder="Password"
-          className="border p-2 rounded"
+          className="border p-2 rounded input-custom"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
