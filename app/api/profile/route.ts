@@ -71,8 +71,8 @@ export async function GET(req: Request) {
     const safeUser = {
       ...rest,
       stravaClientSecret: user.stravaClientSecret
-        ? decrypt(user.stravaClientSecret).slice(0, 4) + "***********"
-        : null,
+        ? decrypt(user.stravaClientSecret).slice(0, 2) + "***********"
+        : null
     };
     return new Response(JSON.stringify(safeUser), { status: 200 });
   } catch (error: any) {

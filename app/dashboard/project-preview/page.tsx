@@ -3,31 +3,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import clientPromise from "@/lib/mongodb";
-import { StepKey } from "@/app/entities/StepConfig";
 import { areAllStepsComplete } from "@/app/utils/user_helper";
-import ProjectPreviewLayout from "@/app/components/ProjectPreviewLayout";
-import { GoalMeasureKey } from "@/app/entities/GoalMeasureConfig";
+import { User } from "@/app/entities/User";
 
-interface User {
-    email: string;
-    stravaUserId: string;
-    stravaClientId: string;
-    stravaClientSecret: string;
-    projectName: string;
-    goalMeasure: GoalMeasureKey;
-    fundraiserUrl: string;
-    fundraiserDescription: string;
-    isActive?: boolean | null;
-    steps: Step
-    name: string
-}
-
-interface Step  {
-    connectStrava?: boolean;
-    createFundraiser?: boolean;
-    setGoals?: boolean;
-    hikeTrackShare?: boolean;
-  };
 
 export default async function HomePage() {
     const token = cookies().get("token")?.value;

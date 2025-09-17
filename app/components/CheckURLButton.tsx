@@ -43,7 +43,7 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
         }
 
         try {
-          const res = await fetch(`/api/get-amount?url=${encodeURIComponent(url)}`);
+          const res = await fetch(`/api/get-amount?url=${encodeURIComponent(url)}&isRecent=true`);
           const result = await res.json();
           if (result.amount != null) {
             setStatus(`🎉 Your fundraiser is valid! ✅ Current amount raised: €${result.amount}`);
@@ -66,7 +66,7 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
       <button
         onClick={handleClick}
         disabled={valid}
-        className={`px-4 py-2 rounded ${valid ? 'bg-gray-400' : 'bg-blue-500 text-white'}`}
+        className="custom-button"
       >
         Verify Fundraiser
       </button>

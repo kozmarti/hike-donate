@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 import { HiInformationCircle } from "react-icons/hi";
 import { GoalMeasureKey, getGoalMeasure, goalMeasureConfig, goalMeasureKeys } from "../entities/GoalMeasureConfig";
+import useUser from "../hooks/useUser";
 
 interface Props {
   email: string;
@@ -16,17 +17,24 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
   const [goalMeasure, setGoalMeasure] = useState<GoalMeasureKey | "">("");
   const [saved, setSaved] = useState(false);
   const [nameValid, setNameValid] = useState(true);
-
-
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorNameMessage, setErrorNameMessage] = useState("");
   const [successNameMessage, setSuccessNameMessage] = useState("");
   const [saving, setSaving] = useState(false);
-
-  const [disabled, setDisabled] = useState(true);
+  const { data: userData, loading: loadingUser, error: errorUser } = useUser();
+  
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
+
+    useEffect(() => {
+      if (userData?.projectName) {
+        setProjectName(userData.projectName);
+      }
+      if (userData?.goalMeasure) {
+        setGoalMeasure(userData.goalMeasure)
+      }
+    }, [userData]);
 
   const handleSaveGoals = async () => {
     setErrorMessage("");
@@ -90,8 +98,9 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
     }
 
     try {
-      const res = await fetch(`/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}`);
-
+      const res = await fetch(
+        `/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}&email=${encodeURIComponent(userData?.email ? userData.email : "")}`
+      );
 
       if (!res.ok) {
         const errorText = await res.text();
@@ -107,9 +116,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         setNameValid(true)
         setSuccessNameMessage("✅ Project name can be used");
         setErrorNameMessage("")
-        if (goalMeasure) {
-          setDisabled(false)
-        }
+
       }
     } catch (err: any) {
       setNameValid(false)
@@ -159,10 +166,6 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
                 checked={goalMeasure === key}
                 onChange={() => {
                   setGoalMeasure(key as GoalMeasureKey);
-                
-                  if (nameValid) {
-                    setDisabled(false);
-                  }
                 }}                
                 disabled={saving || saved}
               />{" "}
@@ -175,7 +178,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
       <button
         onClick={handleSaveGoals}
         className="custom-button"
-        disabled={saving || saved || !nameValid  || disabled}
+        disabled={saving || saved || !nameValid  || goalMeasure === ""}
       >
         {saved ? "Goals Saved ✅" : "Save Goals"}
       </button>

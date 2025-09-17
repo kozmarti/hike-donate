@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 import { HiInformationCircle } from "react-icons/hi";
 import { isValidLeetchiUrl } from "../utils/validation_helper";
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import CheckURLButton from "./CheckURLButton";
+import useUser from "../hooks/useUser";
+import SetGoals from "./SetGoals";
 
 const RichTextWithEmoji = dynamic(() => import("./RichTextWithEmoji"), {
   ssr: false, // 🚀 disables server-side rendering for this component
@@ -26,13 +28,18 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
-  const [valueText, setValueText] = useState('');
-  const [disabled, setDisabled] = useState(false);
   const [validURL, setValideURL] = useState(false);
-
-
-
+  const { data: userData, loading: loadingUser, error: errorUser } = useUser();
   const stepConfig = stepsConfig.find((s) => s.key === step);
+
+  useEffect(() => {
+    if (userData?.fundraiserUrl) {
+      setFundraiserUrl(userData.fundraiserUrl);
+    }
+    if (userData?.fundraiserDescription) {
+      setFundraiserDescription(userData.fundraiserDescription)
+    }
+  }, [userData]);
 
   const handleSaveFundraiser = async () => {
     setErrorMessage("");
@@ -121,22 +128,19 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
       <input
         id="fundraiser-url"
         type="url"
-        placeholder="Paste your Leetchi fundraiser link"
+        placeholder={"Paste your Leetchi fundraiser link"}
         value={fundraiserUrl}
         onChange={(e) => setFundraiserUrl(e.target.value)}
         className="border p-2 rounded w-full"
-        disabled={saved || saving || disabled}
+        disabled={saved || saving || validURL }
       />
       <CheckURLButton url={fundraiserUrl} valid={validURL} setValid={setValideURL}/>
 
       <label htmlFor="fundraiser-description">Fundraiser Description</label>
       <RichTextWithEmoji
         value={fundraiserDescription}
-        onChange={(e) => {
-          setFundraiserDescription(e);
-          console.log(e); // enable whenever user types
-        }}
-        disabled={saved || saving|| !validURL}
+        onChange={setFundraiserDescription}
+        disabled={saved || saving || !validURL}
       />      
       <button
         onClick={handleSaveFundraiser}

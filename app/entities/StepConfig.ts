@@ -6,3 +6,11 @@ export const stepsConfig = [
   ] as const;
   
   export type StepKey = typeof stepsConfig[number]["key"];
+
+
+export interface Step  {
+      connectStrava?: boolean;
+      createFundraiser?: boolean;
+      setGoals?: boolean;
+      hikeTrackShare?: boolean;
+    };

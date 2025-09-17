@@ -14,12 +14,9 @@ export async function middleware(request: NextRequest) {
         if (!token) {
             return NextResponse.redirect(new URL("/welcome", request.url));
         }
-
         return NextResponse.next();
-
     }
-    
-    
+
     if (pathname.startsWith("/api")) {
         const origin = request.headers.get("origin") || request.headers.get("referer");
         if (!origin || !ALLOWED_HOSTS.some((host) => origin.startsWith(host))) {

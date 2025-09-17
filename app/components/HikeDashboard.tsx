@@ -28,8 +28,8 @@ interface UserProps {
 }
 const fredoka = Fredoka({ subsets: ["latin"] });
 
-const CollectedAmountGauge = dynamic(
-  () => import("@/app/components/CollectedAmountGauge"),
+const RaisedAmountGauge = dynamic(
+  () => import("@/app/components/RaisedAmountGauge"),
   {
     ssr: false,
     loading: () => (
@@ -149,7 +149,7 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
         style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         {!loading && stats && (
-          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={stats.totalDistance / 1000} />
+          <RaisedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} performanceValue={stats.totalDistance / 1000} goalMeasure={goalMeasure}/>
         )}
         {loading && !stats && (
           <>
@@ -160,7 +160,7 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
           </>
         )}
         {!loading && !stats && (
-          <CollectedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} distance={0} />
+          <RaisedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} performanceValue={0} goalMeasure={goalMeasure}/>
         )}
       </div>
 

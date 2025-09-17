@@ -37,7 +37,6 @@ export default function RichTextWithEmoji({
       editor.insertText(range.index, emojiData.emoji);
       editor.setSelection(range.index + emojiData.emoji.length);
       onChange(editor.root.innerHTML);
-      console.log(editor.root.innerHTML)
     }
   };
 
@@ -62,12 +61,12 @@ export default function RichTextWithEmoji({
           right: "5px",
         }}
       >
-        <button type="button" onClick={() => setShowEmoji(!showEmoji)}>
+        <button type="button" onClick={() => setShowEmoji(!showEmoji)} disabled={disabled}>
           {showEmoji ? "✖️" : "🙂"}
         </button>
       </div>
 
-      {showEmoji && (
+      {showEmoji && !disabled && (
         <Picker skinTonesDisabled reactionsDefaultOpen onEmojiClick={onEmojiClick} />
       )}
 

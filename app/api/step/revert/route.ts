@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     // Revert the step to false
     await db.collection("users").updateOne(
       { email },
-      { $set: { [`steps.${step}`]: false } }
+      { $set: { [`steps.${step}`]: false, isActive: false } }
     );
 
     const user = await db.collection("users").findOne({ email });

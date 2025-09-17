@@ -28,7 +28,7 @@ const ProjectDescription = ({fundraiserDescription, goalMeasure, fundraiserUrl}:
           <strong>Turning {goalMeasure} into Solidarity </strong></h1>
           <p>I am embarking on an exciting journey with a simple mission:
           for each {goalMeasureOfUser.singular_detail}, I aim to raise €1.</p>
-        <p style={{textAlign: "start", paddingLeft: "20px"}} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(fundraiserDescription)}}/>
+        <p style={{textAlign: "center", paddingLeft: "20px"}} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(fundraiserDescription)}}/>
         <div className='flexbox-vertical-conatiner'>
           <p style={{ margin: "20px" }}>Would you consider <span style={{ color: "#fd5770" }}>sponsoring one {goalMeasureOfUser.singular}</span> of my journey?</p>
           <a href={fundraiserUrl} target="_blank">
