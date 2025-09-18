@@ -11,20 +11,20 @@ interface Props {
 
 export default function CheckURLButton({ url, valid, setValid }: Props) {
   const [status, setStatus] = useState('');
+  const [isVeryfing, setisVeryfing] = useState(false);
+
 
   const handleClick = async () => {
-    setValid(true);
+    setisVeryfing(true);
 
     if (!url) {
       setStatus('❌ Please provide an url.');
-      setValid(false);
-
+      setisVeryfing(false);
       return;
     }
     if (!isValidLeetchiUrl(url)) {
       setStatus('❌ Please provide a valid leetchi url.');
-      setValid(false);
-
+      setisVeryfing(false);
       return;
     }
     setStatus('✅ Workflow triggered. We are checking the page... please wait. This may take up to a few minutes.');
@@ -38,7 +38,7 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
       const data = await res.json();
       if (data.error) {
         setStatus('❌ Error triggering workflow');
-        setValid(false);
+        setisVeryfing(false);
         return;
       }
 
@@ -51,7 +51,7 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
         if (elapsed > 60000) {
           clearInterval(interval);
           setStatus('⏱️ Sorry, we could not get a result within  60 seconds. Please try again later.');
-          setValid(false);
+          setisVeryfing(false);
           return;
         }
 
@@ -70,7 +70,6 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
     } catch (err) {
       console.error(err);
       setStatus('Error triggering workflow');
-      setValid(false);
     }
   };
 
