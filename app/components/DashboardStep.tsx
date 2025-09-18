@@ -7,6 +7,7 @@ import SetGoals from "./SetGoals";
 import CreateFundraiser from "./CreateFundraiser";
 import HikeTrackShare from "./HikeTrackShare";
 import AllStepsComplete from "./AllStepsComplete";
+import LogoutButton from "./LogoutButton";
 
 
 export interface User {
@@ -91,6 +92,9 @@ export default function DashboardStep({ user }: Props) {
       <ProgressBar progress={progress} />
       <div className="map-wrapper flex flex-col items-center justify-center p-2 mt-8">
       <StepComponent /></div>
+      <LogoutButton/>
+
     </div>
+    
   );
 }
