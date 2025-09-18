@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 
 import { useRouter } from "next/navigation";
+import LogoutButton from "./LogoutButton";
 
 
 export interface User {
@@ -75,6 +76,9 @@ export default function Dashboard({ user }: Props) {
       : "⏩ Continue Setup"}
      </button>
         </Link>
+
+            <LogoutButton/>
+        
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import clientPromise from "@/lib/mongodb";
 import CompleteProfile from "../components/CompleteProfile";
 import Dashboard, { User } from "../components/Dashboard";
+import LogoutButton from "../components/LogoutButton";
 
 
 export default async function DashboardPage() {
@@ -27,7 +28,12 @@ export default async function DashboardPage() {
 
   if (!user) {
     // Optional: redirect or show error if user not found
-    return <p>User not found</p>;
+    return (
+    <>
+    <p>User not found</p>;
+    <LogoutButton/>
+    </>
+    )
   }
 
   const currentUser: User = {

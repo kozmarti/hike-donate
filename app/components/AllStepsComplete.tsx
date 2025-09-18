@@ -17,6 +17,7 @@ import {
 import DOMPurify from 'dompurify';
 import { getGoalMeasure, GoalMeasureKey } from "../entities/GoalMeasureConfig";
 import useRaisedAmount from "../hooks/useRaisedAmount";
+import LogoutButton from "./LogoutButton";
 
 
 interface UserSummary {
@@ -322,6 +323,8 @@ export default function AllStepsComplete() {
                 <div style={{zIndex: -1}} className="absolute bottom-0 left-0 w-full h-40 bg-white opacity-60 pointer-events-none rounded-b-xl"></div>
 
             </div>
+                <LogoutButton/>
+            
         </>
     );
 }
