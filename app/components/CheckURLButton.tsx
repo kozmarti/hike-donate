@@ -77,7 +77,7 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
     <div>
       <button
         onClick={handleClick}
-        disabled={valid}
+        disabled={valid  || isVeryfing}
         className="custom-button"
       >
         Verify Fundraiser
