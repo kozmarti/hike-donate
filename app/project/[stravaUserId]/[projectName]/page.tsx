@@ -13,7 +13,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const { stravaUserId, projectName } = params;
 
   if (!stravaUserId || !projectName) {
-    notFound(); // optional: show 404 if missing
+    redirect("/welcome");
   }
   const client = await clientPromise;
   const db = client.db("hike");
@@ -24,8 +24,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <HikeDashboard stravaUserId={user.stravaUserId} projectName={user.projectName}
-      goalMeasure={user.goalMeasure} fundraiserDescription={user.fundraiserDescription} 
-      fundraiserUrl={user.fundraiserUrl} name={user.name}/>
+    <HikeDashboard stravaUserId={stravaUserId} projectName={projectName}/>
   );
 }

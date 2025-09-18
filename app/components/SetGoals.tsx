@@ -151,8 +151,8 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         className="border p-2 rounded w-full input-custom"
         disabled={saving || saved}
       />
-      {successNameMessage && <p className="text-green-600">{successNameMessage}</p>}
-      {errorNameMessage && <p className="text-red-600">{errorNameMessage}</p>}
+      {successNameMessage && <p className="custom-success-text">{successNameMessage}</p>}
+      {errorNameMessage && <p className="custom-error-text">{errorNameMessage}</p>}
       <p>How should your fundraising goal be measured?</p>
       <div className="flex flex-col gap-2">
         {goalMeasureKeys.map((key) => {
@@ -189,8 +189,8 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         </button>
       )}
 
-      {successMessage && <p className="text-green-600">{successMessage}</p>}
-      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+      {successMessage && <p className=".custom-success-text">{successMessage}</p>}
+      {errorMessage && <p className=".custom-error-text">{errorMessage}</p>}
     </div>
   );
 };

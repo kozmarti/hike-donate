@@ -17,17 +17,27 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    if (pathname.startsWith("/welcome")) {
+        const token = request.cookies.get("token")?.value;
+
+        if (token) {
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+        return NextResponse.next();
+    }
+{/** 
     if (pathname.startsWith("/api")) {
         const origin = request.headers.get("origin") || request.headers.get("referer");
         if (!origin || !ALLOWED_HOSTS.some((host) => origin.startsWith(host))) {
           return NextResponse.json({ error: "Unauthorized origin" }, { status: 403 });
         }
       }  
+        */}
 
     return NextResponse.next();
 }
 
 
 export const config = {
-    matcher: ["/add-activity","/activities", "/api/user/:path*", "/api/streams/:path*", "/dashboard/:path*"],
+    // matcher: ["/add-activity","/activities", "/api/user/:path*", "/api/streams/:path*", "/dashboard/:path*"],
 };

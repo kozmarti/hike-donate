@@ -26,6 +26,15 @@ export async function POST(req: Request) {
         );
       }
     }
+    const user = await db
+        .collection("users")
+        .findOne({ email: email });
+
+    if (user && user.isActive) {
+      return new Response(JSON.stringify({ error: "Project is public, cannot update data" }), { status: 400 });
+
+    }
+    
     const updateFields: any = {};
     if (name) updateFields.name = name;
     if (stravaClientId) updateFields.stravaClientId = stravaClientId;
@@ -52,28 +61,44 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const cookieHeader = req.headers.get("cookie") || "";
-    const email = getUserEmailFromCookie(cookieHeader);
-    if (!email) {
-      return new Response(JSON.stringify({ error: "Email is required" }), { status: 400 });
-    }
+    const url = new URL(req.url);
+    const stravaUserIdParam = url.searchParams.get("stravaUserId");
 
     const client = await clientPromise;
     const db = client.db("hike");
 
-    const user = await db.collection("users").findOne({ email });
+    let user;
+
+    if (stravaUserIdParam) {
+      // Use stravaUserId if provided
+      const stravaUserId = parseInt(stravaUserIdParam, 10);
+      user = await db.collection("users").findOne({ stravaUserId });
+    } else {
+      // Otherwise, use cookie/email
+      const cookieHeader = req.headers.get("cookie") || "";
+      const email = getUserEmailFromCookie(cookieHeader);
+
+      if (!email) {
+        return new Response(JSON.stringify({ error: "Email is required" }), { status: 400 });
+      }
+
+      user = await db.collection("users").findOne({ email });
+    }
 
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
     }
+
+    // Exclude sensitive info
     const { password, refreshToken, ...rest } = user;
 
     const safeUser = {
       ...rest,
       stravaClientSecret: user.stravaClientSecret
         ? decrypt(user.stravaClientSecret).slice(0, 2) + "***********"
-        : null
+        : null,
     };
+
     return new Response(JSON.stringify(safeUser), { status: 200 });
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });

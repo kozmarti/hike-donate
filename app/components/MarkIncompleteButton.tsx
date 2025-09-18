@@ -33,14 +33,14 @@ export default function MarkIncompleteButton({ step }: Props) {
   };
 
   return (
-    <div className="mt-2">
+    <div>
       <button
         onClick={handleUncomplete}
         className="custom-button"
         disabled={loading}
         style={{ borderRadius: "10px" }}
       >
-         <FiEdit className="w-5 h-5" />
+         <FiEdit className="w-3 h-3" />
         
       </button>
       {error && <p className="text-red-600 mt-1">{error}</p>}

@@ -156,8 +156,8 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
         </button>
       )}
 
-      {successMessage && <p className="text-green-600">{successMessage}</p>}
-      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+      {successMessage && <p className="custom-success-text">{successMessage}</p>}
+      {errorMessage && <p className="custom-error-text">{errorMessage}</p>}
     </div>
   );
 };

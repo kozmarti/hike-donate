@@ -526,3 +526,11 @@ menu {
   border-color: #74816c;
   box-shadow: 0 0 0 2px #74816c;
 }
+
+.custom-success-text {
+  color:#74816c;
+}
+
+.custom-error-text {
+  color: #fd5770;
+}

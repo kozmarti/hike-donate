@@ -15,16 +15,13 @@ import { convertHikePhotos } from "@/app/utils/calculation_functions_client";
 import Footer from "@/app/components/Footer";
 import { useStatistics } from "../hooks/useStatistics";
 import ProjectDescription from "./ProjectDescription";
-import { GoalMeasureKey } from "../entities/GoalMeasureConfig";
+import { getGoalMeasure } from "../entities/GoalMeasureConfig";
+import { User } from "../entities/User";
+import useUser from "../hooks/useUser";
 
 interface UserProps {
-    name: string;
     stravaUserId: string;
     projectName: string;
-    fundraiserUrl: string;
-    fundraiserDescription: string;
-    goalMeasure: GoalMeasureKey;
-
 }
 const fredoka = Fredoka({ subsets: ["latin"] });
 
@@ -73,13 +70,15 @@ const PhotoAlbumComponent = dynamic(
   { ssr: false }
 );
 
-export default function HikeDashboard( {name, stravaUserId, projectName, fundraiserDescription, fundraiserUrl, goalMeasure }: UserProps ) {
+export default function HikeDashboard( {stravaUserId, projectName}: UserProps ) {
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [collectedAmount, setCollectedAmount] = useState<number>(0);
   const [amountLastUpdated, setAmountLastUpdated] = useState<string>("");
 
   const [loading, setLoading] = useState(true);
   const [showButton, setShowButton] = useState(false);
+  const {data: user, loading: userLoading, error: userError} = useUser(stravaUserId)
+
 
   // Scroll listener for "back to top"
   useEffect(() => {
@@ -115,7 +114,6 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
           }) ?? ""
         );
         console.log("Fetched stats:", data);
-
         setStats(data);
       } catch (error) {
         console.error("Failed to fetch stats:", error);
@@ -131,7 +129,8 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
     <div
       className={`flex min-h-screen flex-col items-center justify-between p-6 global-background ${fredoka.className}`}
     >
-      <h1 className="p-5">{name}'s Fundraiser Hike</h1>
+      <h1 className="p-5">{user ? user.name + "'s Fundraiser Hike" : <Skeleton variant="rectangular" animation="wave" height={20} width={150} style={{display: "inline-block" }} />
+    }</h1>
       {/* Performance metrics */}
       <div className="container wrapper" id="statistics">
         <PerformanceItemComponent title="totalDistance" loading={loading} quantity={stats ? stats.totalDistance / 1000 : undefined} />
@@ -148,10 +147,10 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
         className="gauge-container relative"
         style={{ width: "300px", height: "285px", display: "flex", justifyContent: "center", alignItems: "center" }}
       >
-        {!loading && stats && (
-          <RaisedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} performanceValue={stats.totalDistance / 1000} goalMeasure={goalMeasure}/>
+        {!loading && stats && user && (
+          <RaisedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} performanceValue={stats[getGoalMeasure(user.goalMeasure).statElement]} goalMeasure={user.goalMeasure}/>
         )}
-        {loading && !stats && (
+        {loading && (!stats || !user) && (
           <>
             <Skeleton animation="wave" variant="circular" height="180px" width="180px" />
             <Skeleton animation="wave" height={10} width="80%" />
@@ -160,7 +159,7 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
           </>
         )}
         {!loading && !stats && (
-          <RaisedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} performanceValue={0} goalMeasure={goalMeasure}/>
+          <RaisedAmountGauge amountLastUpdated={amountLastUpdated} collectedAmount={collectedAmount} performanceValue={0} goalMeasure={user ? user.goalMeasure : "km"}/>
         )}
       </div>
 
@@ -179,11 +178,11 @@ export default function HikeDashboard( {name, stravaUserId, projectName, fundrai
           <IoStatsChartOutline style={{ display: "inline" }} /> View Daily Stats
         </button>
       </Link>
-
-        <ProjectDescription fundraiserUrl={fundraiserUrl} fundraiserDescription={fundraiserDescription} goalMeasure={goalMeasure}/>
-
+      {!loading && user && (
+        <ProjectDescription fundraiserUrl={user.fundraiserUrl} fundraiserDescription={user.fundraiserDescription} goalMeasure={user.goalMeasure}/>
+      )}
       {/* Photos */}
-      {!loading && stats && <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)} />}
+      {!loading && stats && user && <PhotoAlbumComponent photos={convertHikePhotos(stats.photosUrl)} />}
 
       {/* Scroll-up button */}
       {showButton && (

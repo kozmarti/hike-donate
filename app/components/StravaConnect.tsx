@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { StepKey, stepsConfig } from "../entities/StepConfig";
+import useUser from "../hooks/useUser";
 
 interface Props {
   email: string;
@@ -23,6 +24,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
 
   const [authorized, setAuthorized] = useState(false);
   const stepConfig = stepsConfig.find((s) => s.key === step);
+  const {data: user, loading: userLoading, error: userError} = useUser()
   
 
   useEffect(() => {
@@ -36,6 +38,13 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
       setSubscribed(true);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    console.log(user)
+    if (user?.stravaClientId) {
+      setClientId(user.stravaClientId);
+    }
+  }, [user]);
 
   const handleSave = async () => {
     setErrorMessage("");
@@ -160,7 +169,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         disabled={saved}
       />
 
-      <button onClick={handleSave} className="custom-button" disabled={saved}>
+      <button onClick={handleSave} className="custom-button" disabled={saved || !stravaClientId || ! stravaClientSecret}>
       {saved ? "Credentials Saved ✅" : "Save Credentials"}
       </button>
 
@@ -182,8 +191,8 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         {subscribed ? "Webhook Subscribed ✅" : "Subscribe to Webhook"}
       </button>
 
-      {successMessage && <p className="text-green-600 mt-1">{successMessage}</p>}
-      {errorMessage && <p className="text-red-600 mt-1">{errorMessage}</p>}
+      {successMessage && <p className="custom-success-text mt-1">{successMessage}</p>}
+      {errorMessage && <p className="custom-error-text mt-1">{errorMessage}</p>}
 
       {subscribed && (
         <p className="text-sm text-gray-500 mt-1">

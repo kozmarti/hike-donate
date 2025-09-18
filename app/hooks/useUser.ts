@@ -4,20 +4,27 @@ import { useState, useEffect } from "react";
 import fetchFromApi from "../services/api-client-base";
 import { User } from "../entities/User";
 
-
-export default function useUser() {
+export default function useUser(stravaUserId?: string) {
   const [data, setData] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
+
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+
       try {
-        const endpoint = "profile";
+        let endpoint = "profile";
+
+        if (stravaUserId) {
+          endpoint += `?stravaUserId=${stravaUserId}`;
+        }
+
         const result = await fetchFromApi<User>(endpoint, { method: "GET" });
+
         if (isMounted) {
           setData(result);
         }
@@ -35,7 +42,7 @@ export default function useUser() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [stravaUserId]);
 
   return { data, loading, error };
 }

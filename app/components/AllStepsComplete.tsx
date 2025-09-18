@@ -132,7 +132,6 @@ export default function AllStepsComplete() {
         }
     };
 
-    const shareUrl = `${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`
     const shareTitle = "Hike&Donate"
 
     return (
@@ -147,8 +146,10 @@ export default function AllStepsComplete() {
     
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
-                        <span>🔗 Strava Account</span>
+                        <span className="p-2">🔗 Strava Account</span>
+                        {!isVisible && (
                         <MarkIncompleteButton step="connectStrava" />
+                            )}
                     </h3>
                     
                     <p>
@@ -182,8 +183,11 @@ export default function AllStepsComplete() {
                 <hr style={{ borderColor: "#74816c" }} />
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
-                        <span>🎯 Project Goals</span>
+                        <span  className="p-2">🎯 Project Goals</span>
+                        {!isVisible && (
+
                         <MarkIncompleteButton step="setGoals" />
+                        )}
                     </h3>
                     <p>Project Name: {user.projectName || "Not set"}</p>
                     <p>
@@ -195,8 +199,10 @@ export default function AllStepsComplete() {
                 <hr style={{ borderColor: "#74816c" }} />
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
-                        <span>💰 Fundraiser</span>
+                        <span className="p-2">💰 Fundraiser</span>
+                        {!isVisible && (
                         <MarkIncompleteButton step="createFundraiser" />
+                        )}
                     </h3>
                     <div>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} 
                     dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : ""  }} /></div>
@@ -224,8 +230,10 @@ export default function AllStepsComplete() {
 
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
-                        <span>🥾 Hike & Track & Share</span>
+                        <span className="p-2">🥾 Hike & Track & Share</span>
+                        {!isVisible && (
                         <MarkIncompleteButton step="hikeTrackShare" />
+                        )}
                     </h3>
 
                     <p>
@@ -273,25 +281,25 @@ export default function AllStepsComplete() {
     </p>
     <div className="flex items-center gap-2 mt-2">
         <FacebookShareButton
-          url={shareUrl}
+          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
           >
           <FacebookIcon size={32} round />
         </FacebookShareButton>
         <TwitterShareButton
-          url={shareUrl}
+          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
           title={shareTitle}
         >
           <XIcon size={32} round />
         </TwitterShareButton>
         <WhatsappShareButton
-          url={shareUrl}
+          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
           title={shareTitle}
           separator=":: "
         >
           <WhatsappIcon size={32} round />
         </WhatsappShareButton>
         <LinkedinShareButton
-          url={shareUrl}        >
+          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}        >
           <LinkedinIcon size={32} round />
         </LinkedinShareButton>
         </div>

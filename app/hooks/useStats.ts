@@ -6,6 +6,7 @@ export interface StatsResponse {
   totalDistance: number;
   totalElevationGain: number;
   totalElevationLoss: number;
+  totalMovingTimeHours: number;
   minAltitude: number;
   maxAltitude: number;
   timeElapsed: number;

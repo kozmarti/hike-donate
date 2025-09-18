@@ -15,7 +15,11 @@ interface Props {
 }
 
 const CollectedAmountGauge = ({ collectedAmount, goalMeasure, performanceValue, amountLastUpdated }: Props) => {
-  performanceValue = Math.round(performanceValue)
+  if (goalMeasure === "km") {
+    performanceValue =  Math.round(performanceValue) / 1000
+  } else {
+    performanceValue = Math.round(performanceValue)
+  }
   const distanceKm = (value: number) => {
     if (value === collectedAmount) {
       return performanceValue + ' ' + goalMeasure;
