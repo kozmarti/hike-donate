@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { isValidLeetchiUrl } from '../utils/validation_helper';
 
 interface Props {
   url: string;
@@ -12,9 +13,21 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
   const [status, setStatus] = useState('');
 
   const handleClick = async () => {
-    setStatus('✅ Workflow triggered. We are checking the page... please wait. This may take up to a few minutes.');
     setValid(true);
 
+    if (!url) {
+      setStatus('❌ Please provide an url.');
+      setValid(false);
+
+      return;
+    }
+    if (!isValidLeetchiUrl(url)) {
+      setStatus('❌ Please provide a valid leetchi url.');
+      setValid(false);
+
+      return;
+    }
+    setStatus('✅ Workflow triggered. We are checking the page... please wait. This may take up to a few minutes.');
     try {
       // Trigger workflow
       const res = await fetch('/api/trigger-scraper', {
@@ -24,7 +37,7 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
       });
       const data = await res.json();
       if (data.error) {
-        setStatus('Error triggering workflow');
+        setStatus('❌ Error triggering workflow');
         setValid(false);
         return;
       }

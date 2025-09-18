@@ -25,6 +25,8 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const [authorized, setAuthorized] = useState(false);
   const stepConfig = stepsConfig.find((s) => s.key === step);
   const {data: user, loading: userLoading, error: userError} = useUser()
+  const [loadingWebhook, setloadingWebhook] = useState(false);
+
   
 
   useEffect(() => {
@@ -91,6 +93,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const handleSubscribeWebhook = async () => {
     setErrorMessage("");
     setSuccessMessage("");
+    setloadingWebhook(true)
 
     if (!saved) {
       setErrorMessage("Please save your credentials first.");
@@ -107,14 +110,17 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Subscription failed");
 
       setSubscribed(true);
       setSuccessMessage("✅ Webhook subscription created successfully.");
+      setloadingWebhook(false)
+
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
+      setloadingWebhook(false)
+
     }
   };
 
@@ -186,9 +192,9 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         onClick={handleSubscribeWebhook}
         className="custom-button"
         style={{ backgroundColor: "#11B7A1" }}
-        disabled={!authorized || subscribed}
+        disabled={!authorized || subscribed || loadingWebhook}
       >
-        {subscribed ? "Webhook Subscribed ✅" : "Subscribe to Webhook"}
+        {subscribed ? "Webhook Subscribed ✅" : loadingWebhook ? "⏳ Subscribing to Webhook..." : "Subscribe to Webhook"}
       </button>
 
       {successMessage && <p className="custom-success-text mt-1">{successMessage}</p>}

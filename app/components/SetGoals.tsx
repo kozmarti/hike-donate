@@ -178,7 +178,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
       <button
         onClick={handleSaveGoals}
         className="custom-button"
-        disabled={saving || saved || !nameValid  || goalMeasure === ""}
+        disabled={saving || saved || !nameValid  || goalMeasure === "" || !projectName}
       >
         {saved ? "Goals Saved ✅" : "Save Goals"}
       </button>
