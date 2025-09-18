@@ -12,7 +12,6 @@ export async function GET(req: Request) {
   const cookieHeader = req.headers.get("cookie") || "";
   const email = getUserEmailFromCookie(cookieHeader);
   if (!email) {
-    console.log("****** NO EMAIL FOUND")
       return NextResponse.redirect(new URL("/welcome", process.env.NEXT_PUBLIC_API_URL));
   }
 
