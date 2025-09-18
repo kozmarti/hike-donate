@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   const client = await clientPromise;
   const db = client.db("hike");
 
-  const user = await db.collection("users").findOne({ email });
+  const user = await db.collection("users").findOne({ email, verified: true, });
   if (!user) {
     return NextResponse.json({ message: "Invalid email or password" }, { status: 400 });
   }
