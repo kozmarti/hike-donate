@@ -39,6 +39,8 @@ export async function GET(req: Request) {
   });
 
   const data = await tokenRes.json();
+  console.log("STRAVA AUTHORIZATION RESPONSE")
+  console.log(data)
     /* Response example:
     { 
       "token_type": "Bearer",
