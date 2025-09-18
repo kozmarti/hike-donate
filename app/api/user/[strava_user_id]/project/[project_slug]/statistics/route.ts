@@ -11,7 +11,7 @@ export async function GET(
   try {
     const client = await clientPromise;
     const db = client.db("hike");
-    const stats = await db
+    const statsArray = await db
       .collection("activities")
       .aggregate([
         {
@@ -34,6 +34,7 @@ export async function GET(
             coordinates: 1,
             altitudes: 1,
             distances_aggregated: 1,
+            moving_time: 1
           },
         },
         { $sort: { start_time: 1 } },
@@ -54,6 +55,8 @@ export async function GET(
 
             startHikeDate: { $min: { $toDate: "$start_time" } },
             lastHikeDate: { $max: { $toDate: "$start_time" } },
+
+            totalMovingTimeSeconds: { $sum: "$moving_time" },
           },
         },
         {
@@ -86,6 +89,11 @@ export async function GET(
               },
             },
             photosUrl: { $reverseArray: "$photosUrl" },
+            totalMovingTimeHours: {
+               $round: [{
+                 $divide: ["$totalMovingTimeSeconds", 3600] 
+                }, 2] 
+              }
           }
         },
         {
@@ -94,7 +102,7 @@ export async function GET(
             lastAltitude: {
               $arrayElemAt: ["$altitudes", { $subtract: [{ $size: "$altitudes" }, 1] }],
             },
-            
+
           }
         },
         {
@@ -105,7 +113,8 @@ export async function GET(
                 "$totalElevationGain",
               ]
             }
-          }},
+          }
+        },
         {
           $unset: [
             "coordinate_by_day",
@@ -116,14 +125,23 @@ export async function GET(
             "_id",
             "firstAltitude",
             "lastAltitude",
+            "totalMovingTimeSeconds"
           ],
         },
       ])
-      
       .toArray();
 
-    return NextResponse.json(stats[0]);
+    if (!statsArray || statsArray.length === 0) {
+      return NextResponse.json({ message: "No stats for user and project" }, { status: 500 });
+    }
+
+    const stats = statsArray[0];
+
+    return NextResponse.json(stats, { status: 200 });
   } catch (e) {
     console.error(e);
+    //@ts-ignore
+    return NextResponse.json({ error: e.message || "Unknown error" }, { status: 500 });
+
   }
 }

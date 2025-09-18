@@ -21,6 +21,7 @@ export interface StatsResponse {
   distance_aggregated: number[];
   delta_distances: number[];
   delta_altitudes: number[];
+  totalMovingTimeHours: number;
 };
 
 export async function useStatistics(  stravaUserId?: string,

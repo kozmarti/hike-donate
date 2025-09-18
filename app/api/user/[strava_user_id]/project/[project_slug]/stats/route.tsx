@@ -12,7 +12,7 @@ export async function GET(
   try {
     const client = await clientPromise;
     const db = client.db("hike");
-    const stats = await db
+    const statsArray = await db
       .collection("activities")
       .aggregate([
         {
@@ -122,8 +122,14 @@ export async function GET(
       ])
       
       .toArray();
+    
+    if (!statsArray || statsArray.length === 0) {
+      return NextResponse.json({ message: "No stats for user and project" }, { status: 500 });
+    }
+  
+    const stats = statsArray[0];
 
-    return NextResponse.json(stats[0]);
+    return NextResponse.json(stats);
   } catch (e) {
     console.error(e);
   }

@@ -1,7 +1,7 @@
 export const goalMeasureConfig = [
-    { key: "km", description: "Distance (km) = €", singular: "kilometer", singular_detail: "kilometer I hike", icon: "↔️" },
-    { key: "m", description: "Elevation gain (m) = €", singular: "meter", singular_detail: "meter I climb", icon: "📈" },
-    { key: "h", description: "Hike Time (h) = €", singular: "hour", singular_detail: "hour I spend hiking" , icon: "⏱️" },
+    { key: "km", description: "Distance (km) = €", singular: "kilometer", singular_detail: "kilometer I hike", icon: "↔️", statElement: "totalDistance" },
+    { key: "m", description: "Elevation gain (m) = €", singular: "meter", singular_detail: "meter I climb", icon: "📈", statElement: "totalElevationGain" },
+    { key: "h", description: "Hike Time (h) = €", singular: "hour", singular_detail: "hour I spend hiking" , icon: "⏱️", statElement: "totalMovingTimeHours" },
   ] as const;
 
 
