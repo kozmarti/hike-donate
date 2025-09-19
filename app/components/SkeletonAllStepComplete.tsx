@@ -6,7 +6,10 @@ import Skeleton from "@mui/material/Skeleton";
 const SkeletonAllStepComplete = () => {
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
+    <div style={{zIndex: -1}} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none rounded-t-xl">
+    </div>
     <h2 className="text">Project Setup Summary</h2>
+    <hr style={{ borderColor: "#74816c" }} />
 
     {/* Strava Account */}
     <div>
@@ -17,6 +20,7 @@ const SkeletonAllStepComplete = () => {
       <p>
         <Skeleton width={150} height={20} style={{ display: "inline-block" }} component={"span"}/>
       </p>
+      {/**
       <p>
         <span>Strava User ID: </span>
         <Skeleton width={100} height={20} style={{ display: "inline-block" }} component={"span"}/>
@@ -31,9 +35,9 @@ const SkeletonAllStepComplete = () => {
       </p>
 
       <Skeleton width={200} height={36} style={{ marginTop: 8 }} component={"span"}/>
-
+ */}
       <p className="text-gray-600 mt-1 text-sm">
-        <Skeleton width={160} height={16} style={{ display: "inline-block" }} component={"span"}/>
+        <Skeleton width={160} height={40} style={{ display: "inline-block" }} component={"span"}/>
       </p>
     </div>
 

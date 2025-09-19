@@ -128,13 +128,13 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
-      <h2 className="text flex items-center">
-        {stepConfig?.icon} {stepConfig?.label}
+      <h2 className="text font-bold">
+      {stepConfig?.icon} {stepConfig?.label}
       </h2>
       <hr style={{ borderColor: "#74816c" }} />
 
       <label htmlFor="project-name" className="text flex items-center">
-        Project Name
+      ➡️ Project Name
         <span className="relative group ml-2">
           <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
           <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-40 italic">
@@ -153,7 +153,9 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
       />
       {successNameMessage && <p className="custom-success-text">{successNameMessage}</p>}
       {errorNameMessage && <p className="custom-error-text">{errorNameMessage}</p>}
-      <p>How should your fundraising goal be measured?</p>
+      <hr style={{ borderColor: "#74816c" }} />
+
+      <p>➡️ How should your fundraising goal be measured?</p>
       <div className="flex flex-col gap-2">
         {goalMeasureKeys.map((key) => {
           const { description, icon } = getGoalMeasure(key);

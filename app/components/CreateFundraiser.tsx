@@ -97,13 +97,13 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
-      <h2 className="text flex items-center">
+      <h2 className="text flex items-center font-bold">
         {stepConfig?.icon} {stepConfig?.label}
       </h2>
       <hr style={{ borderColor: "#74816c" }} />
 
       <p>
-        To start fundraising, create your campaign on{" "}
+      ➡️ To start fundraising, create your campaign on{" "}
         <a
           href="https://www.leetchi.com/"
           target="_blank"
@@ -112,12 +112,12 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
         >
           Leetchi
         </a>{" "}
-        and paste your project link below. Collected amounts will update
-        automatically in this app a few times per day.
+        and paste your project link below.
       </p>
+      <hr style={{ borderColor: "#74816c" }} />
 
       <label htmlFor="fundraiser-url" className="text flex items-center">
-        Fundraiser URL
+      ➡️ Fundraiser URL
         <span className="relative group ml-2">
           <HiInformationCircle className="w-5 h-5 text-[#74816c]" />
           <div className="absolute top-6 right-0 hidden group-hover:block bg-white text-[10px] text-[#74816c] p-1 rounded shadow-md z-10 w-52 italic">
@@ -135,8 +135,9 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
         disabled={saved || saving || validURL }
       />
       <CheckURLButton url={fundraiserUrl} valid={validURL} setValid={setValideURL}/>
+      <hr style={{ borderColor: "#74816c" }} />
 
-      <label htmlFor="fundraiser-description">Fundraiser Description</label>
+      <label htmlFor="fundraiser-description">➡️ Fundraiser Description</label>
       <RichTextWithEmoji
         value={fundraiserDescription}
         onChange={setFundraiserDescription}

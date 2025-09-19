@@ -17,7 +17,9 @@ import {
 import DOMPurify from 'dompurify';
 import { getGoalMeasure, GoalMeasureKey } from "../entities/GoalMeasureConfig";
 import useRaisedAmount from "../hooks/useRaisedAmount";
-import LogoutButton from "./LogoutButton";
+import useUser from "../hooks/useUser";
+import DeleteStravaButton from "./DeleteStravaButton";
+import CopyTextButton from "./CopyTextButton";
 
 
 interface UserSummary {
@@ -33,40 +35,16 @@ interface UserSummary {
 }
 
 export default function AllStepsComplete() {
-    const [user, setUser] = useState<UserSummary | null>(null);
-    const [loading, setLoading] = useState(true);
     const [checkingSub, setCheckingSub] = useState(false);
     const [subscriptionData, setSubscriptionData] = useState<any>(null);
     const [error, setError] = useState("");
     const [isVisible, setIsVisible] = useState(false);
-    const [amount, setAmount] = useState(0);
+    const { data: user, loading: loading, error: userError } = useUser()
     const { data: raisedData, loading: amountLoading, error: amountError } = useRaisedAmount(user?.fundraiserUrl || "");
-
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const res = await fetch("/api/profile");
-                const data = await res.json();
-                setUser(data);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchUser();
-    }, []);
-
-    useEffect(() => {
-        if (user) {
-            setIsVisible(user.isActive ?? false); // default to false if null
-        }
-    }, [user]);
 
     useEffect(() => {
         const handleCheckSubscription = async () => {
-            if (!user?.stravaClientId) return; // wait until user is loaded
+            if (!user?.stravaClientId) return;
             setCheckingSub(true);
             setError("");
             setSubscriptionData(null);
@@ -93,27 +71,16 @@ export default function AllStepsComplete() {
         handleCheckSubscription();
     }, [user]);
 
+    useEffect(() => {
+        if (user?.isActive) {
+            setIsVisible(true);
+        }
+    }, [user]);
+
     if (loading) return (
         <SkeletonAllStepComplete />
     );
     if (!user) return <p>User not found</p>;
-
-
-
-    const handleDelete = async (id: number) => {
-        try {
-            const res = await fetch(`/api/strava/delete-subscription?id=${id}`, {
-                method: "DELETE",
-            });
-            const data = await res.json();
-
-            if (!res.ok) throw new Error(data.error || "Failed to delete");
-
-            alert("Subscription deleted successfully ✅");
-        } catch (err: any) {
-            alert(`❌ ${err.message}`);
-        }
-    };
 
     const toggleVisibility = async () => {
         try {
@@ -140,36 +107,36 @@ export default function AllStepsComplete() {
 
             <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
                 {/* Top white overlay before first HR */}
-                <div style={{zIndex: -1}} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none rounded-t-xl">
+                <div style={{ zIndex: -1 }} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none rounded-t-xl">
                 </div>
                 <h2 className="text" >Project Setup Summary</h2>
                 <hr style={{ borderColor: "#74816c" }} />
-    
+
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
                         <span className="p-2">🔗 Strava Account</span>
                         {!isVisible && (
-                        <MarkIncompleteButton step="connectStrava" />
-                            )}
+                            <MarkIncompleteButton step="connectStrava" />
+                        )}
                     </h3>
-                    
-                    <p>
+
+                    <p className="p-2">
                         {subscriptionData?.isActive
-                            ? "Subscription Active ✅"
+                            ? "Strava Connected ✅"
                             : checkingSub
                                 ? "Checking..."
-                                : "No Active Subscription ❌"}
+                                : "Strava Not Connected ❌"}
                     </p>
-
+                    {/**
                     <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
                     <p>Client ID: {user.stravaClientId || "Not saved"}</p>
                     <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
-
-                    {subscriptionData?.isActive && (
-                        <button className="custom-button mt-2 bg-red-600 hover:bg-red-700 text-white"
-                            onClick={() => handleDelete(subscriptionData.raw[0].id)}>
-                            Delete Subscription
-                        </button>
+ */}
+                    {subscriptionData?.isActive && !isVisible && (
+                        <DeleteStravaButton />
+                    )}
+                    {subscriptionData?.isActive && isVisible && (
+                        <div className="p-5" />
                     )}
 
                     {subscriptionData && !subscriptionData.isActive && (
@@ -184,14 +151,20 @@ export default function AllStepsComplete() {
                 <hr style={{ borderColor: "#74816c" }} />
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
-                        <span  className="p-2">🎯 Project Goals</span>
+                        <span className="p-2">🎯 Project Goals</span>
                         {!isVisible && (
 
-                        <MarkIncompleteButton step="setGoals" />
+                            <MarkIncompleteButton step="setGoals" />
                         )}
                     </h3>
-                    <p>Project Name: {user.projectName || "Not set"}</p>
-                    <p>
+                    <p> ✨ Project Name: <span className="custom-error-text font-semibold">{user.projectName || "Not set"} </span>  {user.projectName && <CopyTextButton textToCopy={user.projectName} />}
+                    ✨ 
+
+                        <br />
+                        <span className="text-gray-600 text-sm">
+                        This project name is the key 🔑 rename your activities to match this to enable synchronization.                     </span>
+                    </p>
+                    <p className="mt-3">
                         Goal Measure:{" "}
                         {user.goalMeasure ? getGoalMeasure(user.goalMeasure).description : "Not set"}
                     </p>
@@ -202,14 +175,17 @@ export default function AllStepsComplete() {
                     <h3 className="font-semibold flex justify-between items-center w-full">
                         <span className="p-2">💰 Fundraiser</span>
                         {!isVisible && (
-                        <MarkIncompleteButton step="createFundraiser" />
+                            <MarkIncompleteButton step="createFundraiser" />
                         )}
                     </h3>
-                    <div>Description: <div style={{border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} 
-                    dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : ""  }} /></div>
 
-                <p>Amount Raised: {amountLoading ? "Loading..." : `€${raisedData?.amount ?? 0}`}</p>
-                {amountError && <p className="text-red-600">{amountError}</p>}
+                    <p>Amount Raised: {amountLoading ? "Loading..." : `€${raisedData?.amount ?? 0}`}</p>
+                    {amountError && <p className="text-red-600">{amountError}</p>}
+                    <div>Description:
+
+                        <div style={{ border: "solid 1px", borderColor: "#74816c", borderRadius: "10px", padding: "10px", backgroundColor: "rgba(255, 255, 255, 0.6)", margin: "20px 0px 20px 0px" }}
+                            dangerouslySetInnerHTML={{ __html: user.fundraiserDescription ? DOMPurify.sanitize(user.fundraiserDescription) : "" }} /></div>
+
 
                     <p>
                         Your Fundraiser Page:{" "}
@@ -233,7 +209,7 @@ export default function AllStepsComplete() {
                     <h3 className="font-semibold flex justify-between items-center w-full">
                         <span className="p-2">🥾 Hike & Track & Share</span>
                         {!isVisible && (
-                        <MarkIncompleteButton step="hikeTrackShare" />
+                            <MarkIncompleteButton step="hikeTrackShare" />
                         )}
                     </h3>
 
@@ -270,60 +246,60 @@ export default function AllStepsComplete() {
                 <hr style={{ borderColor: "#74816c" }} />
 
                 <div>
-                {isVisible ? (
-  <div className="flex flex-col items-center">
-    <Link target="_blank" href={`/project/${user.stravaUserId}/${user.projectName}`} passHref>
-      <button type="button" className="custom-button mt-2 w-full text-center">
-        🌍 Visit Public Project Site
-      </button>
-    </Link>
-    <p className="mt-1 text-center">
-      🎉 Your project is live!
-    </p>
-    <div className="flex items-center gap-2 mt-2">
-        <FacebookShareButton
-          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
-          >
-          <FacebookIcon size={32} round />
-        </FacebookShareButton>
-        <TwitterShareButton
-          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
-          title={shareTitle}
-        >
-          <XIcon size={32} round />
-        </TwitterShareButton>
-        <WhatsappShareButton
-          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
-          title={shareTitle}
-          separator=":: "
-        >
-          <WhatsappIcon size={32} round />
-        </WhatsappShareButton>
-        <LinkedinShareButton
-          url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}        >
-          <LinkedinIcon size={32} round />
-        </LinkedinShareButton>
-        </div>
-  </div>
-) : (
-  <div className="flex flex-col items-center">
-    <Link href="/dashboard/project-preview">
-      <button type="button" className="custom-button mt-2 w-full text-center">
-        🥾 Preview Project Site
-      </button>
-    </Link>
-    <p className="mt-1 text-center mb-4">
-    👀 Your project is currently private.
-    <br />
-    Make it public whenever ready.
-    </p>
-  </div>
-)}
+                    {isVisible ? (
+                        <div className="flex flex-col items-center">
+                            <Link target="_blank" href={`/project/${user.stravaUserId}/${user.projectName}`} passHref>
+                                <button type="button" className="custom-button mt-2 w-full text-center">
+                                    🌍 Visit Public Project Site
+                                </button>
+                            </Link>
+                            <p className="mt-1 text-center">
+                                🎉 Your project is live!
+                            </p>
+                            <div className="flex items-center gap-2 mt-2">
+                                <FacebookShareButton
+                                    url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
+                                >
+                                    <FacebookIcon size={32} round />
+                                </FacebookShareButton>
+                                <TwitterShareButton
+                                    url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
+                                    title={shareTitle}
+                                >
+                                    <XIcon size={32} round />
+                                </TwitterShareButton>
+                                <WhatsappShareButton
+                                    url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}
+                                    title={shareTitle}
+                                    separator=":: "
+                                >
+                                    <WhatsappIcon size={32} round />
+                                </WhatsappShareButton>
+                                <LinkedinShareButton
+                                    url={`${process.env.NEXT_PUBLIC_API_URL}/project/${user.stravaUserId}/${user.projectName}`}        >
+                                    <LinkedinIcon size={32} round />
+                                </LinkedinShareButton>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center">
+                            <Link href="/dashboard/project-preview">
+                                <button type="button" className="custom-button mt-2 w-full text-center">
+                                    🥾 Preview Project Site
+                                </button>
+                            </Link>
+                            <p className="mt-1 text-center mb-4">
+                                👀 Your project is currently private.
+                                <br />
+                                Make it public whenever ready.
+                            </p>
+                        </div>
+                    )}
                 </div>
-                <div style={{zIndex: -1}} className="absolute bottom-0 left-0 w-full h-40 bg-white opacity-60 pointer-events-none rounded-b-xl"></div>
+                <div style={{ zIndex: -1 }} className="absolute bottom-0 left-0 w-full h-40 bg-white opacity-60 pointer-events-none rounded-b-xl"></div>
 
             </div>
-            
+
         </>
     );
 }

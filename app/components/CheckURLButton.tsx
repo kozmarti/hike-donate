@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { isValidLeetchiUrl } from '../utils/validation_helper';
+import ProgressBar from './ProgressBar';
 
 interface Props {
   url: string;
@@ -12,11 +13,12 @@ interface Props {
 export default function CheckURLButton({ url, valid, setValid }: Props) {
   const [status, setStatus] = useState('');
   const [isVeryfing, setisVeryfing] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
+  const [key, setKey] = useState(0)
 
 
   const handleClick = async () => {
     setisVeryfing(true);
-
     if (!url) {
       setStatus('❌ Please provide an url.');
       setisVeryfing(false);
@@ -28,6 +30,8 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
       return;
     }
     setStatus('✅ Workflow triggered. We are checking the page... please wait. This may take up to a few minutes.');
+    setShowProgress(true)
+    setKey(prev => prev + 1);
     try {
       // Trigger workflow
       const res = await fetch('/api/trigger-scraper', {
@@ -82,7 +86,10 @@ export default function CheckURLButton({ url, valid, setValid }: Props) {
       >
         Verify Fundraiser
       </button>
+      {showProgress && <ProgressBar key={key} duration={60} isEnded={valid}/>}
+
       <p>{status}</p>
+
     </div>
   );
 }

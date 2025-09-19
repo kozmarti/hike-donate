@@ -30,7 +30,14 @@ export async function GET(req: Request) {
         });
 
         const data = await res.json();
-
+        /* Response
+            [{"id":304554, = SUBSCRIPTION ID
+            "resource_state":2,
+            "application_id":176790, =CLIENT ID
+            "callback_url":"https://hike-donate.vercel.app/api/webhook",
+            "created_at":"2025-09-18T19:43:01+00:00",
+            "updated_at":"2025-09-18T19:43:01+00:00"}]%
+        */
         return new Response(JSON.stringify(data), { status: 200 });
     } catch (err: any) {
         return new Response(JSON.stringify({ error: err.message }), { status: 500 });

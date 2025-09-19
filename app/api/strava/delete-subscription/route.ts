@@ -23,8 +23,6 @@ export async function DELETE(req: Request) {
             method: "GET",
         });
         const data = await res.json();
-        console.log("SUBSCRIPTION FETCEHED")
-        console.log(data)
 
         const stravaUrl = `https://www.strava.com/api/v3/push_subscriptions/${data[0].id}?client_id=${user.stravaClientId}&client_secret=${decrypt(user.stravaClientSecret)}`;
         const response = await fetch(stravaUrl, {

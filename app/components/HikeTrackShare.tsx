@@ -36,8 +36,8 @@ const HikeTrackShare = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
-      <h2 className="text flex items-center">
-        {stepConfig?.icon} {stepConfig?.label}
+      <h2 className="text font-bold">
+      {stepConfig?.icon} {stepConfig?.label}
       </h2>
       <hr style={{ borderColor: "#74816c" }} />
 
