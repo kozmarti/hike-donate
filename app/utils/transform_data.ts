@@ -140,6 +140,7 @@ export const extractData = (
     console.log(syncedStreams)
 
     console.log("PHOTOS")
+    console.log(photos_strava)
     let photo_urls: any= []
     if (photos_strava) {
     photo_urls = photos_strava.map(
