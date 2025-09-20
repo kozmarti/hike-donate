@@ -188,7 +188,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         style={{ backgroundColor: "#74816c" }}
         disabled={!saved || authorized}
       >
-  {authorized ? "Authorized ✅" : "Authorize Connection"}
+  {authorized ? "Strava Connected ✅" : "Connect Strava"}
   </button>
 
       <button
@@ -197,7 +197,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         style={{ backgroundColor: "#11B7A1" }}
         disabled={!authorized || subscribed || loadingWebhook}
       >
-        {subscribed ? "Webhook Subscribed ✅" : loadingWebhook ? "⏳ Subscribing to Webhook..." : "Subscribe to Webhook"}
+        {subscribed ? "Synchro Active ✅" : loadingWebhook ? "⏳ Activating..." : "Activate synchro"}
       </button>
 
       {successMessage && <p className="custom-success-text mt-1">{successMessage}</p>}
