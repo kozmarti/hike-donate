@@ -15,17 +15,39 @@ interface Webhook {
   object_type: string;
   owner_id: number; //strava user id
   subscription_id: number;
-  updates: {};
+  updates: {"title": string};
 }
 
 export async function POST(request: Request) {
   const webhook_data: Webhook = await request.json();
   console.log("webhook event received!", webhook_data);
 
+  if (webhook_data.aspect_type == "update") {
+        try {
+            const client = await clientPromise;
+            const db = client.db("hike");
+            const user = await db
+              .collection("activities").findOne({
+                stravaUserId: webhook_data.owner_id,
+                projectName: webhook_data.updates["title"],
+              });
+              if (!user) {
+                return new Response("No user for event", {
+                  status: 400,
+                });
+              }
+        } catch (e) {
+              return new Response("ERROR", {
+                status: 400,
+          });
+  }
+  }
+
   // in scope if :
   // ubscription id, aspect type, strava user, object type and project name matches
 
   // TODO : USER = ... check if strava_user_id and project_name combo exists in DB for users if yes -- in scope
+  {/*
   if (
     webhook_data.aspect_type == "update" &&
     webhook_data.subscription_id ==
@@ -34,6 +56,7 @@ export async function POST(request: Request) {
     // @ts-ignore
     webhook_data.updates["title"] == process.env.STRAVA_PROJECT_NAME
   ) {
+  */}
     console.log("Activity event in scope")
     const activity_id: number = webhook_data.object_id;
     // TODO Pass USER.clientId, clientSecret and refresh token here
@@ -65,7 +88,7 @@ export async function POST(request: Request) {
     } catch (e) {
       console.error(e);
     }
-  }
+  
 
   return new Response("EVENT_RECEIVED", {
     status: 200,
