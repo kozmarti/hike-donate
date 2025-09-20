@@ -45,9 +45,12 @@ export default function Dashboard({ user }: Props) {
 
 
   return (
-    <div className="steps-container">
+    <>
+      <div className="header-wrapper pt-1 pb-1 pl-2 pr-2">
       <div className="flex justify-between items-center"><h1>Start Hiking with Purpose,  {state.name}!</h1> <LogoutButton/> </div>
       <StepProgressBar progress={progress} />
+      </div>
+          <div className="steps-container">
 
       <div className="space-y-4 flex flex-col items-center justify-center">
 
@@ -71,5 +74,6 @@ export default function Dashboard({ user }: Props) {
         
       </div>
     </div>
+    </>
   );
 }

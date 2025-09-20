@@ -78,8 +78,10 @@ export default function DashboardStep({ user }: Props) {
 
   return (
     <div>
+      <div className="header-wrapper pt-1 pb-1 pl-2 pr-2">
       <div className="flex justify-between items-center"><h1>Start Hiking with Purpose,  {state.name}!</h1> <LogoutButton/> </div>
       <StepProgressBar progress={progress} />
+      </div>
       <div className="step-wrapper flex flex-col items-center justify-center p-2 mt-8">
       <StepComponent /></div>
     </div>
