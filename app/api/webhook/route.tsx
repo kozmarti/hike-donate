@@ -27,7 +27,7 @@ export async function POST(request: Request) {
             const client = await clientPromise;
             const db = client.db("hike");
             const user = await db
-              .collection("activities").findOne({
+              .collection("users").findOne({
                 stravaUserId: webhook_data.owner_id,
                 projectName: webhook_data.updates["title"],
               });
