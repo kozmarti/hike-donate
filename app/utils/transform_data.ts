@@ -140,12 +140,13 @@ export const extractData = (
     console.log(syncedStreams)
 
     console.log("PHOTOS")
-  
-    const photo_urls: any = photos_strava.map(
+    let photo_urls: any= []
+    if (photos_strava) {
+    photo_urls = photos_strava.map(
       // @ts-ignore
       (photo: Photo) => photo.urls["5000"]
     );
-  
+    }
     const delta_distances_aggregated = dataAggregateWithConstant(
       syncedStreams["distance"],
       last_distance
