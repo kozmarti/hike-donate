@@ -514,13 +514,14 @@ a {
 }
 
 ul {
-  list-style: disc;
+  list-style: inside;
   margin-left: 1.5rem;
 }
 
 ol {
   list-style: decimal;
   margin-left: 1.5rem;
+  list-style-position: inside
 }
 
 menu {

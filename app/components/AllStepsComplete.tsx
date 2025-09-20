@@ -105,9 +105,9 @@ export default function AllStepsComplete() {
     return (
         <>
 
-            <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
+            <div className="max-w-md mx-auto p-4 flex flex-col gap-8">
                 {/* Top white overlay before first HR */}
-                <div style={{ zIndex: -1 }} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none rounded-t-xl">
+                <div style={{ zIndex: -1, borderTopRightRadius: "20px", borderTopLeftRadius: "20px" }} className="absolute top-0 p-4 left-0 w-full h-20 bg-white opacity-60 pointer-events-none">
                 </div>
                 <h2 className="text" >Project Setup Summary</h2>
                 <hr style={{ borderColor: "#74816c" }} />
@@ -136,7 +136,7 @@ export default function AllStepsComplete() {
                         <DeleteStravaButton />
                     )}
                     {subscriptionData?.isActive && isVisible && (
-                        <div className="p-5" />
+                        <div className="p-1 text-gray-600 text-sm"> Make your project private to delete your Strava connection. </div>
                     )}
 
                     {subscriptionData && !subscriptionData.isActive && (
@@ -162,7 +162,7 @@ export default function AllStepsComplete() {
 
                         <br />
                         <span className="text-gray-600 text-sm">
-                        This project name is the key 🔑 rename your activities to match this to enable synchronization.                     </span>
+                        This project name is the key 🔑 rename your activities in Strava to match this to enable synchronization.                     </span>
                     </p>
                     <p className="mt-3">
                         Goal Measure:{" "}
@@ -296,7 +296,7 @@ export default function AllStepsComplete() {
                         </div>
                     )}
                 </div>
-                <div style={{ zIndex: -1 }} className="absolute bottom-0 left-0 w-full h-40 bg-white opacity-60 pointer-events-none rounded-b-xl"></div>
+                <div style={{ zIndex: -1, borderBottomRightRadius: "20px", borderBottomLeftRadius: "20px" }} className="absolute bottom-0 left-0 w-full h-44 bg-white opacity-60 pointer-events-none rounded-b-xl"></div>
 
             </div>
 

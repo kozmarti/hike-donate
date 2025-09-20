@@ -8,6 +8,7 @@ import CreateFundraiser from "./CreateFundraiser";
 import HikeTrackShare from "./HikeTrackShare";
 import AllStepsComplete from "./AllStepsComplete";
 import LogoutButton from "./LogoutButton";
+import StepProgressBar from "./StepProgressBar";
 
 
 export interface User {
@@ -20,17 +21,6 @@ interface Props {
   user: User;
 }
 
-const ProgressBar = ({ progress }: { progress: number }) => (
-  <div className="mb-4">
-    <div className="h-3 progress-bar-uncompleted rounded-xl">
-      <div
-        className="h-3 progress-bar-completed rounded-xl"
-        style={{ width: `${progress}%` }}
-      />
-    </div>
-    <p className="text-sm mt-1">{progress*4/100} / 4 complete</p>
-  </div>
-);
 
 export default function DashboardStep({ user }: Props) {
   const defaultSteps: Record<StepKey, boolean> = stepsConfig.reduce((acc, step) => {
@@ -87,13 +77,11 @@ export default function DashboardStep({ user }: Props) {
     100;
 
   return (
-    <div className="p-4">
-      <h1 className="mb-4">Hello {state.name} – Start Hiking with Purpose!</h1>
-      <ProgressBar progress={progress} />
+    <div>
+      <div className="flex justify-between items-center"><h1>Start Hiking with Purpose,  {state.name}!</h1> <LogoutButton/> </div>
+      <StepProgressBar progress={progress} />
       <div className="step-wrapper flex flex-col items-center justify-center p-2 mt-8">
       <StepComponent /></div>
-      <LogoutButton/>
-
     </div>
     
   );

@@ -6,6 +6,7 @@ import { stepsConfig, StepKey } from "../entities/StepConfig";
 
 import { useRouter } from "next/navigation";
 import LogoutButton from "./LogoutButton";
+import StepProgressBar from "./StepProgressBar";
 
 
 export interface User {
@@ -45,18 +46,9 @@ export default function Dashboard({ user }: Props) {
 
   return (
     <div className="steps-container">
-      <h1 >
-        Hello {state.name} – Start Hiking with Purpose!
-      </h1>
-      <div className="mb-4">
-        <div className="h-3 progress-bar-uncompleted rounded-xl">
-          <div
-            className="h-3 progress-bar-completed rounded-xl"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <p className="text-sm mt-1">{progress*4/100} / 4 complete</p>
-        </div>
+      <div className="flex justify-between items-center"><h1>Start Hiking with Purpose,  {state.name}!</h1> <LogoutButton/> </div>
+      <StepProgressBar progress={progress} />
+
       <div className="space-y-4 flex flex-col items-center justify-center">
 
         {stepsConfig.map((step) => (
@@ -76,8 +68,6 @@ export default function Dashboard({ user }: Props) {
       : "⏩ Continue Setup"}
      </button>
         </Link>
-
-            <LogoutButton/>
         
       </div>
     </div>

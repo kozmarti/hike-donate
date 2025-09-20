@@ -5,8 +5,8 @@ import Skeleton from "@mui/material/Skeleton";
 
 const SkeletonAllStepComplete = () => {
   return (
-    <div className="max-w-md mx-auto p-4 flex flex-col gap-4">
-    <div style={{zIndex: -1}} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none rounded-t-xl">
+    <div className="max-w-md mx-auto p-4 flex flex-col gap-8">
+    <div style={{ zIndex: -1, borderTopRightRadius: "20px", borderTopLeftRadius: "20px" }} className="absolute top-0 p-4 left-0 w-full h-20 bg-white opacity-60 pointer-events-none">
     </div>
     <h2 className="text">Project Setup Summary</h2>
     <hr style={{ borderColor: "#74816c" }} />

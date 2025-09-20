@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { MdLogout } from "react-icons/md";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function LogoutButton() {
   };
   return (
     <button className="custom-button m-3" onClick={handleLogout}>
-      Logout
-    </button>
+<MdLogout />
+</button>
   );
 }

@@ -13,10 +13,10 @@ export default function ProjectPreviewLayout({ children }: { children: React.Rea
       top: 0,
       left: 0,
       width: "100%",
-      height: "100vh",
+      height: "100%",
       pointerEvents: "none",
       zIndex: 9999,
-      backgroundColor: "rgba(128, 128, 128, 0.3)",
+      backgroundColor: "rgba(128, 128, 128, 0.5)",
       overflow: "hidden",
     }}
   >
@@ -28,9 +28,9 @@ export default function ProjectPreviewLayout({ children }: { children: React.Rea
         width: "100%",
         height: "100%",
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
         gridAutoRows: "150px",
-        opacity: 0.3,
+        opacity: 0.8,
         transform: "rotate(-30deg)",
       }}
     >
