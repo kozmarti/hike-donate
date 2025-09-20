@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { StepKey, stepsConfig } from "../entities/StepConfig";
 import useUser from "../hooks/useUser";
+import CopyTextButton from "./CopyTextButton";
 
 interface Props {
   email: string;
@@ -154,7 +155,9 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         >
           your Strava account
         </a>
-        . Make sure to set "{process.env.NEXT_PUBLIC_API_URL}" as <strong>Authorization Callback Domain</strong>.
+        . Make sure to set "{process.env.NEXT_PUBLIC_API_URL?.replace(/^https?:\/\//, '')}" 
+        { process.env.NEXT_PUBLIC_API_URL && (<CopyTextButton textToCopy={process.env.NEXT_PUBLIC_API_URL.replace(/^https?:\/\//, '')} />)}
+         as <strong>Authorization Callback Domain</strong>.
       </p>
 
       <input

@@ -50,8 +50,12 @@ const SkeletonAllStepComplete = () => {
         <Skeleton width={60} height={60} component={"span"} />
       </h3>
       <p>
-        <span>Project Name: </span>
+        <span>✨ Project Name: </span>
         <Skeleton width={120} height={20} style={{ display: "inline-block" }} component={"span"}/>
+        <br />
+                        <span className="text-gray-600 text-sm">
+                        ✨ This project name is the key 🔑 rename your activities in Strava to match this to enable synchronization.                     </span>
+                    
       </p>
       <p>
         <span>Goal Measure: </span>

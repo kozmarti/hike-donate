@@ -23,9 +23,9 @@ export default function CopyTextButton({ textToCopy }: CopyTextButtonProps) {
   return (
       <button
         onClick={handleCopy}
-        className="hover:bg-gray-200 active:scale-95 transition"
+        className="hover:bg-gray-200 text-gray-600 text-sm active:scale-95 rounded transition"
       >
-        {copied ? "✅ Copied!" : <><IoCopyOutline /></>}
+        {copied ? "✔️ Copied!" : <><IoCopyOutline /></>}
       </button>
   );
 }

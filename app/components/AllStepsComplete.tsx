@@ -115,7 +115,7 @@ export default function AllStepsComplete() {
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
                         <span className="p-2">🔗 Strava Account</span>
-                        {!isVisible && (
+                        {!isVisible && (!user.stravaUserId ||  (!checkingSub && !subscriptionData?.isActive)) &&(
                             <MarkIncompleteButton step="connectStrava" />
                         )}
                     </h3>
@@ -158,11 +158,11 @@ export default function AllStepsComplete() {
                         )}
                     </h3>
                     <p> ✨ Project Name: <span className="custom-error-text font-semibold">{user.projectName || "Not set"} </span>  {user.projectName && <CopyTextButton textToCopy={user.projectName} />}
-                    ✨ 
+                     
 
                         <br />
                         <span className="text-gray-600 text-sm">
-                        This project name is the key 🔑 rename your activities in Strava to match this to enable synchronization.                     </span>
+                        ✨ This project name is the key 🔑 rename your activities in Strava to match this to enable synchronization.                     </span>
                     </p>
                     <p className="mt-3">
                         Goal Measure:{" "}
@@ -214,7 +214,7 @@ export default function AllStepsComplete() {
                     </h3>
 
                     <p>
-                        Track your hike and share your progress to boost donations! </p>
+                    Hit the trail, 🔄 sync your progress from Strava, and 📢 share your journey to maximize donations! </p>
 
 
 
