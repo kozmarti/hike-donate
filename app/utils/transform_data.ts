@@ -125,9 +125,11 @@ export const extractData = (
     last_distance: number
   ) => {
     console.log("Extracting data");
-  
+    console.log(streams_strava)
     const streamsCleaned: Stream = _removeDuplicatesStreamData(streams_strava);
     const simplifiedLatLng = simplifyLatLngPolyline(streamsCleaned.latlng);
+    console.log(simplifiedLatLng)
+
     const syncedStreams = syncStreamsToSimplifiedCoords(
       streamsCleaned.latlng,
       // @ts-ignore
@@ -135,7 +137,9 @@ export const extractData = (
       streamsCleaned.altitude,
       streamsCleaned.distance
     );
+    console.log(syncedStreams)
 
+    console.log("PHOTOS")
   
     const photo_urls: any = photos_strava.map(
       // @ts-ignore
