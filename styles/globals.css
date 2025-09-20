@@ -118,6 +118,15 @@ body {
     width: 358px;
     height: auto;
   }
+  .header-wrapper {
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    width: 100vw;
+    margin-left: calc(-1 * (100vw - 100%) / 2); 
+    margin-right: calc(-1 * (100vw - 100%) / 2); 
+
+  }
 }
 /* Mobile phones: up to 480px */
 @media (max-width: 359px) {
