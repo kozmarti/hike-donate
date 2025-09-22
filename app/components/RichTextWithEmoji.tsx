@@ -12,7 +12,7 @@ const modules = {
   toolbar: [
     [{ header: [1, 2, 3, false] }],
     ["bold", "italic", "underline", "strike", "clean"],
-    [{ list: "ordered" }, { list: "bullet" }, { indent: "+1" }, "link"],
+    [{ list: "ordered" }, { list: "bullet" }, { indent: "+1" }, "link", "align"],
   ],
 };
 
