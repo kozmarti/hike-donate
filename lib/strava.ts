@@ -50,6 +50,8 @@ export const getActivity = async (id: number) => {
     `${ACTIVITY_ENDPOINT}/activities/${id}?access_token=${accessToken}`
   );
   const json = await response.json();
+  console.log("ACTIVITY STRAVA RESPONSE")
+  console.log(json)
   return json;
 };
 
