@@ -72,7 +72,7 @@ export async function POST(req: Request) {
 
     );
 
-    const res = await fetch("/api/step/revert", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/step/revert`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ step: "connectStrava" }),

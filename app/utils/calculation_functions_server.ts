@@ -1,14 +1,14 @@
 import clientPromise from "@/lib/mongodb";
 
-export async function get_last_distance(start_date_local: string): Promise<number> {
+export async function get_last_distance(start_date_local: string, stravaUserId: number, projectName: string): Promise<number> {
     try {
       const client = await clientPromise;
       const db = client.db("hike");
   
       const previousHike = await db.collection('activities')
         .find(
-          { start_time: { $lt: start_date_local } },
-          { projection: { distances_aggregated: 1 } }
+          { start_time: { $lt: start_date_local }, strava_user_id: stravaUserId, strava_project_name: projectName },
+          { projection: { distances_aggregated: 1 } },
         )
         .sort({ start_time: -1 })
         .limit(1)

@@ -9,11 +9,13 @@ const ATHLETES_ENDPOINT = `https://www.strava.com/api/v3/athletes/${userId}`;
 const ACTIVITY_ENDPOINT = "https://www.strava.com/api/v3/";
 
 
-const getAccessToken = async () => {
+const getAccessToken = async (  client_id: string,
+  client_secret: string,
+  refresh_token: string) => {
   const body = JSON.stringify({
-    client_id: clientId,
-    client_secret: clientSecret,
-    refresh_token: refreshToken,
+    client_id: client_id,
+    client_secret: client_secret,
+    refresh_token: refresh_token,
     grant_type: "refresh_token",
   });
 
@@ -29,8 +31,11 @@ const getAccessToken = async () => {
   return response.json();
 };
 
-export const getActivities = async () => {
-  const { access_token: accessToken } = await getAccessToken();
+export const getActivities = async (  client_id: string,
+  client_secret: string,
+  refresh_token: string,
+) => {
+  const { access_token: accessToken } = await getAccessToken(client_id, client_secret, refresh_token);
   const response = await fetch(
     `${ATHLETES_ENDPOINT}/activities?access_token=${accessToken}`
   );
@@ -44,8 +49,12 @@ export const getActivities = async () => {
 };
 
 
-export const getActivity = async (id: number) => {
-  const { access_token: accessToken } = await getAccessToken();
+export const getActivity = async (id: number,
+  client_id: string,
+    client_secret: string,
+    refresh_token: string,
+) => {
+  const { access_token: accessToken } = await getAccessToken(client_id, client_secret, refresh_token);
   const response = await fetch(
     `${ACTIVITY_ENDPOINT}/activities/${id}?access_token=${accessToken}`
   );
@@ -55,8 +64,11 @@ export const getActivity = async (id: number) => {
   return json;
 };
 
-export const getActivityPhotos = async (id: number) => {
-  const { access_token: accessToken } = await getAccessToken();
+export const getActivityPhotos = async (id: number, client_id: string,
+  client_secret: string,
+  refresh_token: string,
+) => {
+  const { access_token: accessToken } = await getAccessToken(client_id, client_secret, refresh_token);
   const response = await fetch(
     `${ACTIVITY_ENDPOINT}/activities/${id}/photos?size=600`,
     {
@@ -72,7 +84,10 @@ export const getActivityPhotos = async (id: number) => {
 };
 
 
-export const getActivityStreams = async (id: number) => {
+export const getActivityStreams = async (id: number, client_id: string,
+  client_secret: string,
+  refresh_token: string,
+) => {
   // /activities/{id}/streams
   // This endpoint returns the activity streams for a given activity ID
   // Sample Response
@@ -83,7 +98,7 @@ export const getActivityStreams = async (id: number) => {
   //  "original_size" : 12,
   //  "resolution" : "high"
   //} ]
-    const { access_token: accessToken } = await getAccessToken();
+  const { access_token: accessToken } = await getAccessToken(client_id, client_secret, refresh_token);
     const response = await fetch(
       `${ACTIVITY_ENDPOINT}/activities/${id}/streams?keys=distance,altitude,latlng,time&access_token=${accessToken}`
     );

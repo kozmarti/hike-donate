@@ -5,8 +5,9 @@ import {
 } from "@/lib/strava";
 import clientPromise from "@/lib/mongodb";
 import { get_last_distance } from "@/app/utils/calculation_functions_server";
-import { extractData} from "@/app/utils/transform_data";
+import { extractData } from "@/app/utils/transform_data";
 import { Activity } from "@/app/entities/Activity";
+import { decrypt } from "@/app/utils/encrypt-data";
 
 interface Webhook {
   aspect_type: "update" | "create" | "delete";
@@ -15,7 +16,7 @@ interface Webhook {
   object_type: string;
   owner_id: number; //strava user id
   subscription_id: number;
-  updates: {"title": string};
+  updates: { "title": string };
 }
 
 export async function POST(request: Request) {
@@ -23,31 +24,28 @@ export async function POST(request: Request) {
   console.log("webhook event received!", webhook_data);
 
   if (webhook_data.aspect_type == "update") {
-        try {
-            const client = await clientPromise;
-            const db = client.db("hike");
-            const user = await db
-              .collection("users").findOne({
-                stravaUserId: webhook_data.owner_id,
-                projectName: webhook_data.updates["title"],
-              });
-              if (!user) {
-                return new Response("No user for event", {
-                  status: 400,
-                });
-              }
-        } catch (e) {
-              return new Response("ERROR", {
-                status: 400,
-          });
-  }
-  }
+    try {
+      const client = await clientPromise;
+      const db = client.db("hike");
+      const user = await db
+        .collection("users").findOne({
+          stravaUserId: webhook_data.owner_id,
+          projectName: webhook_data.updates["title"],
+        });
+      if (!user) {
+        return new Response("No user for event", {
+          status: 400,
+        });
+      }
 
-  // in scope if :
-  // ubscription id, aspect type, strava user, object type and project name matches
-
-  // TODO : USER = ... check if strava_user_id and project_name combo exists in DB for users if yes -- in scope
-  {/*
+      console.log("Activity event in scope")
+      const activity_id: number = webhook_data.object_id;
+      const activity_strava = await getActivity(Number(activity_id), user.clientId, decrypt(user.clientSecret), user.refresh_token);
+      const streams_strava = await getActivityStreams(Number(activity_id), user.clientId, decrypt(user.clientSecret), user.refresh_token);
+      const photos_strava = await getActivityPhotos(Number(activity_id), user.clientId, decrypt(user.clientSecret), user.refresh_token);
+      const last_distance = await get_last_distance(activity_strava.start_date_local, webhook_data.owner_id, webhook_data.updates["title"]);
+      console.log("Last activity distance to pass forward", last_distance);
+      {/*
   if (
     webhook_data.aspect_type == "update" &&
     webhook_data.subscription_id ==
@@ -57,26 +55,13 @@ export async function POST(request: Request) {
     webhook_data.updates["title"] == process.env.STRAVA_PROJECT_NAME
   ) {
   */}
-    console.log("Activity event in scope")
-    const activity_id: number = webhook_data.object_id;
-    // TODO Pass USER.clientId, clientSecret and refresh token here
-    const activity_strava = await getActivity(Number(activity_id));
-    const streams_strava = await getActivityStreams(Number(activity_id));
-    const photos_strava = await getActivityPhotos(Number(activity_id));
-    const last_distance = await get_last_distance(activity_strava.start_date_local);
-    console.log("Last activity distance to pass forward", last_distance);
-
-    const activity_extracted: Activity = extractData(
-      activity_strava,
-      photos_strava,
-      streams_strava,
-      last_distance
-    );
-    console.log("Activity data extracted", activity_extracted)
-
-    try {
-      const client = await clientPromise;
-      const db = client.db("hike");
+      const activity_extracted: Activity = extractData(
+        activity_strava,
+        photos_strava,
+        streams_strava,
+        last_distance
+      );
+      console.log("Activity data extracted", activity_extracted)
       const activity = await db
         .collection("activities")
         .updateOne(
@@ -85,14 +70,22 @@ export async function POST(request: Request) {
           { upsert: true }
         );
       console.log("Activity upserted", activity);
+      return new Response("Activity upserted", {
+        status: 200,
+      });
     } catch (e) {
-      console.error(e);
+      //@ts-ignore
+      return new Response(e.message || "Unknown error", {
+        status: 400,
+      });
     }
-  
+  } else {
 
-  return new Response("EVENT_RECEIVED", {
-    status: 200,
-  });
+    return new Response("Event out of scope", {
+      status: 200,
+    });
+  }
+
 }
 
 
