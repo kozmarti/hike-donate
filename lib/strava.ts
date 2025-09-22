@@ -59,8 +59,6 @@ export const getActivity = async (id: number,
     `${ACTIVITY_ENDPOINT}/activities/${id}?access_token=${accessToken}`
   );
   const json = await response.json();
-  console.log("ACTIVITY STRAVA RESPONSE")
-  console.log(json)
   return json;
 };
 
@@ -70,7 +68,7 @@ export const getActivityPhotos = async (id: number, client_id: string,
 ) => {
   const { access_token: accessToken } = await getAccessToken(client_id, client_secret, refresh_token);
   const response = await fetch(
-    `${ACTIVITY_ENDPOINT}/activities/${id}/photos?size=600`,
+    `${ACTIVITY_ENDPOINT}/activities/${id}/photos?size=5000`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -78,8 +76,6 @@ export const getActivityPhotos = async (id: number, client_id: string,
     }
   );
   const json = await response.json();
-  console.log("PHOTOS RESPONSE")
-  console.log(json)
   return json;
 };
 
@@ -103,8 +99,6 @@ export const getActivityStreams = async (id: number, client_id: string,
       `${ACTIVITY_ENDPOINT}/activities/${id}/streams?keys=distance,altitude,latlng,time&access_token=${accessToken}`
     );
     const json = await response.json();
-    console.log("STREAMS RESPONSE")
-    console.log(json)
     return json;
   };
 

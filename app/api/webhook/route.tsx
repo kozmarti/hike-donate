@@ -37,30 +37,19 @@ export async function POST(request: Request) {
           stravaUserId: webhook_data.owner_id,
           projectName: webhook_data.updates["title"],
         });
-        console.log("USER", user)
       if (!user) {
         return new Response("Project name or strava user out of scope", {
           status: 200,
         });
       }
 
-      console.log("Activity event in scope")
+      console.log(`Activity event in scope for project ${webhook_data.updates["title"]}`)
       const activity_id: number = webhook_data.object_id;
       const activity_strava = await getActivity(Number(activity_id), user.stravaClientId, decrypt(user.stravaClientSecret), user.refreshToken);
       const streams_strava = await getActivityStreams(Number(activity_id), user.stravaClientId, decrypt(user.stravaClientSecret), user.refreshToken);
       const photos_strava = await getActivityPhotos(Number(activity_id), user.stravaClientId, decrypt(user.stravaClientSecret), user.refreshToken);
       const last_distance = await get_last_distance(activity_strava.start_date_local, webhook_data.owner_id, webhook_data.updates["title"]);
       console.log("Last activity distance to pass forward", last_distance);
-      {/*
-  if (
-    webhook_data.aspect_type == "update" &&
-    webhook_data.subscription_id ==
-      parseInt((process.env.SUBSCRIPTION_ID ??= "")) &&
-    webhook_data.owner_id == parseInt((process.env.STRAVA_USER_ID ??= "")) &&
-    // @ts-ignore
-    webhook_data.updates["title"] == process.env.STRAVA_PROJECT_NAME
-  ) {
-  */}
       const activity_extracted: Activity = extractData(
         activity_strava,
         photos_strava,
