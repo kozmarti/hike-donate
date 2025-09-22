@@ -88,6 +88,8 @@ export const getActivityStreams = async (id: number) => {
       `${ACTIVITY_ENDPOINT}/activities/${id}/streams?keys=distance,altitude,latlng,time&access_token=${accessToken}`
     );
     const json = await response.json();
+    console.log("STREAMS RESPONSE")
+    console.log(json)
     return json;
   };
 
