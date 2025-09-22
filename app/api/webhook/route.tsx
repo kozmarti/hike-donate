@@ -23,7 +23,12 @@ export async function POST(request: Request) {
   const webhook_data: Webhook = await request.json();
   console.log("webhook event received!", webhook_data);
 
-  if (webhook_data.aspect_type == "update") {
+  if (webhook_data.aspect_type !== "update") {
+    return new Response("Event out of scope", {
+      status: 200,
+    });
+  }
+  else {
     try {
       const client = await clientPromise;
       const db = client.db("hike");
@@ -32,9 +37,10 @@ export async function POST(request: Request) {
           stravaUserId: webhook_data.owner_id,
           projectName: webhook_data.updates["title"],
         });
+        console.log("USER", user)
       if (!user) {
-        return new Response("No user for event", {
-          status: 400,
+        return new Response("Project name or strava user out of scope", {
+          status: 200,
         });
       }
 
@@ -73,19 +79,15 @@ export async function POST(request: Request) {
       return new Response("Activity upserted", {
         status: 200,
       });
+
     } catch (e) {
+      console.log(e)
       //@ts-ignore
       return new Response(e.message || "Unknown error", {
         status: 400,
       });
     }
-  } else {
-
-    return new Response("Event out of scope", {
-      status: 200,
-    });
   }
-
 }
 
 
