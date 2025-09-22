@@ -56,9 +56,11 @@ export const getActivity = async (id: number) => {
 export const getActivityPhotos = async (id: number) => {
   const { access_token: accessToken } = await getAccessToken();
   const response = await fetch(
-    `${ACTIVITY_ENDPOINT}/activities/${id}/photos/?size=5000&access_token=${accessToken}`
+    `${ACTIVITY_ENDPOINT}/activities/${id}/photos/?size=600&access_token=${accessToken}`
   );
   const json = await response.json();
+  console.log("PHOTOS RESPONSE")
+  console.log(json)
   return json;
 };
 
