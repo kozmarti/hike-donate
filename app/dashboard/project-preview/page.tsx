@@ -37,7 +37,7 @@ export default async function HomePage() {
 
   return (
 
-  <HikeDashboard stravaUserId={user.stravaUserId} projectName={user.projectName}/>
+  <HikeDashboard dailyStatsUrl="/dashboard/project-preview/daily-stats" stravaUserId={user.stravaUserId} projectName={user.projectName}/>
 
 );
 }

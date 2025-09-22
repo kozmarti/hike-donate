@@ -24,6 +24,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <HikeDashboard stravaUserId={stravaUserId} projectName={projectName}/>
+    <HikeDashboard dailyStatsUrl={`/project/${stravaUserId}/${projectName}/daily-stats`} stravaUserId={stravaUserId} projectName={projectName}/>
   );
 }

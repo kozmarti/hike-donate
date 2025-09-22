@@ -68,21 +68,12 @@ export async function POST(req: Request) {
           refreshToken: "",
           stravaUserId: "",
         },
-      }
-
-    );
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/step/revert`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ step: "connectStrava" }),
-    });
-
-    if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.error || "Failed to revert step");
+        $set: {
+          "steps.connectStrava": false
     }
-
+      }
+    );
+    
     return new Response(
       JSON.stringify({
         message: "Strava webhook subscription and credentials deleted successfully",

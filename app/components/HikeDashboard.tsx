@@ -19,9 +19,10 @@ import { getGoalMeasure } from "../entities/GoalMeasureConfig";
 import { User } from "../entities/User";
 import useUser from "../hooks/useUser";
 
-interface UserProps {
+interface Props {
     stravaUserId: string;
     projectName: string;
+    dailyStatsUrl: string;
 }
 const fredoka = Fredoka({ subsets: ["latin"] });
 
@@ -70,7 +71,7 @@ const PhotoAlbumComponent = dynamic(
   { ssr: false }
 );
 
-export default function HikeDashboard( {stravaUserId, projectName}: UserProps ) {
+export default function HikeDashboard( {stravaUserId, projectName, dailyStatsUrl}: Props ) {
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [collectedAmount, setCollectedAmount] = useState<number>(0);
   const [amountLastUpdated, setAmountLastUpdated] = useState<string>("");
@@ -173,7 +174,7 @@ export default function HikeDashboard( {stravaUserId, projectName}: UserProps ) 
       <ElevationChart altitude={stats?.altitudes ?? []} distance={stats?.distance_aggregated ?? []} loading={loading} />
 
       {/* Daily stats link */}
-      <Link href="/daily-stats">
+      <Link href={dailyStatsUrl}>
         <button className="custom-button" style={{ fontFamily: fredoka.style.fontFamily }}>
           <IoStatsChartOutline style={{ display: "inline" }} /> View Daily Stats
         </button>
