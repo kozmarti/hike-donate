@@ -46,9 +46,9 @@ export async function POST(request: Request) {
 
       console.log("Activity event in scope")
       const activity_id: number = webhook_data.object_id;
-      const activity_strava = await getActivity(Number(activity_id), user.clientId, decrypt(user.clientSecret), user.refresh_token);
-      const streams_strava = await getActivityStreams(Number(activity_id), user.clientId, decrypt(user.clientSecret), user.refresh_token);
-      const photos_strava = await getActivityPhotos(Number(activity_id), user.clientId, decrypt(user.clientSecret), user.refresh_token);
+      const activity_strava = await getActivity(Number(activity_id), user.stravaClientId, decrypt(user.stravaClientSecret), user.refreshToken);
+      const streams_strava = await getActivityStreams(Number(activity_id), user.stravaClientId, decrypt(user.stravaClientSecret), user.refreshToken);
+      const photos_strava = await getActivityPhotos(Number(activity_id), user.stravaClientId, decrypt(user.stravaClientSecret), user.refreshToken);
       const last_distance = await get_last_distance(activity_strava.start_date_local, webhook_data.owner_id, webhook_data.updates["title"]);
       console.log("Last activity distance to pass forward", last_distance);
       {/*
