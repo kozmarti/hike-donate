@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { StepKey, stepsConfig } from "../entities/StepConfig";
 import useUser from "../hooks/useUser";
 import CopyTextButton from "./CopyTextButton";
@@ -14,38 +13,25 @@ interface Props {
 }
 
 const StravaConnect = ({ email, step, completeStep }: Props) => {
-  const searchParams = useSearchParams();
   const [stravaClientId, setClientId] = useState("");
   const [stravaClientSecret, setClientSecret] = useState("");
   const [saved, setSaved] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
+  const [credentialsSetup, setCredentialsSetup] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const [authorized, setAuthorized] = useState(false);
   const stepConfig = stepsConfig.find((s) => s.key === step);
-  const {data: user, loading: userLoading, error: userError} = useUser()
-  const [loadingWebhook, setloadingWebhook] = useState(false);
+  const { data: user, loading: userLoading, error: userError } = useUser()
 
-  
 
   useEffect(() => {
-    const status = searchParams?.get("status");
-    if (status === "authorized") {
-      setSaved(true);
-      setAuthorized(true);
-    } else if (status === "subscribed") {
-      setSaved(true);
-      setAuthorized(true);
-      setSubscribed(true);
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    console.log(user)
     if (user?.stravaClientId) {
       setClientId(user.stravaClientId);
+    }
+    if (user?.stravaUserId) {
+      setCredentialsSetup(true)
+
     }
   }, [user]);
 
@@ -75,7 +61,6 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
       }
 
       setSaved(true);
-      setSuccessMessage("✅ Strava credentials saved successfully.");
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
@@ -91,44 +76,10 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
     window.location.href = `/api/strava/auth?email=${encodeURIComponent(email)}`;
   };
 
-  const handleSubscribeWebhook = async () => {
-    setErrorMessage("");
-    setSuccessMessage("");
-    setloadingWebhook(true)
-
-    if (!saved) {
-      setErrorMessage("Please save your credentials first.");
-      return;
-    }
-    if (!authorized) {
-      setErrorMessage("Please authorize Strava connection first.");
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/strava/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Subscription failed");
-
-      setSubscribed(true);
-      setSuccessMessage("✅ Webhook subscription created successfully.");
-      setloadingWebhook(false)
-
-    } catch (err: any) {
-      setErrorMessage(`❌ ${err.message}`);
-      setloadingWebhook(false)
-
-    }
-  };
-
   const handleCompleteStep = async () => {
     setErrorMessage("");
     setSuccessMessage("");
-  
+
     try {
       await completeStep(step);
       setSuccessMessage("✅ Step completed! Refreshing...");
@@ -142,7 +93,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
       <h2 className="text font-bold">
         {stepConfig?.icon} {stepConfig?.label}
-      </h2>      
+      </h2>
       <hr style={{ borderColor: "#74816c" }} />
 
       <p>
@@ -155,9 +106,8 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         >
           your Strava account
         </a>
-        . Make sure to set "{process.env.NEXT_PUBLIC_API_URL?.replace(/^https?:\/\//, '')}" 
-        { process.env.NEXT_PUBLIC_API_URL && (<CopyTextButton textToCopy={process.env.NEXT_PUBLIC_API_URL.replace(/^https?:\/\//, '')} />)}
-         as <strong>Authorization Callback Domain</strong>.
+        . Make sure to set "{process.env.NEXT_PUBLIC_API_URL?.replace(/^https?:\/\//, '')}"
+        {process.env.NEXT_PUBLIC_API_URL && (<CopyTextButton textToCopy={process.env.NEXT_PUBLIC_API_URL.replace(/^https?:\/\//, '')} />)} as <strong>Authorization Callback Domain</strong>.
       </p>
 
       <input
@@ -178,43 +128,29 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         disabled={saved}
       />
 
-      <button onClick={handleSave} className="custom-button" disabled={saved || !stravaClientId || ! stravaClientSecret}>
-      {saved ? "Credentials Saved ✅" : "Save Credentials"}
-      </button>
-
-      <button
-        onClick={handleAuthorize}
-        className="custom-button"
-        style={{ backgroundColor: "#74816c" }}
-        disabled={!saved || authorized}
-      >
-  {authorized ? "Strava Connected ✅" : "Connect Strava"}
-  </button>
-
-      <button
-        onClick={handleSubscribeWebhook}
-        className="custom-button"
-        style={{ backgroundColor: "#11B7A1" }}
-        disabled={!authorized || subscribed || loadingWebhook}
-      >
-        {subscribed ? "Synchro Active ✅" : loadingWebhook ? "⏳ Activating..." : "Activate synchro"}
+      <button onClick={() => {
+        handleSave();
+        handleAuthorize();
+      }}
+        className="custom-button" disabled={!stravaClientId || !stravaClientSecret}>
+        {saved ? "Strava Connected ✅" : "Connect Strava"}
       </button>
 
       {successMessage && <p className="custom-success-text mt-1">{successMessage}</p>}
       {errorMessage && <p className="custom-error-text mt-1">{errorMessage}</p>}
 
-      {subscribed && (
+      {credentialsSetup && (
         <p className="text-sm text-gray-500 mt-1">
-          You can revoke this subscription at any time.
+          You can revoke this at any time.
         </p>
       )}
-      {saved && authorized && subscribed && (
-  <button
-    onClick={handleCompleteStep}
-    className="custom-button" >
-    Complete Setup & Next Step
-  </button>
-)}
+      {credentialsSetup && (
+        <button
+          onClick={handleCompleteStep}
+          className="custom-button" >
+          Complete Setup & Next Step
+        </button>
+      )}
     </div>
   );
 };

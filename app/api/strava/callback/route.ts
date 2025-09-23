@@ -86,12 +86,10 @@ export async function GET(req: Request) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
   });
-  console.log("WEBHOOK SUBSCRIPTION")
-  console.log(res.json())
 
   return NextResponse.redirect(
     new URL(
-      `dashboard/steps`,
+      `dashboard/step`,
       process.env.NEXT_PUBLIC_API_URL
     )
   );}
