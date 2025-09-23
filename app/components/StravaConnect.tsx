@@ -58,6 +58,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
 
       if (!res.ok) {
         const data = await res.json();
+        console.log(data)
         throw new Error(data.error || "Failed to save credentials");
       }
 
