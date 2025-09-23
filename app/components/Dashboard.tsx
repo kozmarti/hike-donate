@@ -20,7 +20,6 @@ interface Props {
 }
 
 export default function Dashboard({ user }: Props) {
-  const router = useRouter();
 
   const defaultSteps: Record<StepKey, boolean> = stepsConfig.reduce((acc, step) => {
     acc[step.key] = user.steps?.[step.key] || false;
@@ -36,12 +35,7 @@ export default function Dashboard({ user }: Props) {
     (Object.values(state.steps ?? {}).filter(Boolean).length /
       stepsConfig.length) *
     100;
-  
-  useEffect(() => {
-    if (progress === 100) {
-      router.push("/dashboard/step");
-    }
-  }, [progress]);
+
 
 
   return (
@@ -68,7 +62,8 @@ export default function Dashboard({ user }: Props) {
         <button className="custom-button m-5"> 
         {progress === 0
       ? "🚀 Start Setup"
-      : "⏩ Continue Setup"}
+      : progress === 1 ? "🎉 View Summary" :
+      "⏩ Continue Setup"}
      </button>
         </Link>
         

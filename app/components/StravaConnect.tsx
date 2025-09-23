@@ -165,7 +165,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         placeholder="Strava Client ID"
         value={stravaClientId}
         onChange={(e) => setClientId(e.target.value)}
-        className="border p-2 rounded w-full"
+        className="border p-2 rounded w-full input-custom"
         disabled={saved}
       />
 
@@ -174,7 +174,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         placeholder="Strava Client Secret"
         value={stravaClientSecret}
         onChange={(e) => setClientSecret(e.target.value)}
-        className="border p-2 rounded w-full"
+        className="border p-2 rounded w-full input-custom"
         disabled={saved}
       />
 

@@ -63,8 +63,7 @@ export async function GET(req: Request) {
 
   const existing = await db
             .collection("users")
-            .findOne({ stravaUserId: data.athlete.id });
-  
+            .findOne({ stravaUserId: { $ne: data.athlete.id } });
   if (existing) {
       return new Response(
           JSON.stringify({ error: "❌ StravaUser already used by another user." }),
@@ -81,7 +80,7 @@ export async function GET(req: Request) {
       },
     }
   );
-  const res = await fetch("/api/strava/subscribe", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/strava/subscribe`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
