@@ -163,7 +163,7 @@ const MapComponent = ({ coordinates, currentLocation, centerCoordinates, clicked
         </MapContainer>
 
       </div>
-      <DownloadGpxButton polyline={polyline} filename="hike-donate-track.gpx" />
+      <DownloadGpxButton polyline={polyline} filename="hike-donate-full-track.gpx" />
 
     </>
   );

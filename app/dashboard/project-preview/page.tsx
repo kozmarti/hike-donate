@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import clientPromise from "@/lib/mongodb";
 import { areAllStepsComplete } from "@/app/utils/user_helper";
 import { User } from "@/app/entities/User";
+import ProjectPreviewLayout from "@/app/components/ProjectPreviewLayout";
 
 
 export default async function HomePage() {
@@ -36,8 +37,12 @@ export default async function HomePage() {
   
 
   return (
-
+    <ProjectPreviewLayout>
+      <main
+        className={`flex min-h-screen flex-col items-center p-2 global-background`}
+      >
   <HikeDashboard dailyStatsUrl="/dashboard/project-preview/daily-stats" stravaUserId={user.stravaUserId} projectName={user.projectName}/>
-
-);
+      </main>
+    </ProjectPreviewLayout>
+  );
 }

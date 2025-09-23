@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Skeleton from '@mui/material/Skeleton';
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
-import { useActivities } from "@/app/hooks/useActivities";
 import { redirect } from "next/navigation";
-import useActivitiesByProject, { activityClient } from "@/app/hooks/useActivitiesByProject";
+import { activityClient } from "@/app/hooks/useActivitiesByProject";
 import { Activity } from "@/app/entities/Activity";
 import useUser from "@/app/hooks/useUser";
+import ProjectPreviewLayout from "@/app/components/ProjectPreviewLayout";
 
 
 const DailyStatsCarousel = dynamic(() => import("@/app/components/DailyCarousel"), {
@@ -107,7 +107,8 @@ export default function Page() {
 
   return (
     <>
-      <DailyStatsCarousel activities={activities} loading={loading} />
+    <ProjectPreviewLayout>  <div></div></ProjectPreviewLayout>
+      <DailyStatsCarousel activities={activities} loading={loading}/>
     </>
   )
 }

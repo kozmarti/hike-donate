@@ -77,7 +77,7 @@ export default function Page({ params }: ProjectPageProps) {
 
   return (
     <>
-      <DailyStatsCarousel activities={data} loading={loading} />
+      <DailyStatsCarousel activities={data ? data : []} loading={loading} />
     </>
   )
 }

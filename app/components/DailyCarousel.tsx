@@ -137,7 +137,7 @@ const DailyStatsCarousel = ({ activities, loading }: Props) => {
                       }
                     />
                                       </div>
-                    <DownloadGpxButton polyline={activity.coordinates} filename="hike-donate-track.gpx" />
+                    <DownloadGpxButton polyline={activity.coordinates} filename={`hike-donate-${activity.strava_project_name}-${activity.start_time}.gpx`} />
                   <ElevationChart
                     altitude={activity.altitudes ?? []}
                     distance={activity.distances ?? []}
