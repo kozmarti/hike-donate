@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "@/styles/globals.css";
-import ProjectPreviewLayout from "@/app/components/ProjectPreviewLayout";
 
 const inter = Fredoka({ subsets: ["latin"] });
 
@@ -29,12 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProjectPreviewLayout>
       <main
         className={`flex min-h-screen flex-col items-center p-2 global-background ${inter.className}`}
       >
         {children}
       </main>
-    </ProjectPreviewLayout>
   );
 }

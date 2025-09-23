@@ -10,7 +10,7 @@ export default async function fetchFromApi<T>(endpoint: string,
   }
 ): Promise<T> {
   const { method = "GET", body } = options || {};
-  const res = await fetch(`${apiUrl}/api//${endpoint}`, {
+  const res = await fetch(`${apiUrl}/api/${endpoint}`, {
     method: method,
     body: body ? JSON.stringify(body) : undefined,
   });

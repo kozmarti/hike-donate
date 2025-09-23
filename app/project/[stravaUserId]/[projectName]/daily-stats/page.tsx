@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Skeleton from '@mui/material/Skeleton';
 import { PerformanceItemComponent } from "@/app/components/PerformanceItemComponent";
 import { useActivities } from "@/app/hooks/useActivities";
+import useActivitiesByProject from "@/app/hooks/useActivitiesByProject";
 
 
 const DailyStatsCarousel = dynamic(() => import("@/app/components/DailyCarousel"), {
@@ -69,29 +70,14 @@ interface ProjectPageProps {
   };
 }
 
-export default function Page({ params }: ProjectPageProps) {
-  const [loading, setLoading] = useState(true);
-  const [activities, setActivities] = useState<any[]>([]);
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const [data] = await Promise.all([
-          useActivities(),
-        ]);
-        setActivities(data);
-      } catch (error) {
-        console.error("Failed to fetch stats:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchStats();
-  }, []);
+export default function Page({ params }: ProjectPageProps) {
+  const { stravaUserId, projectName } = params;
+  const { data, loading, error } = useActivitiesByProject( stravaUserId, projectName)
 
   return (
     <>
-      <DailyStatsCarousel activities={activities} loading={loading} />
+      <DailyStatsCarousel activities={data} loading={loading} />
     </>
   )
 }
