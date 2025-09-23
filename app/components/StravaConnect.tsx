@@ -38,6 +38,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const handleSave = async () => {
     setErrorMessage("");
     setSuccessMessage("");
+    console.log("save credentials")
 
     if (!stravaClientId || !stravaClientSecret) {
       setErrorMessage("Both Client ID and Client Secret are required.");
@@ -61,6 +62,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
       }
 
       setSaved(true);
+      console.log(saved)
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
@@ -69,6 +71,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const handleAuthorize = () => {
     setErrorMessage("");
     setSuccessMessage("");
+    console.log(saved)
     if (!saved) {
       setErrorMessage("Please save your credentials first.");
       return;
