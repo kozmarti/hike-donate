@@ -60,6 +60,18 @@ export async function GET(req: Request) {
                   ...
         }
     } */
+
+  const existing = await db
+            .collection("users")
+            .findOne({ stravaUserId: data.athlete.id });
+  
+  if (existing) {
+      return new Response(
+          JSON.stringify({ error: "❌ StravaUser already used by another user." }),
+              { status: 400 }
+            );
+          }
+  
   await usersCollection.updateOne(
     { email },
     {
@@ -69,10 +81,17 @@ export async function GET(req: Request) {
       },
     }
   );
+  const res = await fetch("/api/strava/subscribe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  console.log("WEBHOOK SUBSCRIPTION")
+  console.log(res.json())
 
   return NextResponse.redirect(
     new URL(
-      `/dashboard/step?status=authorized&email=${encodeURIComponent(email)}`,
+      `dashboard/steps`,
       process.env.NEXT_PUBLIC_API_URL
     )
   );}
