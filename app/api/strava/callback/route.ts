@@ -63,7 +63,7 @@ export async function GET(req: Request) {
 
   const existing = await db
             .collection("users")
-            .findOne({ stravaUserId: { $ne: data.athlete.id } });
+            .findOne({ stravaUserId: data.athlete.id , email: { $ne: email }});
   console.log("EXISTING", existing)
   if (existing) {
       return new Response(
