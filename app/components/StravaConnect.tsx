@@ -63,7 +63,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
       }
 
       setSaved(true);
-      console.log(saved)
+      console.log(saved, "SAVED1")
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
@@ -72,7 +72,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const handleAuthorize = () => {
     setErrorMessage("");
     setSuccessMessage("");
-    console.log(saved)
+    console.log(saved, "SAVED")
     if (!saved) {
       setErrorMessage("Please save your credentials first.");
       return;
@@ -136,7 +136,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         handleSave();
         handleAuthorize();
       }}
-        className="custom-button" disabled={!stravaClientId || !stravaClientSecret}>
+        className="custom-button" disabled={!stravaClientId || !stravaClientSecret || credentialsSetup}>
         {saved ? "Strava Connected ✅" : "Connect Strava"}
       </button>
 
