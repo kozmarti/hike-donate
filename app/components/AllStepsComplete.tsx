@@ -68,7 +68,7 @@ export default function AllStepsComplete() {
     if (loading) return (
         <SkeletonAllStepComplete />
     );
-    if (!user) return <p>User not found</p>;
+    if (!user && !loading) return <p>User not found</p>;
 
     const toggleVisibility = async () => {
         try {
@@ -103,7 +103,7 @@ export default function AllStepsComplete() {
                 <div>
                     <h3 className="font-semibold flex justify-between items-center w-full">
                         <span className="p-2">🔗 Strava Account</span>
-                        {!isVisible && (!user.stravaUserId ||  (!checkingSub && !subscriptionData?.isActive)) &&(
+                        {!isVisible && (!user?.stravaUserId ||  (!checkingSub && !subscriptionData?.isActive)) &&(
                             <MarkIncompleteButton step="connectStrava" />
                         )}
                     </h3>
@@ -114,8 +114,8 @@ export default function AllStepsComplete() {
                             : checkingSub
                                 ? "Checking..."
                                 : "Strava Not Connected ❌"}
-                    </p>
-                                   {subscriptionData?.isActive && !isVisible && (
+                    </p>               
+                    {subscriptionData?.isActive && !isVisible && (
                         <DeleteStravaButton />
                     )}
                     {subscriptionData?.isActive && isVisible && (

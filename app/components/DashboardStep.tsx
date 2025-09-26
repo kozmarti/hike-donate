@@ -58,7 +58,7 @@ export default function DashboardStep() {
         StepComponent = () => <HikeTrackShare step="hikeTrackShare" completeStep={completeStep} />;
         break;
       default:
-        StepComponent = () => <AllStepsComplete/>;
+        StepComponent = () => <AllStepsComplete />;
     }
   }
 

@@ -5,16 +5,15 @@ import jwt from "jsonwebtoken";
 import DashboardStep from "@/app/components/DashboardStep";
 
 export default async function DashboardStepPage() {
-    {/** */}
   const token = cookies().get("token")?.value;
 
-    if (!token) redirect("/welcome"); // Not logged in
+    if (!token) redirect("/welcome");
   
     let payload;
     try {
       payload = jwt.verify(token, process.env.JWT_SECRET!) as { email: string };
     } catch {
-      redirect("/welcome"); // Invalid token
+      redirect("/welcome");
     }
 
   return <DashboardStep/>;
