@@ -1,5 +1,6 @@
 "use client";
 
+import { useStepsStore } from "@/lib/store/stepStore";
 import { useState } from "react";
 
 export default function DeleteStravaButton() {
@@ -9,6 +10,7 @@ export default function DeleteStravaButton() {
   const [showModal, setShowModal] = useState(false);
 
   const handleDelete = async () => {
+    const { setStepInComplete } = useStepsStore();
     setLoading(true);
     setErrorMessage(null);
     setSuccessMessage(null);
@@ -22,6 +24,7 @@ export default function DeleteStravaButton() {
 
       if (res.ok) {
         setSuccessMessage("✅ " + data.message);
+        setStepInComplete("connectStrava");
       } else {
         setErrorMessage("❌ " + (data.error || "Something went wrong"));
       }

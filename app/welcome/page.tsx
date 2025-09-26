@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Steps from "../components/Steps";
 import { useRouter } from "next/navigation";
+import Image from 'next/image'
 
 
 export default function AuthPage() {
@@ -21,12 +22,14 @@ export default function AuthPage() {
     try {
       const endpoint =
         mode === "login" ? "/api/auth/login" : "/api/auth/register";
+        console.log("before fetch");
 
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+      console.log("after fetch", res);
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Something went wrong");
@@ -48,9 +51,9 @@ export default function AuthPage() {
 
   return (
     <>
-        <div className="steps-container">
-        <h1>Welcome - Start Hiking with Purpose!</h1>
-        <Steps />
+  <div className="steps-container">
+    <h1>Welcome - Start Hiking with Purpose!</h1>
+    <Steps />
 
     <div className="map-wrapper flex flex-col items-center justify-center p-4 mt-8">
       <h1 className="mb-4">
@@ -115,8 +118,22 @@ export default function AuthPage() {
 
       {message && <p className="mt-4 text-sm">{message}</p>}
     </div>
-    </div>
+  </div>
 
-    </>
+  {loading && mode === "login" && (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white p-2 rounded-xl shadow-md flex items-center">
+       <Image
+           src={"/loading.gif"}
+           width={50}
+           height={50}
+           alt="Loading data..."
+         />
+        <span className="pr-4">Logging you in...</span>
+      </div>
+    </div>
+      )}
+</>
+
   );
 }

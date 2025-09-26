@@ -502,6 +502,14 @@ a {
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+}
+
+.step-complete{
+  background: #69fda91a;
+
+}
+.step-incomplete{
+  background: #fd57701a;
 
 }
 .icon {

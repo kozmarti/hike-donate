@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { StepKey, stepsConfig } from "../entities/StepConfig";
-import useUser from "../hooks/useUser";
 import CopyTextButton from "./CopyTextButton";
+import { User } from "../entities/User";
 
 interface Props {
-  email: string;
+  user: User;
   step: StepKey;
   completeStep: (step: StepKey) => Promise<void>;
 
 }
 
-const StravaConnect = ({ email, step, completeStep }: Props) => {
+const StravaConnect = ({ user, step, completeStep }: Props) => {
   const [stravaClientId, setClientId] = useState("");
   const [stravaClientSecret, setClientSecret] = useState("");
   const [saved, setSaved] = useState(false);
@@ -22,7 +22,6 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
-  const { data: user, loading: userLoading, error: userError } = useUser()
 
 
   useEffect(() => {
@@ -50,7 +49,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          email: user.email,
           stravaClientId,
           stravaClientSecret,
         }),
@@ -61,9 +60,6 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         console.log(data)
         throw new Error(data.error || "Failed to save credentials");
       }
-
-      setSaved(true);
-      console.log(saved, "SAVED1")
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
@@ -72,12 +68,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
   const handleAuthorize = () => {
     setErrorMessage("");
     setSuccessMessage("");
-    console.log(saved, "SAVED")
-    if (!saved) {
-      setErrorMessage("Please save your credentials first.");
-      return;
-    }
-    window.location.href = `/api/strava/auth?email=${encodeURIComponent(email)}`;
+    window.location.href = `/api/strava/auth?email=${encodeURIComponent(user.email)}`;
   };
 
   const handleCompleteStep = async () => {
@@ -87,7 +78,6 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
     try {
       await completeStep(step);
       setSuccessMessage("✅ Step completed! Refreshing...");
-      window.location.reload();
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
@@ -95,6 +85,9 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
+            {/* Top white overlay before first HR */}
+            <div style={{ zIndex: -1, borderTopRightRadius: "20px", borderTopLeftRadius: "20px" }} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none">
+                </div>
       <h2 className="text font-bold">
         {stepConfig?.icon} {stepConfig?.label}
       </h2>
@@ -137,7 +130,7 @@ const StravaConnect = ({ email, step, completeStep }: Props) => {
         handleAuthorize();
       }}
         className="custom-button" disabled={!stravaClientId || !stravaClientSecret || credentialsSetup}>
-        {saved ? "Strava Connected ✅" : "Connect Strava"}
+        {!stravaClientId || !stravaClientSecret || credentialsSetup ? "Strava Connected ✅" : "Connect Strava"}
       </button>
 
       {successMessage && <p className="custom-success-text mt-1">{successMessage}</p>}

@@ -5,12 +5,11 @@ import { useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 
 interface Props {
-  email: string;
   step: StepKey;
   completeStep: (step: StepKey) => Promise<void>;
 }
 
-const HikeTrackShare = ({ email, step, completeStep }: Props) => {
+const HikeTrackShare = ({ step, completeStep }: Props) => {
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,6 +35,9 @@ const HikeTrackShare = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
+            {/* Top white overlay before first HR */}
+            <div style={{ zIndex: -1, borderTopRightRadius: "20px", borderTopLeftRadius: "20px" }} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none">
+                </div>
       <h2 className="text font-bold">
       {stepConfig?.icon} {stepConfig?.label}
       </h2>
@@ -54,7 +56,7 @@ const HikeTrackShare = ({ email, step, completeStep }: Props) => {
         className="custom-button mt-4"
         disabled={saving || completed}
       >
-Complete & View Summary
+        Complete & View Summary
       </button>
 
       {successMessage && <p className="text-green-600">{successMessage}</p>}

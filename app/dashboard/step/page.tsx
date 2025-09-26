@@ -5,7 +5,8 @@ import jwt from "jsonwebtoken";
 import DashboardStep, { User } from "@/app/components/DashboardStep";
 
 export default async function DashboardStepPage() {
-    const token = cookies().get("token")?.value;
+    {/** */}
+  const token = cookies().get("token")?.value;
 
     if (!token) redirect("/welcome"); // Not logged in
   
@@ -15,7 +16,7 @@ export default async function DashboardStepPage() {
     } catch {
       redirect("/welcome"); // Invalid token
     }
-  
+  {/** 
     const client = await clientPromise;
     const db = (await client).db("hike");
     const user = await db
@@ -36,6 +37,7 @@ export default async function DashboardStepPage() {
       hikeTrackShare: false,
     },
   };
+  */}
 
-  return <DashboardStep user={currentUser} />;
+  return <DashboardStep/>;
 }

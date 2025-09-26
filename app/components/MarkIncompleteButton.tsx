@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StepKey } from "../entities/StepConfig";
 import { FiEdit } from "react-icons/fi";
+import { useStepsStore } from "@/lib/store/stepStore";
 
 interface Props {
   step: StepKey;
@@ -9,6 +10,8 @@ interface Props {
 export default function MarkIncompleteButton({ step }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { setStepInComplete } = useStepsStore();
+  
 
   const handleUncomplete = async () => {
     setLoading(true);
@@ -24,8 +27,8 @@ export default function MarkIncompleteButton({ step }: Props) {
         const data = await res.json();
         throw new Error(data.error || "Failed to revert step");
       }
+    setStepInComplete(step)
 
-      window.location.reload();
     } catch (err: any) {
       setError(err.message);
       setLoading(false);

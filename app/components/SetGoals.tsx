@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import { stepsConfig, StepKey } from "../entities/StepConfig";
 import { HiInformationCircle } from "react-icons/hi";
-import { GoalMeasureKey, getGoalMeasure, goalMeasureConfig, goalMeasureKeys } from "../entities/GoalMeasureConfig";
-import useUser from "../hooks/useUser";
+import { GoalMeasureKey, getGoalMeasure, goalMeasureKeys } from "../entities/GoalMeasureConfig";
+import { User } from "../entities/User";
 
 interface Props {
-  email: string;
+  user: User;
   step: StepKey;
   completeStep: (step: StepKey) => Promise<void>;
 }
 
-const SetGoals = ({ email, step, completeStep }: Props) => {
+const SetGoals = ({ user, step, completeStep }: Props) => {
   const [projectName, setProjectName] = useState("");
   const [goalMeasure, setGoalMeasure] = useState<GoalMeasureKey | "">("");
   const [saved, setSaved] = useState(false);
@@ -22,19 +22,18 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
   const [errorNameMessage, setErrorNameMessage] = useState("");
   const [successNameMessage, setSuccessNameMessage] = useState("");
   const [saving, setSaving] = useState(false);
-  const { data: userData, loading: loadingUser, error: errorUser } = useUser();
   
 
   const stepConfig = stepsConfig.find((s) => s.key === step);
 
     useEffect(() => {
-      if (userData?.projectName) {
-        setProjectName(userData.projectName);
+      if (user?.projectName) {
+        setProjectName(user.projectName);
       }
-      if (userData?.goalMeasure) {
-        setGoalMeasure(userData.goalMeasure)
+      if (user?.goalMeasure) {
+        setGoalMeasure(user.goalMeasure)
       }
-    }, [userData]);
+    }, [user]);
 
   const handleSaveGoals = async () => {
     setErrorMessage("");
@@ -56,7 +55,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          email: user.email,
           projectName: sanitizedProjectName,
           goalMeasure,
         }),
@@ -80,7 +79,6 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
     try {
       await completeStep(step);
       setSuccessMessage("✅ Step completed! Refreshing...");
-      window.location.reload();
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
@@ -99,7 +97,7 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
     try {
       const res = await fetch(
-        `/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}&email=${encodeURIComponent(userData?.email ? userData.email : "")}`
+        `/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}&email=${encodeURIComponent(user?.email ? user.email : "")}`
       );
 
       if (!res.ok) {
@@ -128,6 +126,9 @@ const SetGoals = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
+      {/* Top white overlay before first HR */}
+      <div style={{ zIndex: -1, borderTopRightRadius: "20px", borderTopLeftRadius: "20px" }} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none">
+                </div>
       <h2 className="text font-bold">
       {stepConfig?.icon} {stepConfig?.label}
       </h2>

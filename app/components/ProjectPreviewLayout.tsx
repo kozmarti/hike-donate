@@ -18,7 +18,7 @@ export default function ProjectPreviewLayout({ children }: { children: React.Rea
       height: "100%",
       pointerEvents: "none",
       zIndex: 9999,
-      backgroundColor: "rgba(128, 128, 128, 0.5)",
+      backgroundColor: "rgba(128, 128, 128, 0.3)",
       overflow: "hidden",
     }}
   >

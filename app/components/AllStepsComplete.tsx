@@ -15,24 +15,12 @@ import {
     XIcon
 } from "react-share";
 import DOMPurify from 'dompurify';
-import { getGoalMeasure, GoalMeasureKey } from "../entities/GoalMeasureConfig";
+import { getGoalMeasure } from "../entities/GoalMeasureConfig";
 import useRaisedAmount from "../hooks/useRaisedAmount";
 import useUser from "../hooks/useUser";
 import DeleteStravaButton from "./DeleteStravaButton";
 import CopyTextButton from "./CopyTextButton";
 
-
-interface UserSummary {
-    email: string;
-    stravaUserId?: number;
-    stravaClientId?: string;
-    stravaClientSecret?: string;
-    projectName?: string;
-    goalMeasure?: GoalMeasureKey;
-    fundraiserUrl?: string;
-    fundraiserDescription?: string;
-    isActive?: boolean | null;
-}
 
 export default function AllStepsComplete() {
     const [checkingSub, setCheckingSub] = useState(false);
@@ -127,12 +115,7 @@ export default function AllStepsComplete() {
                                 ? "Checking..."
                                 : "Strava Not Connected ❌"}
                     </p>
-                    {/**
-                    <p>Strava User ID: {user.stravaUserId || "Not connected"}</p>
-                    <p>Client ID: {user.stravaClientId || "Not saved"}</p>
-                    <p>Client Secret: {user.stravaClientSecret || "Not saved"}</p>
- */}
-                    {subscriptionData?.isActive && !isVisible && (
+                                   {subscriptionData?.isActive && !isVisible && (
                         <DeleteStravaButton />
                     )}
                     {subscriptionData?.isActive && isVisible && (

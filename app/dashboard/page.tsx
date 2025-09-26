@@ -51,5 +51,5 @@ export default async function DashboardPage() {
     return <CompleteProfile email={payload.email} />;
   }
 
-  return <Dashboard user={currentUser} />;
+  return <Dashboard/>;
 }

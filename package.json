@@ -44,7 +44,8 @@
     "styled-components": "^6.1.13",
     "swiper": "^11.2.10",
     "togpx": "^0.5.4",
-    "uploadthing": "^7.6.0"
+    "uploadthing": "^7.6.0",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",

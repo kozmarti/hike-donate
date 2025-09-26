@@ -9,18 +9,19 @@ import dynamic from "next/dynamic";
 import CheckURLButton from "./CheckURLButton";
 import useUser from "../hooks/useUser";
 import SetGoals from "./SetGoals";
+import { User } from "../entities/User";
 
 const RichTextWithEmoji = dynamic(() => import("./RichTextWithEmoji"), {
   ssr: false, // 🚀 disables server-side rendering for this component
 });
 
 interface Props {
-  email: string;
+  user: User;
   step: StepKey;
   completeStep: (step: StepKey) => Promise<void>;
 }
 
-const CreateFundraiser = ({ email, step, completeStep }: Props) => {
+const CreateFundraiser = ({ user, step, completeStep }: Props) => {
   const [fundraiserUrl, setFundraiserUrl] = useState("");
   const [fundraiserDescription, setFundraiserDescription] = useState("");
   const [saved, setSaved] = useState(false);
@@ -29,17 +30,16 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [validURL, setValideURL] = useState(false);
-  const { data: userData, loading: loadingUser, error: errorUser } = useUser();
   const stepConfig = stepsConfig.find((s) => s.key === step);
 
   useEffect(() => {
-    if (userData?.fundraiserUrl) {
-      setFundraiserUrl(userData.fundraiserUrl);
+    if (user?.fundraiserUrl) {
+      setFundraiserUrl(user.fundraiserUrl);
     }
-    if (userData?.fundraiserDescription) {
-      setFundraiserDescription(userData.fundraiserDescription)
+    if (user?.fundraiserDescription) {
+      setFundraiserDescription(user.fundraiserDescription)
     }
-  }, [userData]);
+  }, [user]);
 
   const handleSaveFundraiser = async () => {
     setErrorMessage("");
@@ -64,7 +64,7 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          email: user.email,
           fundraiserUrl,
           fundraiserDescription,
         }),
@@ -88,7 +88,6 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
     try {
       await completeStep(step);
       setSuccessMessage("✅ Step completed! Refreshing...");
-      window.location.reload();
     } catch (err: any) {
       setErrorMessage(`❌ ${err.message}`);
     }
@@ -97,6 +96,9 @@ const CreateFundraiser = ({ email, step, completeStep }: Props) => {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-4">
+            {/* Top white overlay before first HR */}
+            <div style={{ zIndex: -1, borderTopRightRadius: "20px", borderTopLeftRadius: "20px" }} className="absolute top-0 p-4 left-0 w-full h-16 bg-white opacity-60 pointer-events-none">
+                </div>
       <h2 className="text flex items-center font-bold">
         {stepConfig?.icon} {stepConfig?.label}
       </h2>
