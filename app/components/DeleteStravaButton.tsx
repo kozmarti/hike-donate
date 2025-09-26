@@ -10,7 +10,7 @@ export default function DeleteStravaButton() {
   const [showModal, setShowModal] = useState(false);
 
   const handleDelete = async () => {
-    const { setStepInComplete } = useStepsStore();
+    const setStepInComplete = useStepsStore((state) => state.setStepInComplete);
     setLoading(true);
     setErrorMessage(null);
     setSuccessMessage(null);
