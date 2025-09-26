@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import clientPromise from "@/lib/mongodb";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import DashboardStep, { User } from "@/app/components/DashboardStep";
+import DashboardStep from "@/app/components/DashboardStep";
 
 export default async function DashboardStepPage() {
     {/** */}
@@ -16,28 +16,6 @@ export default async function DashboardStepPage() {
     } catch {
       redirect("/welcome"); // Invalid token
     }
-  {/** 
-    const client = await clientPromise;
-    const db = (await client).db("hike");
-    const user = await db
-    .collection<User>("users")
-    .findOne({ email: payload.email });
-
-  if (!user) {
-    redirect("/welcome"); 
-  }
-
-  const currentUser: User = {
-    email: user.email,
-    name: user.name,
-    steps: user.steps || {
-      connectStrava: false,
-      createFundraiser: false,
-      setGoals: false,
-      hikeTrackShare: false,
-    },
-  };
-  */}
 
   return <DashboardStep/>;
 }
