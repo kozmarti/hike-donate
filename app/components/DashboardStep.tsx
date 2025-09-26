@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import useUser from "../hooks/useUser";
 import SkeletonAllStepComplete from "./SkeletonAllStepComplete";
 import SkeletonStepComponent from "./SkeletonStepComponent";
+import DeleteUserButton from "./DeleteUserButton";
 
 
 
@@ -82,7 +83,7 @@ export default function DashboardStep() {
     }
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <div className="header-wrapper pt-1 pb-1 pl-2 pr-2">
       <div className="flex justify-between items-center"><h1>Start Hiking with Purpose,  {userData?.name}!</h1> <LogoutButton/> </div>
       <StepProgressBar loading={loading} progress={progress} />
@@ -91,6 +92,7 @@ export default function DashboardStep() {
         {!loading && userData && (<StepComponent />)}
         {loading &&  (<SkeletonComponent />)}
       </div>
+      <DeleteUserButton />
     </div>
     
   );

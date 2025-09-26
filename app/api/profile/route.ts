@@ -104,3 +104,37 @@ export async function GET(req: Request) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const cookieHeader = req.headers.get("cookie") || "";
+    const email = getUserEmailFromCookie(cookieHeader);
+
+    if (!email) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+    }
+
+    const client = await clientPromise;
+    const db = client.db("hike");
+
+    const result = await db.collection("users").deleteOne({ email });
+
+    if (result.deletedCount === 0) {
+      return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
+    }
+
+    const headers = new Headers();
+    headers.append(
+      "Set-Cookie",
+      `userToken=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`
+    );
+
+    return new Response(
+      JSON.stringify({ message: "User deleted successfully" }),
+      { status: 200, headers }
+    );
+  } catch (err: any) {
+    console.error("Error deleting user:", err);
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+}

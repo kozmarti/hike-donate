@@ -15,7 +15,6 @@ interface Props {
 const StravaConnect = ({ user, step, completeStep }: Props) => {
   const [stravaClientId, setClientId] = useState("");
   const [stravaClientSecret, setClientSecret] = useState("");
-  const [saved, setSaved] = useState(false);
   const [credentialsSetup, setCredentialsSetup] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -113,8 +112,7 @@ const StravaConnect = ({ user, step, completeStep }: Props) => {
         value={stravaClientId}
         onChange={(e) => setClientId(e.target.value)}
         className="border p-2 rounded w-full input-custom"
-        disabled={saved}
-      />
+        disabled={credentialsSetup}      />
 
       <input
         type="password"
@@ -122,8 +120,7 @@ const StravaConnect = ({ user, step, completeStep }: Props) => {
         value={stravaClientSecret}
         onChange={(e) => setClientSecret(e.target.value)}
         className="border p-2 rounded w-full input-custom"
-        disabled={saved}
-      />
+        disabled={credentialsSetup}      />
 
       <button onClick={() => {
         handleSave();

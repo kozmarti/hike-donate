@@ -10,6 +10,7 @@ import StepProgressBar from "./StepProgressBar";
 import { useStepsStore } from "@/lib/store/stepStore";
 import useUser from "../hooks/useUser";
 import Skeleton from "@mui/material/Skeleton";
+import DeleteUserButton from "./DeleteUserButton";
 
 
 export default function Dashboard() {
@@ -61,9 +62,11 @@ export default function Dashboard() {
               )}
             </button>
           </Link>
+          <DeleteUserButton />
 
 
         </div>
+        
       </div>
     </>
   );
