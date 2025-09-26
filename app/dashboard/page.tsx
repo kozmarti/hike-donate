@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import clientPromise from "@/lib/mongodb";
 import CompleteProfile from "../components/CompleteProfile";
-import Dashboard, { User } from "../components/Dashboard";
 import LogoutButton from "../components/LogoutButton";
+import { User } from "../entities/User";
+import Dashboard from "../components/Dashboard";
 
 
 export default async function DashboardPage() {
@@ -27,25 +28,8 @@ export default async function DashboardPage() {
     .findOne({ email: payload.email });
 
   if (!user) {
-    // Optional: redirect or show error if user not found
-    return (
-    <>
-    <p>User not found</p>;
-    <LogoutButton/>
-    </>
-    )
+    redirect("/welcome");
   }
-
-  const currentUser: User = {
-    email: user.email,
-    name: user.name,
-    steps: user.steps || {
-      connectStrava: false,
-      createFundraiser: false,
-      setGoals: false,
-      hikeTrackShare: false,
-    },
-  };
 
   if (!user.name) {
     return <CompleteProfile email={payload.email} />;
