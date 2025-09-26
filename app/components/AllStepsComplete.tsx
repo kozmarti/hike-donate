@@ -68,7 +68,7 @@ export default function AllStepsComplete() {
     if (loading) return (
         <SkeletonAllStepComplete />
     );
-    if (!user && !loading) return <p>User not found</p>;
+    if (!user) return <p>User not found</p>;
 
     const toggleVisibility = async () => {
         try {
