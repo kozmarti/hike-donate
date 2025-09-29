@@ -192,7 +192,6 @@ export default function HikeDashboard( {stravaUserId, projectName, dailyStatsUrl
         </a>
       )}
 
-      <Footer />
     </div>
   );
 }

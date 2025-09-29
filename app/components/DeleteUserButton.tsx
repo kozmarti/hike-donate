@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { GoTrash } from "react-icons/go";
+
 
 export default function DeleteUserButton() {
   const [loading, setLoading] = useState(false);
@@ -39,9 +41,9 @@ export default function DeleteUserButton() {
       <button
         onClick={() => setShowModal(true)}
         disabled={loading}
-        className="custom-button min-w-60 bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-xl mt-4"
+        className="custom-button justify-center items-center flex gap-2 min-w-60 bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-xl mt-4"
       >
-        {loading ? "Deleting..." : "Delete Account"}
+      <GoTrash /> {loading ? " Deleting..." : " Delete Account"}
       </button>
 
       {message && (
@@ -73,7 +75,7 @@ export default function DeleteUserButton() {
           disabled={loading}
           className="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700"
         >
-          {loading ? "Deleting..." : "Delete"}
+           {loading ? "Deleting..." : "Delete"}
         </button>
       </div>
     </div>

@@ -92,7 +92,6 @@ export default function DashboardStep() {
         {!loading && userData && (<StepComponent />)}
         {loading &&  (<SkeletonComponent />)}
       </div>
-      <DeleteUserButton />
     </div>
     
   );

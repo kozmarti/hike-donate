@@ -123,15 +123,9 @@ export async function DELETE(req: Request) {
       return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
     }
 
-    const headers = new Headers();
-    headers.append(
-      "Set-Cookie",
-      `userToken=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`
-    );
-
     return new Response(
       JSON.stringify({ message: "User deleted successfully" }),
-      { status: 200, headers }
+      { status: 200 }
     );
   } catch (err: any) {
     console.error("Error deleting user:", err);

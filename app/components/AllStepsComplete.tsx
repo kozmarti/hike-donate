@@ -20,6 +20,7 @@ import useRaisedAmount from "../hooks/useRaisedAmount";
 import useUser from "../hooks/useUser";
 import DeleteStravaButton from "./DeleteStravaButton";
 import CopyTextButton from "./CopyTextButton";
+import DeleteUserButton from "./DeleteUserButton";
 
 
 export default function AllStepsComplete() {
@@ -282,7 +283,6 @@ export default function AllStepsComplete() {
                 <div style={{ zIndex: -1, borderBottomRightRadius: "20px", borderBottomLeftRadius: "20px" }} className="absolute bottom-0 left-0 w-full h-44 bg-white opacity-60 pointer-events-none rounded-b-xl"></div>
 
             </div>
-
         </>
     );
 }

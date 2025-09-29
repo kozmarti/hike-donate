@@ -50,7 +50,7 @@ export default function Dashboard() {
 
 
           <Link href="/dashboard/step">
-            <button className="custom-button m-5 min-w-60">
+            <button className="custom-button-secondary m-5 min-w-60">
               {data && !loading && (
                 progress === 0
                   ? "🚀 Start Setup"

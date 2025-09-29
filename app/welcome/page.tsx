@@ -4,6 +4,7 @@ import { useState } from "react";
 import Steps from "../components/Steps";
 import { useRouter } from "next/navigation";
 import Image from 'next/image'
+import Footer from "../components/Footer";
 
 
 export default function AuthPage() {
@@ -133,6 +134,7 @@ export default function AuthPage() {
       </div>
     </div>
       )}
+      <Footer/>
 </>
 
   );

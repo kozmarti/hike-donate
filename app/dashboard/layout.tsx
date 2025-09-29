@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fredoka } from "next/font/google";
 import "@/styles/globals.css";
 import Image from "next/image";
+import Footer from "../components/Footer";
 
 const inter = Fredoka({ subsets: ["latin"] });
 
@@ -29,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-
+<>
             <main
               className={`flex min-h-screen flex-col items-center p-2 global-background ${inter.className}`}
             >
@@ -43,8 +44,9 @@ export default function RootLayout({
               />
 
         {children}
+        <Footer/>
 
             </main>
-
+            </>
   );
 }
