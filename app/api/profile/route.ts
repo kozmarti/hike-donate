@@ -2,13 +2,23 @@
 import { decrypt, encrypt } from "@/app/utils/encrypt-data";
 import { getUserEmailFromCookie } from "@/app/utils/getUserEmail";
 import clientPromise from "@/lib/mongodb";
+import { requireUser } from "@/lib/session";
+
+const STRING_FIELDS = ["name", "stravaClientId", "stravaClientSecret", "projectName", "goalMeasure", "fundraiserUrl", "fundraiserDescription"] as const;
 
 export async function POST(req: Request) {
   try {
-    const { email, name, stravaClientId, stravaClientSecret, projectName, goalMeasure, fundraiserUrl, fundraiserDescription } = await req.json();
-    if (!email) {
-      return new Response(JSON.stringify({ error: "Email is required" }), { status: 400 });
+    const session = requireUser(req);
+    if (session instanceof Response) return session;
+    const email = session.email;
+
+    const body = await req.json();
+    for (const field of STRING_FIELDS) {
+      if (body[field] !== undefined && typeof body[field] !== "string") {
+        return new Response(JSON.stringify({ error: `${field} must be a string` }), { status: 400 });
+      }
     }
+    const { name, stravaClientId, stravaClientSecret, projectName, goalMeasure, fundraiserUrl, fundraiserDescription } = body;
 
     const client = await clientPromise;
     const db = client.db("hike");

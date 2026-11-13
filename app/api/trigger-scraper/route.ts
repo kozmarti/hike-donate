@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/core';
+import { requireUser } from '@/lib/session';
+import { isValidLeetchiUrl } from '@/app/utils/validation_helper';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const targetUrl = body.targetUrl;
+    const session = requireUser(req);
+    if (session instanceof Response) return session;
 
-    if (!targetUrl) {
-      return NextResponse.json({ error: 'targetUrl is required' }, { status: 400 });
+    const body = await req.json();
+    const targetUrl = body?.targetUrl;
+
+    if (typeof targetUrl !== 'string' || !isValidLeetchiUrl(targetUrl)) {
+      return NextResponse.json({ error: 'A valid Leetchi targetUrl is required' }, { status: 400 });
     }
 
     const octokit = new Octokit({
@@ -17,9 +22,9 @@ export async function POST(req: NextRequest) {
     await octokit.request(
       'POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches',
       {
-        owner: 'kozmarti',             
-        repo: 'scraper-verify-url',     
-        workflow_id: 'scrape.yaml',      
+        owner: 'kozmarti',
+        repo: 'scraper-verify-url',
+        workflow_id: 'scrape.yaml',
         ref: 'main',
         inputs: { targetUrl },
         headers: {

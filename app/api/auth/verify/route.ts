@@ -16,13 +16,18 @@ export async function GET(req: Request) {
     }
 
     // Verify the token safely
-    let payload: { userId: string; email: string };
+    let payload: { userId: string; email: string; purpose?: string };
     console.log("Verifying token...");
     try {
       payload = jwt.verify(token, process.env.JWT_SECRET!) as {
         userId: string;
         email: string;
+        purpose?: string;
       };
+      // Older links (sent before the purpose claim existed) have no purpose; still accept those.
+      if (payload.purpose && payload.purpose !== "verify-email") {
+        throw new Error("wrong token purpose");
+      }
     } catch {
       return NextResponse.redirect(`${process.env.NEXT_PUBLIC_API_URL}/auth/verified?status=expired`);
     }

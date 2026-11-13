@@ -1,19 +1,7 @@
-import jwt from "jsonwebtoken";
+import { getSessionUser } from "@/lib/session";
 
+/** @deprecated use `requireUser` / `getSessionUser` from `@/lib/session` */
 export function getUserEmailFromCookie(cookieHeader: string | null | undefined): string | null {
   if (!cookieHeader) return null;
-
-  const token = cookieHeader
-    .split(";")
-    .find((c) => c.trim().startsWith("token="))
-    ?.split("=")[1];
-
-  if (!token) return null;
-
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as { email: string };
-    return payload.email;
-  } catch {
-    return null;
-  }
+  return getSessionUser(new Request("http://localhost", { headers: { cookie: cookieHeader } }))?.email ?? null;
 }
