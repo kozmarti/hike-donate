@@ -1,14 +1,17 @@
 import clientPromise from "@/lib/mongodb";
+import { requireUser } from "@/lib/session";
 
 export async function GET(req: Request) {
   try {
+    const session = requireUser(req);
+    if (session instanceof Response) return session;
+
     const { searchParams } = new URL(req.url);
     const projectName = searchParams.get("projectName");
-    const email = searchParams.get("email");
 
-    if (!projectName || !email) {
+    if (!projectName) {
       return new Response(
-        JSON.stringify({ error: "projectName and email are required" }),
+        JSON.stringify({ error: "projectName is required" }),
         { status: 400 }
       );
     }
@@ -18,7 +21,7 @@ export async function GET(req: Request) {
 
     const otherUser = await db.collection("users").findOne({
       projectName,
-      email: { $ne: email }, // exclude current user
+      email: { $ne: session.email }, // exclude current user
     });
 
     return new Response(
@@ -26,8 +29,9 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
+    console.error("Error checking project name:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "Failed to check project name" }),
       { status: 500 }
     );
   }

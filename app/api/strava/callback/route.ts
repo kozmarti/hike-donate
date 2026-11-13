@@ -1,21 +1,23 @@
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { decrypt } from "@/app/utils/encrypt-data";
-import { getUserEmailFromCookie } from "@/app/utils/getUserEmail";
+import { getSessionUser } from "@/lib/session";
+import { createStravaSubscription } from "@/lib/strava-subscription";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
-  // Get JWT from cookie manually (use request.headers)
-  const cookieHeader = req.headers.get("cookie") || "";
-  const email = getUserEmailFromCookie(cookieHeader);
-  if (!email) {
-      return NextResponse.redirect(new URL("/welcome", process.env.NEXT_PUBLIC_API_URL));
+  const session = getSessionUser(req);
+  if (!session) {
+    return NextResponse.redirect(new URL("/welcome", process.env.NEXT_PUBLIC_API_URL));
   }
+  const email = session.email;
 
-  if (!code || !email) return new Response("Missing code or email", { status: 400 });
+  // User denied access on Strava, or Strava returned an error
+  if (url.searchParams.get("error") || !code) {
+    return NextResponse.redirect(new URL("dashboard/step", process.env.NEXT_PUBLIC_API_URL));
+  }
 
   const client = await clientPromise;
   const db = client.db("hike");
@@ -25,7 +27,7 @@ export async function GET(req: Request) {
   if (!user || !user.stravaClientId || !user.stravaClientSecret) {
     return new Response("User missing Strava credentials", { status: 400 });
   }
-  
+
   // Exchange code for tokens
   const tokenRes = await fetch("https://www.strava.com/oauth/token", {
     method: "POST",
@@ -39,39 +41,20 @@ export async function GET(req: Request) {
   });
 
   const data = await tokenRes.json();
-  console.log("STRAVA AUTHORIZATION RESPONSE")
-  console.log(data)
-    /* Response example:
-    { 
-      "token_type": "Bearer",
-      "expires_at": 1562908002,
-      "expires_in": 21600,
-      "refresh_token": "REFRESHTOKEN",
-      "access_token": "ACCESSTOKEN",
-      "athlete": {
-                  "id": 123456,
-                  "username": "MeowTheCat",
-                  "resource_state": 2,
-                  "firstname": "Meow",
-                  "lastname": "TheCat",
-                  "city": "",
-                  "state": "",
-                  "country": null,
-                  ...
-        }
-    } */
+  /* Response shape: { token_type, expires_at, expires_in, refresh_token, access_token, athlete: { id, ... } } */
+  if (!tokenRes.ok || !data?.athlete?.id || !data?.refresh_token) {
+    console.error("Strava token exchange failed:", tokenRes.status, data?.message ?? data?.errors);
+    return new Response("Strava authorization failed. Check your Client ID and Secret and try again.", { status: 400 });
+  }
 
-  const existing = await db
-            .collection("users")
-            .findOne({ stravaUserId: data.athlete.id , email: { $ne: email }});
-  console.log("EXISTING", existing)
+  const existing = await usersCollection.findOne({ stravaUserId: data.athlete.id, email: { $ne: email } });
   if (existing) {
-      return new Response(
-          JSON.stringify({ error: "❌ StravaUser already used by another user." }),
-              { status: 400 }
-            );
-          }
-  
+    return new Response(
+      JSON.stringify({ error: "❌ StravaUser already used by another user." }),
+      { status: 400 }
+    );
+  }
+
   await usersCollection.updateOne(
     { email },
     {
@@ -81,15 +64,15 @@ export async function GET(req: Request) {
       },
     }
   );
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/strava/subscribe`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  });
 
-  return NextResponse.redirect(
-    new URL(
-      `dashboard/step`,
-      process.env.NEXT_PUBLIC_API_URL
-    )
-  );}
+  const subscription = await createStravaSubscription({
+    stravaClientId: user.stravaClientId,
+    stravaClientSecret: user.stravaClientSecret,
+  });
+  if (!subscription.ok) {
+    // Not fatal: e.g. a subscription already exists for this Strava app
+    console.error("Strava subscription failed:", subscription.status, subscription.data);
+  }
+
+  return NextResponse.redirect(new URL("dashboard/step", process.env.NEXT_PUBLIC_API_URL));
+}
