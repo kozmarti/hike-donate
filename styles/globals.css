@@ -463,8 +463,13 @@ a {
 .swiper-pagination {
   top: 10px !important; /* adjust as needed */
   height: 100px;
+  /* Swiper positions this absolutely at left: 0; stretch it across and let auto margins center it
+     (Swiper's own CSS sets `transform`, so a translateX centering trick gets overridden) */
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
   max-width: 500px;
-  justify-self: anchor-center;
+  margin: 0 auto;
 }
 
 
