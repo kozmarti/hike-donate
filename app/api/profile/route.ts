@@ -1,4 +1,7 @@
 // app/api/profile/route.ts
+// Reads the login cookie, so it must never be pre-rendered at build time
+export const dynamic = "force-dynamic";
+
 import { decrypt, encrypt } from "@/app/utils/encrypt-data";
 import { getUserEmailFromCookie } from "@/app/utils/getUserEmail";
 import clientPromise from "@/lib/mongodb";

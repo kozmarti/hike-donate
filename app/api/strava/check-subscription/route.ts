@@ -1,4 +1,7 @@
 // app/api/strava/check-subscription/route.ts
+// Reads the login cookie, so it must never be pre-rendered at build time
+export const dynamic = "force-dynamic";
+
 import clientPromise from "@/lib/mongodb";
 import { decrypt } from "@/app/utils/encrypt-data";
 import { getUserEmailFromCookie } from "@/app/utils/getUserEmail";

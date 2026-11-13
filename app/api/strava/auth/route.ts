@@ -1,3 +1,6 @@
+// Reads the login cookie, so it must never be pre-rendered at build time
+export const dynamic = "force-dynamic";
+
 import clientPromise from "@/lib/mongodb";
 import { getSessionUser } from "@/lib/session";
 
