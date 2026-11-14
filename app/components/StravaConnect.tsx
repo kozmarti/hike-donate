@@ -48,7 +48,6 @@ const StravaConnect = ({ user, step, completeStep }: Props) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: user.email,
           stravaClientId,
           stravaClientSecret,
         }),
@@ -67,7 +66,7 @@ const StravaConnect = ({ user, step, completeStep }: Props) => {
   const handleAuthorize = () => {
     setErrorMessage("");
     setSuccessMessage("");
-    window.location.href = `/api/strava/auth?email=${encodeURIComponent(user.email)}`;
+    window.location.href = "/api/strava/auth";
   };
 
   const handleCompleteStep = async () => {

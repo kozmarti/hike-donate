@@ -1,20 +1,34 @@
 import clientPromise from "@/lib/mongodb";
+import { requireUser } from "@/lib/session";
+import { stepsConfig } from "@/app/entities/StepConfig";
+
+const STEP_KEYS: readonly string[] = stepsConfig.map((s) => s.key);
 
 export async function POST(req: Request) {
   try {
-    const { email, step } = await req.json();
+    const session = requireUser(req);
+    if (session instanceof Response) return session;
+
+    const { step } = await req.json();
+    if (typeof step !== "string" || !STEP_KEYS.includes(step)) {
+      return new Response(JSON.stringify({ error: "Invalid step" }), { status: 400 });
+    }
+
     const client = await clientPromise;
     const db = client.db("hike");
 
     await db.collection("users").updateOne(
-      { email },
+      { email: session.email },
       { $set: { [`steps.${step}`]: true } }
     );
 
-    const user = await db.collection("users").findOne({ email });
+    const user = await db
+      .collection("users")
+      .findOne({ email: session.email }, { projection: { _id: 0, steps: 1 } });
 
-    return new Response(JSON.stringify(user), { status: 200 });
+    return new Response(JSON.stringify({ steps: user?.steps ?? {} }), { status: 200 });
   } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error("Error completing step:", error);
+    return new Response(JSON.stringify({ error: "Failed to complete step" }), { status: 500 });
   }
 }

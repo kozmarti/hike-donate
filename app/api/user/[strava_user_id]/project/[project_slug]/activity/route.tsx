@@ -1,4 +1,3 @@
-import { Activity } from "@/app/entities/Activity";
 import clientPromise from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -50,25 +49,5 @@ export async function GET(
   }
 }
 
-export async function POST(request: Request) {
-  const activityData: Activity = await request.json();
-  try {
-    const client = await clientPromise;
-    const db = client.db("hike");
-    const activity = await db
-      .collection("activities")
-      .updateOne(
-        { strava_activity_id: activityData.strava_activity_id },
-        { $set: activityData },
-        { upsert: true }
-      );
-    console.log("Activity upserted", activity);
-  } catch (e) {
-    console.error(e);
-  }
-
-  return Response.json(
-    { message: "Activity data posted", activityData },
-    { status: 200 }
-  );
-}
+// Same owner-checked handler as /activities
+export { POST } from "../activities/route";

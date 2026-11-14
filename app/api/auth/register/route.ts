@@ -31,13 +31,12 @@ export async function POST(req: Request) {
 
     // Create a verification token (expires in 1 day)
     const token = jwt.sign(
-      { userId: result.insertedId, email },
+      { userId: result.insertedId.toString(), email, purpose: "verify-email" },
       process.env.JWT_SECRET!,
       { expiresIn: "1d" }
     );
 
     const verifyUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify?token=${token}`;
-    console.log("Verify URL:", verifyUrl);
     // Send email
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,

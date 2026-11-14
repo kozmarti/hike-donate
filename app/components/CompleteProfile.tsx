@@ -21,7 +21,7 @@ export default function CompleteProfile({ email }: Props) {
       const res = await fetch("/api/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name }),
+        body: JSON.stringify({ name }),
       });
 
       if (!res.ok) {

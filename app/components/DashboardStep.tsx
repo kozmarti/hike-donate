@@ -36,7 +36,7 @@ export default function DashboardStep() {
     const res = await fetch("/api/step", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userData?.email, step }),
+      body: JSON.stringify({ step }),
     });
     const updated = await res.json();
     setStepComplete(step);

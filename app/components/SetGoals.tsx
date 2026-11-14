@@ -55,7 +55,6 @@ const SetGoals = ({ user, step, completeStep }: Props) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: user.email,
           projectName: sanitizedProjectName,
           goalMeasure,
         }),
@@ -97,7 +96,7 @@ const SetGoals = ({ user, step, completeStep }: Props) => {
 
     try {
       const res = await fetch(
-        `/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}&email=${encodeURIComponent(user?.email ? user.email : "")}`
+        `/api/profile/check-project?projectName=${encodeURIComponent(sanitizedProjectName)}`
       );
 
       if (!res.ok) {
